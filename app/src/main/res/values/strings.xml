@@ -10,4 +10,11 @@
     <string name="phone_number">Phone number</string>
     <string name="click_to_login">Click to login</string>
     <string name="click_to_register">Click to register</string>
+    <string name="elderly">Elderly</string>
+    <string name="caregiver">Caregiver</string>
+    <string name="welcome_to_eldercare">Welcome to ElderCare</string>
+    <string name="choose_role">Choose role:</string>
+    <string name="elderly_id">Elderly ID</string>
+    <string name="welcome_elderly">Welcome Elderly</string>
+    <string name="welcome_caregiver">Welcome Caregiver</string>
 </resources>

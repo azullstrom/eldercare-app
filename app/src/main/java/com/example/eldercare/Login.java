@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -21,6 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class Login extends AppCompatActivity {
 
+    private static final boolean TEST_MODE = false;
     TextInputEditText editTextEmail, editTextPassword;
     Button loginButton;
     FirebaseAuth mAuth;
@@ -41,9 +44,34 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        boolean firstTimeUse = prefs.getBoolean("isFirstTimeUse", true);
+
+        // If the coder wants to test the FirstTimeUse page each time the app starts
+        if(TEST_MODE) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putBoolean("isFirstTimeUse", true);
+            editor.apply();
+        }
+
+        if(firstTimeUse) {
+            showFirstTimeUseLayout();
+        }
+        boolean isCaregiver = prefs.getBoolean("isCaregiver", true);
+
+        if(isCaregiver) {
+            showLoginCaregiverLayout();
+        } else {
+            showLoginElderlyLayout();
+        }
+    }
+
+    private void showLoginCaregiverLayout() {
+        setContentView(R.layout.activity_login_caregiver);
+
         editTextEmail = findViewById(R.id.email);
         editTextPassword = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
@@ -95,5 +123,15 @@ public class Login extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    private void showLoginElderlyLayout() {
+        setContentView(R.layout.activity_login_elderly);
+    }
+
+    private void showFirstTimeUseLayout() {
+        Intent intent = new Intent(getApplicationContext(), FirstTimeUse.class);
+        startActivity(intent);
+        finish();
     }
 }
