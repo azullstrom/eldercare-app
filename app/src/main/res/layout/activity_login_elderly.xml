@@ -18,14 +18,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_elderly"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:textSize="40sp" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/login"
         android:textAlignment="center"
         android:textSize="40sp" />
