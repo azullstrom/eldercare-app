@@ -17,4 +17,6 @@
     <string name="elderly_id">Elderly ID</string>
     <string name="welcome_elderly">Welcome Elderly</string>
     <string name="welcome_caregiver">Welcome Caregiver</string>
+    <string name="your_patients">Your Patients</string>
+
 </resources>
