@@ -18,5 +18,13 @@
     <string name="welcome_elderly">Welcome Elderly</string>
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
+    <string name="back_to_patient_home">Back to Patient Home</string>
+    <string name="meal_calendar">Meal Calendar</string>
+    <string name="edit_meal">Edit Meal</string>
+    <string name="meal_name">Meal Name:</string>
+    <string name="suggested_meals">Suggested Meals:</string>
+    <string name="mark_this_meal_as_eaten">Mark this meal as "Eaten"</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
 
 </resources>
