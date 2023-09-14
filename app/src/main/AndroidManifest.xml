@@ -35,6 +35,9 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <activity
+            android:name=".CaregiverMainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
