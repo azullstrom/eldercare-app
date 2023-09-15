@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,6 +22,8 @@ public class MealCalendar extends AppCompatActivity {
     FirebaseUser user;
 
     LinearLayout mealButtonsLayout;
+
+    FloatingActionButton addMealButton;
 
     LinearLayout dimLayout;
     String fakeMeals[][];
@@ -51,6 +54,7 @@ public class MealCalendar extends AppCompatActivity {
 
         backButton = findViewById(R.id.backButton);
         mealButtonsLayout = findViewById(R.id.mealButtonsLayout);
+        addMealButton = findViewById(R.id.addMealButton);
 
         dimLayout = findViewById(R.id.dimLayout);
         if (user == null) {
@@ -75,7 +79,6 @@ public class MealCalendar extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MealCalendarEdit.class);
                     intent.putExtra("mealName", fakeMeals[finalI][1]);
                     intent.putExtra("mealPos", finalI);
-                    //dimLayout.setBackgroundColor(0x80000000);
                     animateBackground(0xffffff, 0x80000000);
                     startActivity(intent);
                 }

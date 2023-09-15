@@ -26,7 +26,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:id="@+id/exitEditMeal"
-                android:layout_marginLeft="310dp"
+                android:layout_marginLeft="280dp"
                 android:layout_marginTop="32dp"
                 android:background="@mipmap/exit"/>
 
