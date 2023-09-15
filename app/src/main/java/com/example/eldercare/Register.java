@@ -31,7 +31,7 @@ public class Register extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
-        usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef = FirebaseDatabase.getInstance().getReference().child("caregiver-users");
 
         editTextEmail = findViewById(R.id.email);
         editTextFirstName = findViewById(R.id.firstname);
@@ -80,8 +80,7 @@ public class Register extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         // User registration successful
-                        String userId = mAuth.getCurrentUser().getUid();
-                        DatabaseReference userReference = usersRef.child(userId);
+                        DatabaseReference userReference = usersRef.child(firstName);
                         userReference.child("email").setValue(email);
                         userReference.child("firstname").setValue(firstName);
                         userReference.child("lastname").setValue(lastName);
