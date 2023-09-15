@@ -2,8 +2,9 @@ package com.example.eldercare;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,23 @@ public class MealCalendar extends AppCompatActivity {
 
     LinearLayout mealButtonsLayout;
 
+    LinearLayout dimLayout;
     String fakeMeals[][];
+
+    void animateBackground(int from, int to){
+        ValueAnimator anim = new ValueAnimator();
+        anim.setIntValues(from, to);
+        anim.setEvaluator(new ArgbEvaluator());
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+               dimLayout.setBackgroundColor((Integer)valueAnimator.getAnimatedValue());
+            }
+        });
+        anim.setDuration(300);
+        anim.start();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +52,14 @@ public class MealCalendar extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
         mealButtonsLayout = findViewById(R.id.mealButtonsLayout);
 
+        dimLayout = findViewById(R.id.dimLayout);
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
         }
+
+
 
         for(int i = 0; i < fakeMeals.length; i++){
             Button mealButton = new Button(this);
@@ -55,6 +75,8 @@ public class MealCalendar extends AppCompatActivity {
                     Intent intent = new Intent(getApplicationContext(), MealCalendarEdit.class);
                     intent.putExtra("mealName", fakeMeals[finalI][1]);
                     intent.putExtra("mealPos", finalI);
+                    //dimLayout.setBackgroundColor(0x80000000);
+                    animateBackground(0xffffff, 0x80000000);
                     startActivity(intent);
                 }
             });
@@ -70,5 +92,11 @@ public class MealCalendar extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        animateBackground(0x80000000, 0xffffff);
     }
 }
