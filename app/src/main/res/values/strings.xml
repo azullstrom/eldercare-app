@@ -14,7 +14,7 @@
     <string name="caregiver">Caregiver</string>
     <string name="welcome_to_eldercare">Welcome to ElderCare</string>
     <string name="choose_role">Choose role:</string>
-    <string name="elderly_id">Elderly ID</string>
+    <string name="elderly_pin">Enter PIN code</string>
     <string name="welcome_elderly">Welcome Elderly</string>
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
