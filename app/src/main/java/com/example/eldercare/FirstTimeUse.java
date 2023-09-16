@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -77,27 +78,22 @@ public class FirstTimeUse extends AppCompatActivity {
     }
 
     private void showElderlyMailDialog() {
-        final EditText email = new EditText(FirstTimeUse.this);
-        final EditText pin = new EditText(FirstTimeUse.this);
-        email.setHint("Enter elderly email");
-        pin.setHint("Enter PIN code");
+        View dialogView = getLayoutInflater().inflate(R.layout.activity_elderly_emailpopup, null);
 
-        LinearLayout layout = new LinearLayout(FirstTimeUse.this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        layout.addView(email);
-        layout.addView(pin);
+        TextInputEditText email = dialogView.findViewById(R.id.email);
+        TextInputEditText pin = dialogView.findViewById(R.id.pin);
 
         new AlertDialog.Builder(FirstTimeUse.this)
-                .setTitle("First Time Use as Elderly")
-                .setMessage("Authorization")
-                .setView(layout)
+                .setView(dialogView)
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String elderlyMail = email.getText().toString().trim();
-                        String elderlyPin = pin.getText().toString().trim();
+                        String elderlyMail = String.valueOf(email.getText());
+                        String elderlyPin = String.valueOf(pin.getText());
                         if (TextUtils.isEmpty(elderlyMail) || elderlyMail.contains("caregiver")) {
                             Toast.makeText(FirstTimeUse.this, "Enter a valid email.", Toast.LENGTH_SHORT).show();
+                        } else if (TextUtils.isEmpty(elderlyPin)) {
+                            Toast.makeText(FirstTimeUse.this, "Enter PIN code", Toast.LENGTH_SHORT).show();
                         } else {
                             mAuth.signInWithEmailAndPassword(elderlyMail, elderlyPin)
                                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {

@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = false;
+    private static final boolean TEST_MODE = true;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -151,7 +151,7 @@ public class Login extends AppCompatActivity {
                                 progressBar.setVisibility(View.GONE);
                                 if (task.isSuccessful()) {
                                     Toast.makeText(getApplicationContext(), "Login Successful.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), ElderlyMainActivity.class);
                                     startActivity(intent);
                                     finish();
                                 } else {
