@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = true;
+    private static final boolean TEST_MODE = false;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -36,7 +36,6 @@ public class Login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        databaseLib = new DatabaseLib(this);
         mAuth = FirebaseAuth.getInstance();
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
