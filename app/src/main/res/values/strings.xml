@@ -18,5 +18,7 @@
     <string name="welcome_elderly">Welcome Elderly</string>
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
+    <string name="enter_pin">Enter PIN code</string>
+    <string name="enter_elderly_email">Enter elderly email</string>
 
 </resources>
