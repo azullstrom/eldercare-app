@@ -27,6 +27,12 @@ public class DatabaseLib {
         this.context = context;
         rootRef = FirebaseDatabase.getInstance().getReference();
     }
+
+    /**
+     * Adds an existing elderly to an existing caregiver in the database.
+     * @param firstNameElderly First name of the elderly in the database.
+     * @param firstNameCaregiver First name of the caregiver in the database.
+     */
     public void assignElderlyToCaregiver(String firstNameElderly, String firstNameCaregiver) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
@@ -66,6 +72,11 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Removes an existing elderly from an existing caregiver in the database.
+     * @param firstNameElderly First name of the elderly in the database.
+     * @param firstNameCaregiver First name of the caregiver in the database.
+     */
     public void removeElderlyFromCaregiver(String firstNameElderly, String firstNameCaregiver) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
@@ -95,6 +106,27 @@ public class DatabaseLib {
                 } else {
                     // If the elderly user doesn't exist
                     Toast.makeText(context, "Enter valid elderly.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any database errors here
+            }
+        });
+    }
+
+    public void addMealToElderly(String firstNameElderly, String time) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
+                if (elderlySnapshot.exists()) {
+
+                } else {
+                    // If the elderly user doesn't exist
+                    Toast.makeText(context, "Elderly does not exist", Toast.LENGTH_SHORT).show();
                 }
             }
 
