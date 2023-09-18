@@ -58,7 +58,7 @@ public class MealCalendar extends AppCompatActivity {
 
         dimLayout = findViewById(R.id.dimLayout);
         if (user == null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ElderlyMainActivity.class);
             startActivity(intent);
             finish();
         }
@@ -90,7 +90,7 @@ public class MealCalendar extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO: Change intent to patient home page
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CaregiverMainActivity.class);
                 startActivity(intent);
                 finish();
             }
