@@ -37,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".ElderlyMainActivity"
             android:exported="true" />
         <activity
             android:name=".CaregiverMainActivity"

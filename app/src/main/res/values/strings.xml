@@ -26,5 +26,7 @@
     <string name="mark_this_meal_as_eaten">Mark this meal as "Eaten"</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="enter_pin">Enter PIN code</string>
+    <string name="enter_elderly_email">Enter elderly email</string>
 
 </resources>
