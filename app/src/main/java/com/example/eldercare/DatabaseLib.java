@@ -13,13 +13,69 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class DatabaseLib {
     private DatabaseReference rootRef;
     private Context context;
 
+    /**
+     * Constructor
+     *
+     * @param context Just write the class you're in: <code><b>this</b></code> should be fine.
+     */
     public DatabaseLib(Context context) {
         this.context = context;
         rootRef = FirebaseDatabase.getInstance().getReference();
+    }
+
+    /**
+     * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
+     *
+     * @param firstNameElderly First name of the elderly in the database.
+     * @param callback Async. Add new ValueEventListener() {} and follow the automated functions.
+     */
+    public void getElderlyDataSnapshot(String firstNameElderly, ValueEventListener callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
+                callback.onDataChange(elderlySnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    /**
+     * Converts snapshot into JSON.
+     *
+     * @param dataSnapshot Snapshot from your async function call.
+     *
+     * @return JSON object || null
+     */
+    public JSONObject convertSnapshotToJson(DataSnapshot dataSnapshot) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            // Iterate through the dataSnapshot to extract key-value pairs
+            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                String key = snapshot.getKey();
+                Object value = snapshot.getValue();
+
+                jsonObject.put(key, value);
+            }
+
+            return jsonObject;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
