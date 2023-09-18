@@ -15,14 +15,6 @@ public class Meal {
         this.mealType = mealType;
     }
 
-    // Constructor without the 'toEat' parameter
-    public Meal(String date, String time, String mealType) {
-        this.date = date;
-        this.time = time;
-        this.mealType = mealType;
-        this.toEat = ""; // Default value, you can change it to something else if needed
-    }
-
     public String getDate() {
         return date;
     }
