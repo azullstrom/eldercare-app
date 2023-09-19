@@ -26,6 +26,9 @@ public class MealCalendarEdit extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
+
+        //TODO: change so that save and edit button have dynamic text so that it can be translated
+        //TODO: move pictures to drawable instead of mipmap
         getWindow().setLayout((int) (width*0.9), (int) (height*0.5));
 
         exit = findViewById(R.id.exitEditMeal);
