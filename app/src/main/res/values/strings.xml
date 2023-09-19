@@ -19,7 +19,7 @@
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
     <string name="no_patients_text">You dont have any patients</string>
-    <string name="add_patient">Add patient button</string>
+    <string name="add_patient_button">Add patient button</string>
     <string name="back_to_patient_home">Back to Patient Home</string>
     <string name="meal_calendar">Meal Calendar</string>
     <string name="edit_meal">Edit Meal</string>
@@ -30,4 +30,6 @@
     <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
     <string name="enter_elderly_email">Enter elderly email</string>
+    <string name="add_new_elder_text">This is the top button</string>
+    <string name="add_existing_elder_text">This is the bottom button</string>
 </resources>
