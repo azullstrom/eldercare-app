@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class ElderlyMainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     Button button;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
 
         if (user == null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ElderlyMainActivity.class);
             startActivity(intent);
             finish();
         } else {

@@ -20,4 +20,8 @@
         <item name="android:textColor">#D3D3D3</item>
     </style>
 
+    <style name="Theme.AppCompat.Translucent" parent="Base.Theme.ElderCare">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
 </resources>

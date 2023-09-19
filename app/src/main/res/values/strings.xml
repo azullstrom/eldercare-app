@@ -14,13 +14,20 @@
     <string name="caregiver">Caregiver</string>
     <string name="welcome_to_eldercare">Welcome to ElderCare</string>
     <string name="choose_role">Choose role:</string>
-    <string name="elderly_id">Elderly ID</string>
+    <string name="elderly_pin">Enter PIN code</string>
     <string name="welcome_elderly">Welcome Elderly</string>
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
     <string name="no_patients_text">You dont have any patients</string>
+    <string name="add_patient">Add patient button</string>
+    <string name="back_to_patient_home">Back to Patient Home</string>
+    <string name="meal_calendar">Meal Calendar</string>
+    <string name="edit_meal">Edit Meal</string>
+    <string name="meal_name">Meal Name:</string>
+    <string name="suggested_meals">Suggested Meals:</string>
+    <string name="mark_this_meal_as_eaten">Mark this meal as "Eaten"</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
     <string name="enter_elderly_email">Enter elderly email</string>
-    <string name="add_patient">Add patient button</string>
-
 </resources>
