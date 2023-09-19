@@ -42,7 +42,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mAuth = FirebaseAuth.getInstance();
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
