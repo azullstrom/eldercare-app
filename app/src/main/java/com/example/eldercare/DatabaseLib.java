@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -143,9 +144,9 @@ public class DatabaseLib {
      * @param email Elderlys new email. Example: example@elderly.eldercare.com
      * @param pin Elderlys new 6-digit PIN code. Example: 123456
      * @param phoneNumber XXX-XXX XX XX
-     * @param dateOfBirth Example: 1900
+     * @param yearOfBirth Example: 1900
      */
-    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String dateOfBirth) {
+    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
 
@@ -161,7 +162,7 @@ public class DatabaseLib {
                             if (caregiverSnapshot.exists()) {
                                 // Assign the elderly to the caregiver by updating caregiver's node
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly).setValue(true);
-                                registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, dateOfBirth, "elderly");
+                                registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, yearOfBirth, "elderly");
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
@@ -171,7 +172,7 @@ public class DatabaseLib {
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                            // Handle any database errors here
+                            Toast.makeText(context, "Database error " + databaseError, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -179,7 +180,7 @@ public class DatabaseLib {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any database errors here
+                Toast.makeText(context, "Database error " + databaseError, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -447,7 +448,7 @@ public class DatabaseLib {
                         userReference = caregiverRef;
                     } else {
                         userReference = elderlyRef;
-                        userReference.child("date-of-birth").setValue(yearOfBirthUser);
+                        userReference.child("year-of-birth").setValue(yearOfBirthUser);
                     }
                     userReference.child("email").setValue(emailUser);
                     userReference.child("firstname").setValue(firstNameUser);
@@ -461,6 +462,49 @@ public class DatabaseLib {
                 }
             }
         });
+    }
+
+    /**
+     * Login a user
+     *
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param userType "elderly" || "caregiver"
+     */
+    public void loginUser(String email, String password, String userType) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(context, "Enter email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent;
+                            if(userType.contains("elderly")) {
+                                intent = new Intent(context, ElderlyMainActivity.class);
+
+                            } else {
+                                intent = new Intent(context, CaregiverMainActivity.class);
+                            }
+                            context.startActivity(intent);
+
+                            if (context instanceof Activity) {
+                                ((Activity) context).finish();
+                            }
+                        } else {
+                            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     /**
