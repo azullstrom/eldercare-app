@@ -409,15 +409,16 @@ public class DatabaseLib {
      * @param email Email user
      * @param password 6-digit PIN for elderly
      * @param phoneNumber XXX-XXX XX XX
+     * @param yearOfBirth Example: 1919
      * @param userType "elderly" || "caregiver"
      */
-    public void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String dateOfBirth, String userType) {
+    public void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
         String firstNameUser = firstName.trim();
         String lastNameUser = lastName.trim();
         String emailUser = email.trim();
         String passwordUser = password.trim();
         String phoneUser = phoneNumber.trim();
-        String dateOfBirthUser = dateOfBirth.trim();
+        String yearOfBirthUser = yearOfBirth.trim();
         String userTypeUser = userType.trim();
 
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(firstName) ||
@@ -439,14 +440,14 @@ public class DatabaseLib {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     // User registration successful
-                    DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameUser+dateOfBirthUser);
+                    DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameUser+yearOfBirthUser);
                     DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameUser);
                     DatabaseReference userReference;
                     if(userTypeUser.contains("caregiver")) {
                         userReference = caregiverRef;
                     } else {
                         userReference = elderlyRef;
-                        userReference.child("date-of-birth").setValue(dateOfBirthUser);
+                        userReference.child("date-of-birth").setValue(yearOfBirthUser);
                     }
                     userReference.child("email").setValue(emailUser);
                     userReference.child("firstname").setValue(firstNameUser);
