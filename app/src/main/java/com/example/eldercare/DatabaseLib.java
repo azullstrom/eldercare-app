@@ -1,12 +1,20 @@
 package com.example.eldercare;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskExecutors;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,8 +24,11 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.concurrent.Executor;
+
 public class DatabaseLib {
     private DatabaseReference rootRef;
+    private FirebaseAuth mAuth;
     private Context context;
 
     /**
@@ -28,6 +39,7 @@ public class DatabaseLib {
     public DatabaseLib(Context context) {
         this.context = context;
         rootRef = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
     }
 
     /**
@@ -119,6 +131,56 @@ public class DatabaseLib {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any database errors here
+            }
+        });
+    }
+
+    /**
+     * Assign and adds a new elderly to an existing caregiver in the database.
+     *
+     * @param firstNameElderly First name of the elderly in the database.
+     * @param lastNameElderly Last name of the elderly in the database.
+     * @param firstNameCaregiver First name of the caregiver in the database.
+     * @param email Elderlys new email. Example: example@elderly.eldercare.com
+     * @param pin Elderlys new 6-digit PIN code. Example: 123456
+     * @param phoneNumber XXX-XXX XX XX
+     * @param yearOfBirth Example: 1900
+     */
+    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
+
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
+                if (elderlySnapshot.exists()) {
+                    Toast.makeText(context, "Elderly already exists", Toast.LENGTH_SHORT).show();
+                } else {
+                    caregiverRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
+                            if (caregiverSnapshot.exists()) {
+                                // Assign the elderly to the caregiver by updating caregiver's node
+                                caregiverRef.child("assigned-elderly").child(firstNameElderly).setValue(true);
+                                registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, yearOfBirth, "elderly");
+                                Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // If the caregiver user doesn't exist
+                                Toast.makeText(context, "Enter valid caregiver.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Toast.makeText(context, "Database error " + databaseError, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, "Database error " + databaseError, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -338,6 +400,111 @@ public class DatabaseLib {
                 Toast.makeText(context, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Registers a new user in the database. Elderly or Caregiver.
+     *
+     * @param firstName First name user
+     * @param lastName Last name user
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param phoneNumber XXX-XXX XX XX
+     * @param yearOfBirth Example: 1919
+     * @param userType "elderly" || "caregiver"
+     */
+    public void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
+        String firstNameUser = firstName.trim();
+        String lastNameUser = lastName.trim();
+        String emailUser = email.trim();
+        String passwordUser = password.trim();
+        String phoneUser = phoneNumber.trim();
+        String yearOfBirthUser = yearOfBirth.trim();
+        String userTypeUser = userType.trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(firstName) ||
+                TextUtils.isEmpty(lastName) || TextUtils.isEmpty(phoneNumber) ||
+                TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!userTypeUser.contains("caregiver") && !userTypeUser.contains("elderly")) {
+            Toast.makeText(context, "Error parameter userType", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create a new user with Firebase Authentication
+        mAuth.createUserWithEmailAndPassword(emailUser, passwordUser)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // User registration successful
+                    DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameUser+yearOfBirthUser);
+                    DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameUser);
+                    DatabaseReference userReference;
+                    if(userTypeUser.contains("caregiver")) {
+                        userReference = caregiverRef;
+                    } else {
+                        userReference = elderlyRef;
+                        userReference.child("year-of-birth").setValue(yearOfBirthUser);
+                    }
+                    userReference.child("email").setValue(emailUser);
+                    userReference.child("firstname").setValue(firstNameUser);
+                    userReference.child("lastname").setValue(lastNameUser);
+                    userReference.child("phone-number").setValue(phoneUser);
+
+                    Toast.makeText(context, "Registration Successful.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Registration failed
+                    Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    /**
+     * Login a user
+     *
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param userType "elderly" || "caregiver"
+     */
+    public void loginUser(String email, String password, String userType) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(context, "Enter email", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent;
+                            if(userType.contains("elderly")) {
+                                intent = new Intent(context, ElderlyMainActivity.class);
+
+                            } else {
+                                intent = new Intent(context, CaregiverMainActivity.class);
+                            }
+                            context.startActivity(intent);
+
+                            if (context instanceof Activity) {
+                                ((Activity) context).finish();
+                            }
+                        } else {
+                            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     /**
