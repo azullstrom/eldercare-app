@@ -21,7 +21,8 @@ public class MealCalendarEdit extends AppCompatActivity {
         setContentView(R.layout.activity_meal_calendar_edit);
 
         editMealName = findViewById(R.id.editMealName);
-        editMealName.setText(getIntent().getStringExtra("mealName"));
+        //TODO: add all getStringExtra
+        //editMealName.setText(getIntent().getStringExtra("mealName"));
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int width = dm.widthPixels;
