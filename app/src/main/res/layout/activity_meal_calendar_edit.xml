@@ -28,7 +28,7 @@
                 android:id="@+id/exitEditMeal"
                 android:layout_marginLeft="280dp"
                 android:layout_marginTop="32dp"
-                android:background="@mipmap/exit"/>
+                android:background="@drawable/exit"/>
 
         </RelativeLayout>
         <LinearLayout
@@ -92,11 +92,11 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/save" />
+                    android:background="@drawable/save" />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@mipmap/delete"/>
+                    android:background="@drawable/delete"/>
             </LinearLayout>
 
         </LinearLayout>
