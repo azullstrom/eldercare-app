@@ -20,18 +20,15 @@ public class Register extends AppCompatActivity {
 
     private TextInputEditText editTextEmail, editTextFirstName, editTextLastName, editTextPhoneNumber, editTextPassword;
     private Button registerButton;
-    private ProgressBar progressBar;
     private TextView textView;
-    private FirebaseAuth mAuth;
-    private DatabaseReference usersRef;
+    private DatabaseLib databaseLib;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mAuth = FirebaseAuth.getInstance();
-        usersRef = FirebaseDatabase.getInstance().getReference().child("caregiver-users");
+        databaseLib = new DatabaseLib(this);
 
         editTextEmail = findViewById(R.id.email);
         editTextFirstName = findViewById(R.id.firstname);
@@ -39,7 +36,6 @@ public class Register extends AppCompatActivity {
         editTextPhoneNumber = findViewById(R.id.phonenumber);
         editTextPassword = findViewById(R.id.password);
         registerButton = findViewById(R.id.registerButton);
-        progressBar = findViewById(R.id.progressBar);
         textView = findViewById(R.id.loginNow);
 
         textView.setOnClickListener(new View.OnClickListener() {
@@ -54,48 +50,17 @@ public class Register extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerUser();
+                String firstName = editTextFirstName.getText().toString();
+                String lastName = editTextLastName.getText().toString();
+                String email = editTextEmail.getText().toString();
+                String password = editTextPassword.getText().toString();
+                String phone = editTextPhoneNumber.getText().toString();
+                databaseLib.registerUser(firstName, lastName, email, password, phone, "", "caregiver");
+
+                Intent intent = new Intent(getApplicationContext(), Login.class);
+                startActivity(intent);
+                finish();
             }
         });
-    }
-
-    private void registerUser() {
-        progressBar.setVisibility(View.VISIBLE);
-        String email = editTextEmail.getText().toString().trim();
-        String firstName = editTextFirstName.getText().toString().trim();
-        String lastName = editTextLastName.getText().toString().trim();
-        String phoneNumber = editTextPhoneNumber.getText().toString().trim();
-        String password = editTextPassword.getText().toString();
-
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(firstName) ||
-                TextUtils.isEmpty(lastName) || TextUtils.isEmpty(phoneNumber) ||
-                TextUtils.isEmpty(password)) {
-            Toast.makeText(Register.this, "All fields are required", Toast.LENGTH_SHORT).show();
-            progressBar.setVisibility(View.GONE);
-            return;
-        }
-
-        // Create a new user with Firebase Authentication
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    if (task.isSuccessful()) {
-                        // User registration successful
-                        DatabaseReference userReference = usersRef.child(firstName);
-                        userReference.child("email").setValue(email);
-                        userReference.child("firstname").setValue(firstName);
-                        userReference.child("lastname").setValue(lastName);
-                        userReference.child("phone-number").setValue(phoneNumber);
-
-                        Toast.makeText(Register.this, "Registration Successful.", Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                        Intent intent = new Intent(getApplicationContext(), Login.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        // Registration failed
-                        Toast.makeText(Register.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        progressBar.setVisibility(View.GONE);
-                    }
-                });
     }
 }
