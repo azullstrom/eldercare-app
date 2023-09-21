@@ -6,13 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,26 +30,26 @@ import java.util.Date;
 public class MealCalendar extends AppCompatActivity{
 
     FirebaseAuth auth;
-    Button backButton;
+    ImageView backButton;
     FirebaseUser currentCareGiver;
     LinearLayout mealButtonsLayout;
-    FloatingActionButton addMealButton;
-    LinearLayout dimLayout;
+    ImageView addMealButton;
+    RelativeLayout dimLayout;
     DatabaseLib database;
     CalendarView calendar;
 
 
-    /** Animates activity color from startColor to endColor
+    /** Animates activity foreground alpha from startAlpha to endAlpha
      *
-     * @param startColor 
-     * @param endColor
+     * @param startAlpha
+     * @param endAlpha
      */
-    void animateActivityColor(int startColor, int endColor){
+    void animateActivityAlpha(int startAlpha, int endAlpha){
         ValueAnimator anim = new ValueAnimator();
-        anim.setIntValues(startColor, endColor);
+        anim.setIntValues(startAlpha, endAlpha);
         anim.setEvaluator(new ArgbEvaluator());
         anim.addUpdateListener(valueAnimator ->
-                dimLayout.setBackgroundColor((Integer)valueAnimator.getAnimatedValue()));
+                dimLayout.getForeground().setAlpha((Integer)valueAnimator.getAnimatedValue()));
         anim.setDuration(300);
         anim.start();
     }
@@ -81,10 +84,34 @@ public class MealCalendar extends AppCompatActivity{
      * @param meal the meal to create a button for
      */
     void createMealButton(Meal meal){
-        Button mealButton = new Button(this);
-        mealButton.setId(View.generateViewId());
-        mealButton.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1));
-        mealButton.setText(meal.getMealType() + ": " + meal.getToEat());
+        LinearLayout mealButton = new LinearLayout(this);
+        mealButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
+        mealButton.setBackgroundResource(R.drawable.meal_card);
+        mealButton.setOrientation(LinearLayout.VERTICAL);
+        mealButton.setPadding(60,50,0,40);
+
+        TextView mealType = new TextView(this);
+        switch (meal.getMealType()){
+            case "breakfast":
+                mealType.setText(R.string.breakfast);
+                break;
+            case "dinner":
+                mealType.setText(R.string.dinner);
+                break;
+            case "lunch":
+                mealType.setText(R.string.lunch);
+                break;
+        }
+        mealType.setTextSize(20);
+        mealType.setTextColor(Color.parseColor("#432c81"));
+        mealType.setPadding(0,0,0,10);
+        mealButton.addView(mealType);
+
+        TextView mealToEat = new TextView(this);
+        mealToEat.setText(meal.getToEat());
+        mealType.setTextColor(Color.parseColor("#7b6ba8"));
+        mealButton.addView(mealToEat);
+
         mealButtonsLayout.addView(mealButton);
         mealButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -95,7 +122,7 @@ public class MealCalendar extends AppCompatActivity{
                 intent.putExtra("mealTime", meal.getTime());
                 intent.putExtra("mealDate", meal.getDate());
                 intent.putExtra("mealType", meal.getMealType());
-                animateActivityColor(0xffffff, 0x80000000);
+                animateActivityAlpha(0, 255);
                 startActivity(intent);
             }
         });
@@ -129,6 +156,7 @@ public class MealCalendar extends AppCompatActivity{
         addMealButton = findViewById(R.id.addMealButton);
 
         dimLayout = findViewById(R.id.dimLayout);
+        dimLayout.getForeground().setAlpha(0);
         if (currentCareGiver == null) {
             Intent intent = new Intent(getApplicationContext(), ElderlyMainActivity.class);
             startActivity(intent);
@@ -149,6 +177,15 @@ public class MealCalendar extends AppCompatActivity{
                 Intent intent = new Intent(getApplicationContext(), CaregiverMainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        addMealButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MealCalendarAdd.class);
+                animateActivityAlpha(0, 255);
+                startActivity(intent);
             }
         });
 
@@ -188,6 +225,6 @@ public class MealCalendar extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
-        animateActivityColor(0x80000000, 0xffffff);
+        animateActivityAlpha(255, 0);
     }
 }

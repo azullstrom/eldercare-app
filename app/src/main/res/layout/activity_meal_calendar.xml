@@ -3,64 +3,75 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/dimLayout"
+    android:foreground="@drawable/dim"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dp"
-        android:id="@+id/dimLayout">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="35dp"
-            android:layout_height="25dp"
-            android:background="@drawable/arrow_back" />
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="40dp"
+                android:layout_width="35dp"
+                android:layout_height="25dp"
+                android:background="@drawable/arrow_back" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/back_to_patient_home_page"
+                android:textSize="18dp"
+                android:paddingLeft="10dp"/>
+        </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/back_to_patient_home"
-            android:textSize="20dp"/>
-    </LinearLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/meal_calendar"
-        android:textSize="30dp"
-        />
+            android:textAppearance="@style/your_patients"
+            android:text="@string/meal_calendar"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="25dp" />
 
-    <CalendarView
-        android:id="@+id/mealCalendar"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addMealButton"
+        <CalendarView
+            android:id="@+id/mealCalendar"
             android:layout_width="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@drawable/add"
-            android:layout_margin="16dp" />
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:id="@+id/mealButtonsLayout"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-        </LinearLayout>
-    </ScrollView>
-    </FrameLayout>
-    </LinearLayout>
+            android:background="#edecf4"
+            android:layout_marginTop="5dp" />
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#edecf4"
+            android:layout_marginTop="10dp">
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/mealButtonsLayout"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"/>
+            </ScrollView>
+        </FrameLayout>
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/addMealButton"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/add_button_no_lines"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"/>
 </RelativeLayout>
