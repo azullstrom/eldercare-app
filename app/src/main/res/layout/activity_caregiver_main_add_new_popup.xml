@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/elder_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter first name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/elder_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter last name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/elder_year_of_birth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter year of birth"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/elder_allergies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter allergies (if any)"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/confirm_new_elder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/confirm_new_elder" />
+
+</LinearLayout>
