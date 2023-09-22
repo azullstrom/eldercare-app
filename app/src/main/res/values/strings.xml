@@ -25,7 +25,7 @@
     <string name="edit_meal">Edit Meal</string>
     <string name="meal_name">Meal Name:</string>
     <string name="suggested_meals">Suggested Meals:</string>
-    <string name="mark_this_meal_as_eaten">Mark this meal as "Eaten"</string>
+    <string name="mark_this_meal_as_eaten">Mark this meal as \"Eaten\"</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
@@ -34,4 +34,6 @@
     <string name="dinner">Dinner</string>
     <string name="lunch">Lunch</string>
     <string name="add_meal">Add Meal</string>
+    <string name="meal_type">Meal Type:</string>
+    <string name="meal_to_eat">Meal to Eat:</string>
 </resources>

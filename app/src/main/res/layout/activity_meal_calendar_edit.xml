@@ -13,23 +13,20 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="20dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="120dp"
                 android:text="@string/edit_meal"
-                android:textSize="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_centerHorizontal="true"
-                />
+                android:theme="@style/your_patients"
+                android:textSize="30dp" />
             <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="300dp"
                 android:id="@+id/exitEditMeal"
-                android:layout_marginLeft="280dp"
-                android:layout_marginTop="32dp"
                 android:background="@drawable/exit"/>
-
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,19 +34,26 @@
             android:orientation="vertical">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/meal_name"
-                    android:textSize="25dp"/>
+                    android:theme="@style/your_patients"
+                    android:text="@string/meal_type"
+                    android:textSize="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="10dp"/>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="150dp">
+                    android:id="@+id/layoutMealType"
+                    android:layout_width="210dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="125dp"
+                    android:background="#ffffff"
+                    app:boxStrokeWidth="0dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editMealName"
+                        android:id="@+id/editMealType"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -57,21 +61,29 @@
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/suggested_meals"
-                    android:textSize="25dp"/>
+                    android:text="@string/meal_to_eat"
+                    android:theme="@style/your_patients"
+                    android:textSize="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"/>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="35dp">
+                    android:id="@+id/layoutMealToEat"
+                    android:layout_width="210dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="125dp"
+                    app:boxStrokeWidth="0dp"
+                    android:background="#ffffff">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/suggestedMeals"
+                        android:id="@+id/editMealToEat"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
+                        android:layout_height="wrap_content"
+                        android:hint="test"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
@@ -80,28 +92,55 @@
                 android:layout_height="wrap_content">
                 <CheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:id="@+id/eatenBox"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mark_this_meal_as_eaten"/>
             </LinearLayout>
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-                <ImageView
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/save" />
-                <ImageView
+                    android:id="@+id/saveButton">
+                    <ImageView
+                        android:layout_width="160dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/save"
+                        android:layout_marginRight="10dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/save"
+                        android:textColor="#ffffff"
+                        android:textSize="25dp"
+                        android:layout_marginLeft="65dp"
+                        android:layout_marginTop="7dp"/>
+                </RelativeLayout>
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/delete"/>
-            </LinearLayout>
-
+                    android:layout_marginLeft="200dp"
+                    android:id="@+id/deleteButton">
+                    <ImageView
+                        android:layout_width="160dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/delete"
+                        android:layout_marginRight="10dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/delete"
+                        android:textColor="#ffffff"
+                        android:textSize="25dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginTop="7dp"/>
+                </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
-
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

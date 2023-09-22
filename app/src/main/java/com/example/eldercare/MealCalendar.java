@@ -37,6 +37,7 @@ public class MealCalendar extends AppCompatActivity{
     RelativeLayout dimLayout;
     DatabaseLib database;
     CalendarView calendar;
+    String elderlyId;
 
 
     /** Animates activity foreground alpha from startAlpha to endAlpha
@@ -122,6 +123,7 @@ public class MealCalendar extends AppCompatActivity{
                 intent.putExtra("mealTime", meal.getTime());
                 intent.putExtra("mealDate", meal.getDate());
                 intent.putExtra("mealType", meal.getMealType());
+                intent.putExtra("elderlyId", elderlyId);
                 animateActivityAlpha(0, 255);
                 startActivity(intent);
             }
@@ -144,7 +146,7 @@ public class MealCalendar extends AppCompatActivity{
         setContentView(R.layout.activity_meal_calendar);
 
         //TODO: get elderlyId from intent.getExtra() from previous activity
-        String elderlyId = "Fredrik1919";
+        elderlyId = "Greger1922";
 
         auth = FirebaseAuth.getInstance();
         currentCareGiver = auth.getCurrentUser();
