@@ -94,10 +94,11 @@ public class DatabaseLib {
      * Adds an existing elderly to an existing caregiver in the database.
      *
      * @param firstNameElderly First name of the elderly in the database.
+     * @param yearOfBirthElderly Example: 1920
      * @param firstNameCaregiver First name of the caregiver in the database.
      */
-    public void assignElderlyToCaregiver(String firstNameElderly, String firstNameCaregiver) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+    public void assignElderlyToCaregiver(String firstNameElderly, String yearOfBirthElderly, String firstNameCaregiver) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,7 +110,7 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Assign the elderly to the caregiver by updating caregiver's node
-                                caregiverRef.child("assigned-elderly").child(firstNameElderly).setValue(true);
+                                caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirthElderly.trim()).setValue(true);
                                 Toast.makeText(context, "Successfully assigned!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
@@ -147,7 +148,7 @@ public class DatabaseLib {
      * @param yearOfBirth Example: 1900
      */
     public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -161,7 +162,7 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Assign the elderly to the caregiver by updating caregiver's node
-                                caregiverRef.child("assigned-elderly").child(firstNameElderly).setValue(true);
+                                caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
                                 registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, yearOfBirth, "elderly");
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -189,9 +190,10 @@ public class DatabaseLib {
      * Removes an existing elderly from an existing caregiver in the database.
      *
      * @param firstNameElderly First name of the elderly in the database.
+     * @param yearOfBirthElderly Example: 1920
      * @param firstNameCaregiver First name of the caregiver in the database.
      */
-    public void removeElderlyFromCaregiver(String firstNameElderly, String firstNameCaregiver) {
+    public void removeElderlyFromCaregiver(String firstNameElderly, String yearOfBirthElderly, String firstNameCaregiver) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
 
@@ -204,7 +206,7 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Remove the elderly from the caregiver's assigned-elderly node
-                                caregiverRef.child("assigned-elderly").child(firstNameElderly).removeValue();
+                                caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirthElderly.trim()).removeValue();
                                 Toast.makeText(context, "Successfully removed!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
@@ -235,17 +237,18 @@ public class DatabaseLib {
      *
      * @param toEat Example: "hamburger"
      * @param firstNameElderly First name of the elderly in the database
+     * @param yearOfBirthElderly Example: 1920
      * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void addMealToElderly(String toEat, String firstNameElderly, String date, String time, String mealType) {
+    public void addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
         if(!isMealParamFormattedCorrectly(mealType, date, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -289,16 +292,17 @@ public class DatabaseLib {
      * Removes a meal for an elderly in the database.
      *
      * @param firstNameElderly First name of the elderly in the database
+     * @param yearOfBirthElderly Example: 1920
      * @param date             Formatting: YYYY-MM-DD
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void removeMealFromElderly(String firstNameElderly, String date, String mealType) {
+    public void removeMealFromElderly(String firstNameElderly, String yearOfBirthElderly, String date, String mealType) {
         if(!isMealParamFormattedCorrectly(mealType, date)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -352,17 +356,18 @@ public class DatabaseLib {
      *
      * @param toEat Example: "pizza"
      * @param firstNameElderly First name of the elderly in the database
+     * @param yearOfBirthElderly Example: 1920
      * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void setToEat(String toEat, String firstNameElderly, String date, String time, String mealType) {
+    public void setToEat(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
         if(!isMealParamFormattedCorrectly(mealType, date, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
