@@ -30,4 +30,10 @@
     <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
     <string name="enter_elderly_email">Enter elderly email</string>
+    <string name="back_to_patients_list">Back to Patients list</string>
+    <string name="patient_name_placeholder">Patient Name</string>
+    <string name="meals">Meals</string>
+    <string name="allergies">Allergies</string>
+    <string name="alert_history">Alert History</string>
+    <string name="elderly_settings">Elderly Settings</string>
 </resources>
