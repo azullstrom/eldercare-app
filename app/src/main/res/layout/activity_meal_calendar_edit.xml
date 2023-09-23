@@ -35,27 +35,28 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_marginTop="10dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:theme="@style/your_patients"
                     android:text="@string/meal_type"
                     android:textSize="20dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginLeft="10dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutMealType"
                     android:layout_width="210dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="125dp"
-                    android:background="#ffffff"
+                    android:background="@drawable/rounded_edit_text"
                     app:boxStrokeWidth="0dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editMealType"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:background="#00000000"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
@@ -69,21 +70,21 @@
                     android:text="@string/meal_to_eat"
                     android:theme="@style/your_patients"
                     android:textSize="20dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="10dp"/>
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/layoutMealToEat"
                     android:layout_width="210dp"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="125dp"
-                    app:boxStrokeWidth="0dp"
-                    android:background="#ffffff">
+                    android:background="@drawable/rounded_edit_text"
+                    app:boxStrokeWidth="0dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/editMealToEat"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="test"/>
+                        android:background="#00000000"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>

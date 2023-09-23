@@ -36,4 +36,6 @@
     <string name="add_meal">Add Meal</string>
     <string name="meal_type">Meal Type:</string>
     <string name="meal_to_eat">Meal to Eat:</string>
+    <string name="please_enter_all_info">Please Enter All Info</string>
+    <string name="error">Error: Please Try Again</string>
 </resources>

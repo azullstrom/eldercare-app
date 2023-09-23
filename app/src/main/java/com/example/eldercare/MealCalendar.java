@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -37,13 +37,14 @@ public class MealCalendar extends AppCompatActivity{
     RelativeLayout dimLayout;
     DatabaseLib database;
     CalendarView calendar;
-    String elderlyId;
+    String elderlyName, elderlyYear;
+    String selectedDate;
 
 
     /** Animates activity foreground alpha from startAlpha to endAlpha
      *
-     * @param startAlpha
-     * @param endAlpha
+     * @param startAlpha value between 0-255 where 0 is transparent and 255 is opaque
+     * @param endAlpha   value between 0-255 where 0 is transparent and 255 is opaque
      */
     void animateActivityAlpha(int startAlpha, int endAlpha){
         ValueAnimator anim = new ValueAnimator();
@@ -55,19 +56,22 @@ public class MealCalendar extends AppCompatActivity{
         anim.start();
     }
 
-    /** Displays in a linearview buttons for all the meals an elderly has that date
+    /** Displays buttons in a linear view for all the meals an elderly has that date
      *
-     * @param elderlyId the elderly of which meals to display
+     * @param elderlyName the name of the elderly
+     * @param elderlyYear the year which the elderly is born
      * @param date the date of which meals to display
      */
-    void displayMealsDate(String elderlyId, String date){
+    void displayMealsDate(String elderlyName, String elderlyYear, String date){
+        mealButtonsLayout.removeAllViews();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("elderly-users/" + elderlyId + "/meals/" + date);
+        DatabaseReference ref = database.getReference("elderly-users/" + elderlyName + elderlyYear + "/meals/" + date);
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //TODO: should meals have id? Right now there can only be one meal in each mealtype
+                //TODO: should meals have id? Right now there can only be one meal in each mealType
+                //
                 for (DataSnapshot mealTypeSnapshot: snapshot.getChildren()){
                     Meal meal = mealTypeSnapshot.getValue(Meal.class);
                     createMealButton(meal);
@@ -75,7 +79,7 @@ public class MealCalendar extends AppCompatActivity{
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                //TODO: add toast to show failure to find mealtype
+                Toast.makeText(MealCalendar.this, R.string.error, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -114,19 +118,16 @@ public class MealCalendar extends AppCompatActivity{
         mealButton.addView(mealToEat);
 
         mealButtonsLayout.addView(mealButton);
-        mealButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MealCalendarEdit.class);
-                //TODO: change so that meal class is converted to json and send json file instead
-                intent.putExtra("mealToEat", meal.getToEat());
-                intent.putExtra("mealTime", meal.getTime());
-                intent.putExtra("mealDate", meal.getDate());
-                intent.putExtra("mealType", meal.getMealType());
-                intent.putExtra("elderlyId", elderlyId);
-                animateActivityAlpha(0, 255);
-                startActivity(intent);
-            }
+        mealButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), MealCalendarEdit.class);
+            intent.putExtra("mealToEat", meal.getToEat());
+            intent.putExtra("mealTime", meal.getTime());
+            intent.putExtra("mealDate", meal.getDate());
+            intent.putExtra("mealType", meal.getMealType());
+            intent.putExtra("elderlyName", elderlyName);
+            intent.putExtra("elderlyYear", elderlyYear);
+            animateActivityAlpha(0, 255);
+            startActivity(intent);
         });
     }
 
@@ -145,8 +146,10 @@ public class MealCalendar extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar);
 
-        //TODO: get elderlyId from intent.getExtra() from previous activity
-        elderlyId = "Greger1922";
+        //TODO: get elderlyName/year from intent.getExtra() from previous activity
+        elderlyName = "Greger";
+        elderlyYear = "1922";
+
 
         auth = FirebaseAuth.getInstance();
         currentCareGiver = auth.getCurrentUser();
@@ -157,6 +160,8 @@ public class MealCalendar extends AppCompatActivity{
         calendar = findViewById(R.id.mealCalendar);
         addMealButton = findViewById(R.id.addMealButton);
 
+        selectedDate = getCalendarDate();
+
         dimLayout = findViewById(R.id.dimLayout);
         dimLayout.getForeground().setAlpha(0);
         if (currentCareGiver == null) {
@@ -165,13 +170,13 @@ public class MealCalendar extends AppCompatActivity{
             finish();
         }
 
-        displayMealsDate(elderlyId, getCalendarDate());
+        displayMealsDate(elderlyName, elderlyYear, getCalendarDate());
 
         backButton.setOnClickListener(new View.OnClickListener() {
             /**
              * Return to patient home when pressing back button
              *
-             * @param view viewobject
+             * @param view view object
              */
             @Override
             public void onClick(View view) {
@@ -182,27 +187,25 @@ public class MealCalendar extends AppCompatActivity{
             }
         });
 
-        addMealButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MealCalendarAdd.class);
-                animateActivityAlpha(0, 255);
-                startActivity(intent);
-            }
+        addMealButton.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), MealCalendarAdd.class);
+            intent.putExtra("elderlyName", elderlyName);
+            intent.putExtra("elderlyYear", elderlyYear);
+            animateActivityAlpha(0, 255);
+            startActivity(intent);
         });
 
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             /**
              * Changes the displayed meals when a new date is selected
              *
-             * @param calendarView Calendarobject
+             * @param calendarView Calendar object
              * @param i selected year from calendar
              * @param i1 selected month from calendar
              * @param i2 selected day from calendar
              */
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                mealButtonsLayout.removeAllViews();
                 String date = i + "-";
 
                 //Weird bug where i1 (month) is -1 what its supposed to be
@@ -216,7 +219,8 @@ public class MealCalendar extends AppCompatActivity{
                     date += 0;
                 }
                 date += i2;
-                displayMealsDate(elderlyId, date);
+                selectedDate = date;
+                displayMealsDate(elderlyName, elderlyYear, date);
             }
         });
     }
@@ -228,5 +232,6 @@ public class MealCalendar extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         animateActivityAlpha(255, 0);
+        displayMealsDate(elderlyName, elderlyYear, selectedDate);
     }
 }
