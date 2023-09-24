@@ -65,7 +65,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/Meals_img"
+                android:src="@drawable/meals_img"
                 android:contentDescription="@string/meals"
                 />
 
@@ -95,7 +95,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/Allergies_img"
+                android:src="@drawable/allergies_img"
                 android:contentDescription="@string/allergies"
                 />
 
@@ -125,7 +125,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/Alert_img"
+                android:src="@drawable/alert_img"
                 android:contentDescription="@string/alert_history"
                 />
 
@@ -156,7 +156,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/elderly_settings"
-                android:src="@drawable/Elderly_Settings_img"
+                android:src="@drawable/elderly_settings_img"
                 tools:ignore="ImageContrastCheck" />
 
         </LinearLayout>
