@@ -18,6 +18,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         patientNameTextView = findViewById(R.id.patient_name_placeholder);
         // Expecting to send name and dateOfBirth when anybody calls this activity/class
         String elderlyName = getIntent().getStringExtra("elderlyName");
+        String dateOfBirth = getIntent().getStringExtra("dateOfBirth");
         patientNameTextView.setText(elderlyName);
 
 

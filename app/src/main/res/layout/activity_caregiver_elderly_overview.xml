@@ -8,6 +8,8 @@
     android:padding="15dp">
     <!-- Arrow & text to go back to the previous page -->
     <LinearLayout
+        android:id="@+id/backToPatientsList"
+        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -43,6 +45,8 @@
             android:paddingBottom="15dp"/>
         <!-- Meals Card -->
         <LinearLayout
+            android:id="@+id/mealsCard"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -73,6 +77,8 @@
 
         <!-- Allergies Card -->
         <LinearLayout
+            android:id="@+id/allergiesCard"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -103,6 +109,8 @@
 
         <!-- Alert History Card -->
         <LinearLayout
+            android:id="@+id/alertHistoryCard"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -133,6 +141,8 @@
 
         <!-- Elderly Settings Card -->
         <LinearLayout
+            android:id="@+id/elderlySettingsCard"
+            android:clickable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
