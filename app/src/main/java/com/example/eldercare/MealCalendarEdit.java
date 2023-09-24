@@ -1,8 +1,8 @@
 package com.example.eldercare;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -13,16 +13,12 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class MealCalendarEdit extends AppCompatActivity {
-
     TextInputEditText editMealType, editMealToEat;
-
     TextInputLayout layoutMealToEat, layoutMealType;
     ImageView exit;
-
     RelativeLayout saveButton, deleteButton;
     CheckBox eatenBox;
-
-    String mealToEat, mealTime, mealDate, mealType;
+    Meal meal;
     String typeInput, eatInput, elderlyName, elderlyYear;
     DatabaseLib database;
     int width, height;
@@ -30,14 +26,13 @@ public class MealCalendarEdit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar_edit);
-
         database = new DatabaseLib(this);
+        meal = new Meal();
 
-
-        mealToEat = getIntent().getStringExtra("mealToEat");
-        mealTime = getIntent().getStringExtra("mealTime");
-        mealDate = getIntent().getStringExtra("mealDate");
-        mealType = getIntent().getStringExtra("mealType");
+        meal.setToEat(getIntent().getStringExtra("mealToEat"));
+        meal.setTime(getIntent().getStringExtra("mealTime"));
+        meal.setDate(getIntent().getStringExtra("mealDate"));
+        meal.setMealType(getIntent().getStringExtra("mealType"));
         elderlyYear = getIntent().getStringExtra("elderlyYear");
         elderlyName = getIntent().getStringExtra("elderlyName");
 
@@ -49,8 +44,8 @@ public class MealCalendarEdit extends AppCompatActivity {
         deleteButton = findViewById(R.id.deleteButton);
         eatenBox = findViewById(R.id.eatenBox);
 
-        layoutMealType.setHint(mealType);
-        layoutMealToEat.setHint(mealToEat);
+        layoutMealType.setHint(meal.getMealType());
+        layoutMealToEat.setHint(meal.getToEat());
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
@@ -65,28 +60,32 @@ public class MealCalendarEdit extends AppCompatActivity {
             typeInput = String.valueOf(editMealType.getText());
             eatInput = String.valueOf(editMealToEat.getText());
             if(typeInput.matches("")){
-                typeInput = mealType;
+                typeInput = meal.getMealType();
             }
             if(eatInput.matches("")){
-                eatInput = mealToEat;
+                eatInput = meal.getToEat();
             }
-            //We have changed something, need to update meal
-            if(!eatInput.matches(mealToEat)){
-                database.setToEat(eatInput, elderlyName, elderlyYear, mealDate, mealTime, mealType);
+            if(!eatInput.matches(meal.getToEat())){
+                database.setToEat(eatInput, elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
             }
-            if(!typeInput.matches(mealType)){
+            if(!typeInput.matches(meal.getMealType())){
                 //TODO: set meal type to new type, not added in database api yet
             }
             finish();
         });
         deleteButton.setOnClickListener(view -> {
             //TODO: add confirmation to delete
-            database.removeMealFromElderly(elderlyName, elderlyYear, mealDate, mealType);
+            Intent intent = new Intent(getApplicationContext(), MealCalendarConfirmDelete.class);
+            intent.putExtra("elderlyName", elderlyName);
+            intent.putExtra("elderlyYear", elderlyYear);
+            intent.putExtra("mealDate", meal.getDate());
+            intent.putExtra("mealType", meal.getMealType());
+            startActivity(intent);
             finish();
         });
 
         eatenBox.setOnClickListener(view -> {
-            //TODO: set eaten to true/false, not added in database structure yet "EATEN"
+            //TODO: set eaten to true/false, not added in database structure yet
         });
     }
 }

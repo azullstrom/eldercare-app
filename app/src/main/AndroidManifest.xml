@@ -15,9 +15,13 @@
         android:theme="@style/Theme.ElderCare"
         tools:targetApi="31">
         <activity
-            android:name=".MealCalendarAdd"
+            android:name=".MealCalendarConfirmDelete"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity
+            android:name=".MealCalendarAdd"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".MealCalendarEdit"
             android:exported="false"

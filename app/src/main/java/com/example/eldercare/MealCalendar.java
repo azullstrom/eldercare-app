@@ -8,7 +8,6 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ImageView;
@@ -28,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MealCalendar extends AppCompatActivity{
-
     FirebaseAuth auth;
     ImageView backButton;
     FirebaseUser currentCareGiver;
@@ -39,8 +37,7 @@ public class MealCalendar extends AppCompatActivity{
     CalendarView calendar;
     String elderlyName, elderlyYear;
     String selectedDate;
-
-
+    
     /** Animates activity foreground alpha from startAlpha to endAlpha
      *
      * @param startAlpha value between 0-255 where 0 is transparent and 255 is opaque
@@ -172,19 +169,11 @@ public class MealCalendar extends AppCompatActivity{
 
         displayMealsDate(elderlyName, elderlyYear, getCalendarDate());
 
-        backButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Return to patient home when pressing back button
-             *
-             * @param view view object
-             */
-            @Override
-            public void onClick(View view) {
-                //TODO: Change intent to patient home page
-                Intent intent = new Intent(getApplicationContext(), CaregiverMainActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        backButton.setOnClickListener(view -> {
+            //TODO: Change intent to patient home page
+            Intent intent = new Intent(getApplicationContext(), CaregiverMainActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         addMealButton.setOnClickListener(view -> {
@@ -195,33 +184,22 @@ public class MealCalendar extends AppCompatActivity{
             startActivity(intent);
         });
 
-        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            /**
-             * Changes the displayed meals when a new date is selected
-             *
-             * @param calendarView Calendar object
-             * @param i selected year from calendar
-             * @param i1 selected month from calendar
-             * @param i2 selected day from calendar
-             */
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                String date = i + "-";
+        calendar.setOnDateChangeListener((calendarView, i, i1, i2) -> {
+            String date = i + "-";
 
-                //Weird bug where i1 (month) is -1 what its supposed to be
-                i1 += 1;
+            //Weird bug where i1 (month) is -1 what its supposed to be
+            i1 += 1;
 
-                if(i1 < 10){
-                    date += 0;
-                }
-                date += i1 + "-";
-                if(i2 < 10){
-                    date += 0;
-                }
-                date += i2;
-                selectedDate = date;
-                displayMealsDate(elderlyName, elderlyYear, date);
+            if(i1 < 10){
+                date += 0;
             }
+            date += i1 + "-";
+            if(i2 < 10){
+                date += 0;
+            }
+            date += i2;
+            selectedDate = date;
+            displayMealsDate(elderlyName, elderlyYear, date);
         });
     }
 

@@ -1,10 +1,8 @@
 package com.example.eldercare;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.View;
 import android.widget.CalendarView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -20,7 +18,8 @@ public class MealCalendarAdd extends AppCompatActivity {
     TimePicker timePicker;
     RelativeLayout addMealButton;
     ImageView exitButton;
-    String mealToEat, mealType, mealTime, mealDate, elderlyName, elderlyYear;
+    Meal meal;
+    String elderlyName, elderlyYear;
     DatabaseLib database;
     int width, height;
     @Override
@@ -42,86 +41,51 @@ public class MealCalendarAdd extends AppCompatActivity {
 
         timePicker.setIs24HourView(true);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        mealDate = df.format(Calendar.getInstance().getTime());
-        mealTime = timePicker.getHour() + ":" + timePicker.getMinute();
+        
+        meal = new Meal();
+        meal.setDate(df.format(Calendar.getInstance().getTime()));
+        meal.setTime(timePicker.getHour() + ":" + timePicker.getMinute());
 
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Exits the activity and goes back to mealCalendar
-             * @param view view object
-             */
-            @Override
-            public void onClick(View view) {
-                finish();
+        exitButton.setOnClickListener(view -> finish());
+
+        addMealButton.setOnClickListener(view -> {
+            meal.setMealType(String.valueOf(editAddMealType.getText()));
+            meal.setToEat(String.valueOf(editMealName.getText()));
+            if(meal.getToEat().matches("") || meal.getMealType().matches("")){
+                Toast.makeText(MealCalendarAdd.this, R.string.please_enter_all_info, Toast.LENGTH_SHORT).show();
+                return;
             }
+            database.addMealToElderly(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
+            finish();
         });
 
-        addMealButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Adds a meal to the database
-             * @param view view object
-             */
-            @Override
-            public void onClick(View view) {
-                mealType = String.valueOf(editAddMealType.getText());
-                mealToEat = String.valueOf(editMealName.getText());
-                if(mealToEat.matches("") || mealType.matches("")){
-                    Toast.makeText(MealCalendarAdd.this, R.string.please_enter_all_info, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                database.addMealToElderly(mealToEat, elderlyName, elderlyYear, mealDate, mealTime, mealType);
-                finish();
+        timePicker.setOnTimeChangedListener((timePicker, i, i1) -> {
+            String time = "";
+            if(i < 10){
+                time += "0";
             }
+            time += i + ":";
+            if(i1 < 10){
+                time +=  "0";
+            }
+            time += i1;
+            meal.setTime(time);
         });
+        addMealCalendar.setOnDateChangeListener((calendarView, i, i1, i2) -> {
+            String date = i + "-";
 
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
-            /**
-             * Sets the selected time to mealTime in the format "hh:mm"
-             *
-             * @param timePicker timePicker object
-             * @param i selected hour from timepicker
-             * @param i1 selected minutes from timepicker
-             */
-            @Override
-            public void onTimeChanged(TimePicker timePicker, int i, int i1) {
-                String time = "";
-                if(i < 10){
-                    time += "0";
-                }
-                time += i + ":";
-                if(i1 < 10){
-                    time +=  "0";
-                }
-                time += i1;
-                mealTime = time;
+            //Weird bug where i1 (month) is -1 what its supposed to be
+            i1 += 1;
+
+            if(i1 < 10){
+                date += 0;
             }
-        });
-        addMealCalendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            /**
-             * Sets the selected date to mealDate in the format "yyyy-MM-dd"
-             *
-             * @param calendarView Calendar object
-             * @param i selected year from calendar
-             * @param i1 selected month from calendar
-             * @param i2 selected day from calendar
-             */
-            @Override
-            public void onSelectedDayChange(@NonNull CalendarView calendarView, int i, int i1, int i2) {
-                String date = i + "-";
-
-                //Weird bug where i1 (month) is -1 what its supposed to be
-                i1 += 1;
-
-                if(i1 < 10){
-                    date += 0;
-                }
-                date += i1 + "-";
-                if(i2 < 10){
-                    date += 0;
-                }
-                date += i2;
-                mealDate = date;
+            date += i1 + "-";
+            if(i2 < 10){
+                date += 0;
             }
+            date += i2;
+            meal.setDate(date);
         });
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

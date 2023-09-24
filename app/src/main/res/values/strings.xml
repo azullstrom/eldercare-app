@@ -38,4 +38,5 @@
     <string name="meal_to_eat">Meal to Eat:</string>
     <string name="please_enter_all_info">Please Enter All Info</string>
     <string name="error">Error: Please Try Again</string>
+    <string name="delete_this_meal">Delete This Meal?</string>
 </resources>
