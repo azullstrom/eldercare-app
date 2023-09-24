@@ -498,9 +498,7 @@ public class DatabaseLib {
                                 intent = new Intent(context, ElderlyMainActivity.class);
 
                             } else {
-                                //TODO: remove just for testing
-                                intent = new Intent(context, MealCalendar.class);
-                                //intent = new Intent(context, CaregiverMainActivity.class);
+                                intent = new Intent(context, CaregiverMainActivity.class);
                             }
                             context.startActivity(intent);
 
