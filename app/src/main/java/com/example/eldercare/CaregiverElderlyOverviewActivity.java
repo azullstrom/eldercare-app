@@ -12,7 +12,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
     // Strings to store the date of birth and elderly/patient name
     private String elderlyName;
     private String dateOfBirth;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,8 +39,8 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
 
         // OnClickListener for the backToPatientListLinearLayout
         backToPatientListLinearLayout.setOnClickListener(v -> {
-            // Start CaregiverMainActivity
-            startTargetActivity(CaregiverMainActivity.class);
+            // Close and finish the current activity
+            finish();
         });
 
         // OnClickListener for the mealCardLinearLayout
@@ -78,6 +78,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         intent.putExtra("elderlyName", elderlyName);
         intent.putExtra("dateOfBirth", dateOfBirth);
         startActivity(intent);
+
     }
 
 }
