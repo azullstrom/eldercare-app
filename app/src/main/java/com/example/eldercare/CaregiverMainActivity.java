@@ -16,7 +16,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caregiver_main);
 
-
         //Things that Will be moved somewhere else
         TextView welcomeTextView = findViewById(R.id.your_patients);
         welcomeTextView.setText("Your Patients");
