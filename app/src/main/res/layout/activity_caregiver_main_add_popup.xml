@@ -6,14 +6,14 @@
     android:padding="16dp">
 
     <Button
-        android:id="@+id/add_new_elder"
+        android:id="@+id/add_new_elder_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/add_new_elder_text" />
 
     <Button
-        android:id="@+id/add_existing_elder"
+        android:id="@+id/add_existing_elder_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -19,20 +19,21 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
     /*******************************************************
      * TODO:
-     *  - Complete the textfield for add new elder
-     *  - Error handling in the textfields (no empty spaces, numbers etc)
+     *  - Error handling in the textfields (no empty spaces, numbers etc)?
      *  - Link the input to database
      *  - Add existing elder functionality
      *
      *
      ******************************************************/
 
+    DatabaseLib databaseLib = new DatabaseLib(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caregiver_main);
 
-        //Things that Will be moved somewhere else
+        //Things that Will be moved somewhere else?
         TextView welcomeTextView = findViewById(R.id.your_patients);
         welcomeTextView.setText("Your Patients");
         ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
@@ -43,7 +44,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addNewOrExistingAlertDialog();
+                addNewOrExistingPatientAlertDialog();
             }
         });
 
@@ -58,20 +59,20 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
 
     //AlertDialog-method (When pressing plus ImageButton)
-    private void addNewOrExistingAlertDialog() {
+    private void addNewOrExistingPatientAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.activity_caregiver_main_add_popup, null);
 
-        Button addNewElderButton = dialogView.findViewById(R.id.add_new_elder);
-        Button addExistingElderButton = dialogView.findViewById(R.id.add_existing_elder);
+        Button addNewElderButton = dialogView.findViewById(R.id.add_new_elder_button);
+        Button addExistingElderButton = dialogView.findViewById(R.id.add_existing_elder_button);
 
 
         builder.setView(dialogView);
         AlertDialog addNewOrExistingAlertDialog = builder.create();
+
         //**
         //Code below changes the dimension and position of the dialog box.
-        //Feels too complicated(?)
         //Should probably be abstracted away in a function
         //**
         Window window = addNewOrExistingAlertDialog.getWindow();
@@ -93,7 +94,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
         addExistingElderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Add existing elder
+                //TODO Add existing elder
             }
         });
 
@@ -106,9 +107,13 @@ public class CaregiverMainActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.activity_caregiver_main_add_new_popup, null);
 
+        EditText caregiverFirstName = dialogView.findViewById(R.id.caregiver_first_name);
         EditText elderFirstName = dialogView.findViewById(R.id.elder_first_name);
         EditText elderLastName = dialogView.findViewById(R.id.elder_last_name);
         EditText elderYearOfBirth = dialogView.findViewById(R.id.elder_year_of_birth);
+        EditText elderEmail = dialogView.findViewById(R.id.elder_email);
+        EditText elderPinCode = dialogView.findViewById(R.id.elder_pin_code);
+        EditText elderPhoneNumber = dialogView.findViewById(R.id.elder_phone_number);
         EditText elderAllergies = dialogView.findViewById(R.id.elder_allergies);
         Button confirmNewElderButton = dialogView.findViewById(R.id.confirm_new_elder);
 
@@ -124,6 +129,26 @@ public class CaregiverMainActivity extends AppCompatActivity {
             layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(layoutParams);
         }
+
+        confirmNewElderButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                /*TODO:
+                 * Check for empty fields -> input to database
+                 */
+                databaseLib.assignAndCreateNewElderlyToCaregiver(
+                        elderFirstName.getText().toString().trim(),
+                        elderLastName.getText().toString().trim(),
+                        caregiverFirstName.getText().toString().trim(),
+                        elderEmail.getText().toString().trim(),
+                        elderPinCode.getText().toString().trim(),
+                        elderPhoneNumber.getText().toString().trim(),
+                        elderYearOfBirth.getText().toString().trim());
+
+                addNewElderAlertDialog.dismiss();
+            }
+        });
         addNewElderAlertDialog.show();
     }
 }

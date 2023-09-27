@@ -9,14 +9,21 @@
         android:id="@+id/elder_first_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter first name"
+        android:hint="Enter elder first name"
         android:inputType="textPersonName" />
 
     <EditText
         android:id="@+id/elder_last_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter last name"
+        android:hint="Enter elder last name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/caregiver_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your first name"
         android:inputType="textPersonName" />
 
     <EditText
@@ -24,6 +31,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Enter year of birth"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/elder_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the elder email"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/elder_pin_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter new elder pin"
+        android:inputType="numberPassword" />
+
+    <EditText
+        android:id="@+id/elder_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the elder phone number"
         android:inputType="number" />
 
     <EditText
