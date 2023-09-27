@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class DatabaseLib {
@@ -147,8 +148,9 @@ public class DatabaseLib {
      * @param pin Elderlys new 6-digit PIN code. Example: 123456
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1900
+     * @param allergies String list of allergies. Call like this: Arrays.asList("peanuts", "shrimp")
      */
-    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth) {
+    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth, List<String> allergies) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
 
@@ -165,6 +167,7 @@ public class DatabaseLib {
                                 // Assign the elderly to the caregiver by updating caregiver's node
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
                                 registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, yearOfBirth, "elderly");
+                                elderlyRef.child("allergies").setValue(allergies);
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
