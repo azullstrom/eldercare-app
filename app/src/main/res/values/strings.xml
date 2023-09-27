@@ -45,4 +45,7 @@
     <string name="please_enter_all_info">Please Enter All Info</string>
     <string name="error">Error: Please Try Again</string>
     <string name="delete_this_meal">Delete This Meal?</string>
+    <string name="elderlySettings">Elderly Settings</string>
+    <string name="language">Language</string>
+    <string name="name">Name: </string>
 </resources>

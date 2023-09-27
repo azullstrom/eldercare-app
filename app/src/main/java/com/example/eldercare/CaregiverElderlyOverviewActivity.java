@@ -40,7 +40,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // OnClickListener for the backToPatientListLinearLayout
         backToPatientListLinearLayout.setOnClickListener(v -> {
             // Start CaregiverMainActivity
-            startTargetActivity(CaregiverMainActivity.class);
+            finish();
         });
 
         // OnClickListener for the mealCardLinearLayout
@@ -66,8 +66,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // OnClickListener for the elderlySettingsCardLinearLayout
         elderlySettingsCardLinearLayout.setOnClickListener(v -> {
             // Start elderlySettings activity
-            // TODO: waiting for the elderlySettings class
-            // startTargetActivity(elderlySettings.class);
+            startTargetActivity(CaregiverElderlySettingsActivity.class);
         });
 
     }
