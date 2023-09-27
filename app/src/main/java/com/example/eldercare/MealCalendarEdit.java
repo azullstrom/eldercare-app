@@ -69,7 +69,7 @@ public class MealCalendarEdit extends AppCompatActivity {
 
         exit = findViewById(R.id.exitEditMeal);
         exit.setOnClickListener(view -> finish());
-        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(getResources().getString(R.string.breakfast), getResources().getString(R.string.lunch), getResources().getString(R.string.dinner)));
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner"));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealType.setAdapter(arrayAdapter);
@@ -120,9 +120,7 @@ public class MealCalendarEdit extends AppCompatActivity {
                 database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
             }
             if(!typeInput.matches(meal.getMealType())){
-                //TODO: set meal type to new type, not added in database api yet
-                //database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType(), typeInput);
-
+                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType(), typeInput);
             }
             finish();
         });
