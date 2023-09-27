@@ -66,8 +66,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // OnClickListener for the elderlySettingsCardLinearLayout
         elderlySettingsCardLinearLayout.setOnClickListener(v -> {
             // Start elderlySettings activity
-            // TODO: waiting for the elderlySettings class
-            // startTargetActivity(elderlySettings.class);
+            startTargetActivity(CaregiverElderlySettingsActivity.class);
         });
 
     }
