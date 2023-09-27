@@ -36,9 +36,7 @@ public class Login extends AppCompatActivity {
     DatabaseLib databaseLib;
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
+    public void onStart() { super.onStart(); }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

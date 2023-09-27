@@ -46,10 +46,11 @@ public class DatabaseLib {
      * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
      *
      * @param firstNameElderly First name of the elderly in the database.
+     * @param yearOfBirth Example: 1920
      * @param callback Async. Add new ValueEventListener() {} and follow the automated functions.
      */
-    public void getElderlyDataSnapshot(String firstNameElderly, ValueEventListener callback) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+    public void getElderlyDataSnapshot(String firstNameElderly, String yearOfBirth, ValueEventListener callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
