@@ -144,8 +144,8 @@ public class MealCalendar extends AppCompatActivity{
         setContentView(R.layout.activity_meal_calendar);
 
         //TODO: get elderlyName/year from intent.getExtra() from previous activity
-        elderlyName = "Greger";
-        elderlyYear = "1922";
+        elderlyName = "Fredrik";
+        elderlyYear = "1919";
 
 
         auth = FirebaseAuth.getInstance();
