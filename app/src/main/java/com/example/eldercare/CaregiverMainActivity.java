@@ -4,16 +4,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +50,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private boolean eldersExist = true;
+    LinearLayout eldersContainer;
 
 
     @Override
@@ -63,40 +67,22 @@ public class CaregiverMainActivity extends AppCompatActivity {
         String currentUserLoggedIn = currentUser.getEmail();
 
 
-        /*  Gets the assigned elders data   */
+        /*  Checks if the caregiver has any elders assigned   */
         databaseLib.getAssignedElderlyDataSnapshot("Bengan", new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChildren()) {
-                    JSONObject json = databaseLib.convertSnapshotToJson(snapshot);
-                    try {
-                        // Iterate over the keys in the JSON object
-                        Iterator<String> keys = json.keys();
-                        while (keys.hasNext()) {
-                            String key = keys.next();
-                            Object value = json.get(key);
-
-                            // Print the key and its corresponding value
-                            System.out.println("Key: " + key);
-                            System.out.println("Value: " + value);
-                        }
-                        updateUI(eldersExist);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    eldersExist = true;
                 } else {
                     eldersExist = false;
-                    updateUI(eldersExist);
                 }
+                updateUI(eldersExist);
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
-
         //Plus (i.e add) button listener
         addPatientButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,12 +92,66 @@ public class CaregiverMainActivity extends AppCompatActivity {
         });
     }
 
+    private void eldersIterator() {
+        eldersContainer = findViewById(R.id.eldersContainer);
+        eldersContainer.removeAllViews();
+        List<String> elderKeys = new ArrayList<>();
+        databaseLib.getAssignedElderlyDataSnapshot("Bengan", new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                JSONObject json = databaseLib.convertSnapshotToJson(snapshot);
+
+                try {
+                    // Iterate over the keys in the JSON object
+                    Iterator<String> keys = json.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        Object value = json.get(key);
+                        elderKeys.add(key);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                int index = 0;
+                for(String elderKey : elderKeys) {
+                    Button elderButton = new Button(CaregiverMainActivity.this);
+                    elderButton.setText(elderKey);
+                    elderButton.setTag(elderKey);
+                    elderButton.setOnClickListener(view -> {
+                        //Connect to Ahmads code
+                        String selectedElderKey = (String)view.getTag();
+                        Intent intent = new Intent(CaregiverMainActivity.this, CaregiverMainActivity.class);
+                        intent.putExtra("selectedElderkey", selectedElderKey);
+                        startActivity(intent);
+                    });
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                    );
+                    int topMargin = index == 0 ? 390 : 10; // Use counter variable here
+                    params.setMargins(0, topMargin, 0, 10); // Apply topMargin here
+                    elderButton.setLayoutParams(params);
+                    eldersContainer.addView(elderButton);
+                    index++;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+    }
+
     /*  Updates the UI depending on if there is elders assigned or not should also take in "key" (i.e elder name/ID I guess)  */
     private void updateUI(boolean eldersExist) {
         ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
         ImageView arrowImageView = findViewById(R.id.arrowImageView);
         TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);
         TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
+        eldersContainer = findViewById(R.id.eldersContainer);
 
         //If exists -> Hide a lot of text, Show patients (not yet here)
         if(eldersExist) {
@@ -119,6 +159,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
             noPatientsTextView.setVisibility(View.INVISIBLE);
             clickToAddTextView.setVisibility(View.INVISIBLE);
             arrowImageView.setVisibility(View.INVISIBLE);
+            eldersContainer.setVisibility(View.VISIBLE);
+            eldersIterator();
 
         }
         //If not exists -> Show image, "no patients text"
@@ -127,6 +169,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
             noPatientsTextView.setVisibility(View.VISIBLE);
             clickToAddTextView.setVisibility(View.VISIBLE);
             arrowImageView.setVisibility(View.VISIBLE);
+            eldersContainer.setVisibility(View.GONE);
         }
     }
 
