@@ -22,9 +22,11 @@ import java.util.List;
 public class CaregiverMainActivity extends AppCompatActivity {
 
     /*******************************************************
+     *
+     *
      * TODO:
      *  - Error handling in the textfields (no empty spaces, numbers etc)?
-     *  - Link the input to database
+     *  - Iterate over assigned elders (i.e does caregiver have elders assigned?)
      *  - Add existing elder functionality
      *
      *
@@ -138,8 +140,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                /*TODO:
-                 * Check for empty fields -> input to database
+                /* Tar input från allergirutan och skapar en lista av innehållet,
+                 * separerat med ett kommatecken
+                 * Tomt innehåll bör även accepteras. Inte testat
                  */
                 String input = elderAllergies.getText().toString().trim();
                 List<String> allergiesList = new ArrayList<>();
