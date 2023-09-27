@@ -67,6 +67,28 @@ public class DatabaseLib {
     }
 
     /**
+     * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
+     *
+     * @param firstNameCaregiver
+     * @param callback Async. Add new ValueEventListener() {} and follow the automated functions.
+     */
+    public void getAssignedElderlyDataSnapshot(String firstNameCaregiver, ValueEventListener callback) {
+        DatabaseReference assignedRef = rootRef.child("caregiver-users").child(firstNameCaregiver.trim()).child("assigned-elderly");
+
+        assignedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    /**
      * Converts snapshot into JSON.
      *
      * @param dataSnapshot Snapshot from your async function call.
