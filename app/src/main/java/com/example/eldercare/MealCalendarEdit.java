@@ -114,11 +114,15 @@ public class MealCalendarEdit extends AppCompatActivity {
             if(eatInput.matches("")){
                 eatInput = meal.getToEat();
             }
+
             if(!eatInput.matches(meal.getToEat())){
-                database.setToEat(eatInput, elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
+                meal.setToEat(eatInput);
+                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
             }
             if(!typeInput.matches(meal.getMealType())){
                 //TODO: set meal type to new type, not added in database api yet
+                //database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType(), typeInput);
+
             }
             finish();
         });
