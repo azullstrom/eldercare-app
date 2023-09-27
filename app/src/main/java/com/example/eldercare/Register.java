@@ -16,6 +16,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Register extends AppCompatActivity {
 
     private TextInputEditText editTextEmail, editTextFirstName, editTextLastName, editTextPhoneNumber, editTextPassword;
