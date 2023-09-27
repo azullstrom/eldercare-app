@@ -19,6 +19,8 @@
     <string name="welcome_caregiver">Welcome Caregiver</string>
     <string name="your_patients">Your Patients</string>
     <string name="no_patients_text">You dont have any patients</string>
+    <string name="add_patient_button">Add patient button</string>
+    <string name="back_to_patient_home">Back to Patient Home</string>
     <string name="add_patient">Add patient button</string>
     <string name="back_to_patient_home_page">Back to Patient Home Page</string>
     <string name="meal_calendar">Meal Calendar</string>
@@ -30,6 +32,9 @@
     <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
     <string name="enter_elderly_email">Enter elderly email</string>
+    <string name="add_new_elder_text">Add new patient</string>
+    <string name="add_existing_elder_text">Add existing patient</string>
+    <string name="confirm_new_elder">Confirm</string>
     <string name="back_to_patients_list">Back to Patients list</string>
     <string name="patient_name_placeholder">Patient Name</string>
     <string name="meals">Meals</string>
