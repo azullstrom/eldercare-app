@@ -121,7 +121,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                     elderButton.setOnClickListener(view -> {
                         //Connect to Ahmads code
                         String selectedElderKey = (String)view.getTag();
-                        Intent intent = new Intent(CaregiverMainActivity.this, CaregiverMainActivity.class);
+                        Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
                         intent.putExtra("selectedElderkey", selectedElderKey);
                         startActivity(intent);
                     });
@@ -147,6 +147,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
     /*  Updates the UI depending on if there is elders assigned or not should also take in "key" (i.e elder name/ID I guess)  */
     private void updateUI(boolean eldersExist) {
+        eldersExist = false;
         ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
         ImageView arrowImageView = findViewById(R.id.arrowImageView);
         TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);

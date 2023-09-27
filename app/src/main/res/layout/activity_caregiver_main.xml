@@ -61,7 +61,7 @@
         android:id="@+id/arrowImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginLeft="160dp"
+        android:layout_marginLeft="140dp"
         android:layout_marginTop="505dp"
         android:gravity="bottom"
         android:padding="16dp"
