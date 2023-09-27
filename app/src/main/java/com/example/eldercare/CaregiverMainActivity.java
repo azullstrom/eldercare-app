@@ -15,7 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class CaregiverMainActivity extends AppCompatActivity {
 
@@ -139,6 +141,16 @@ public class CaregiverMainActivity extends AppCompatActivity {
                 /*TODO:
                  * Check for empty fields -> input to database
                  */
+                String input = elderAllergies.getText().toString().trim();
+                List<String> allergiesList = new ArrayList<>();
+                if(!input.isEmpty()) {
+                    String[] allergiesArray = input.split(",");
+                    for (String allergy : allergiesArray) {
+                        allergiesList.add(allergy.trim());
+                    }
+                }
+
+
                 databaseLib.assignAndCreateNewElderlyToCaregiver(
                         elderFirstName.getText().toString().trim(),
                         elderLastName.getText().toString().trim(),
@@ -146,7 +158,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         elderEmail.getText().toString().trim(),
                         elderPinCode.getText().toString().trim(),
                         elderPhoneNumber.getText().toString().trim(),
-                        elderYearOfBirth.getText().toString().trim());
+                        elderYearOfBirth.getText().toString().trim(),
+                        allergiesList);
 
                 addNewElderAlertDialog.dismiss();
             }
