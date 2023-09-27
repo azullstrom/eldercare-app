@@ -459,7 +459,6 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(date, time, toEat, mealType);
                     DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
