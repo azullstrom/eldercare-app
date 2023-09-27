@@ -50,6 +50,9 @@
         <activity
             android:name=".CaregiverMainActivity"
             android:exported="false" />
+        <activity
+            android:name=".CaregiverElderlyOverviewActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
