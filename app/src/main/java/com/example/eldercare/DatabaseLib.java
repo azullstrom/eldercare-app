@@ -4,15 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -25,12 +22,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.concurrent.Executor;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
     private FirebaseAuth mAuth;
     private Context context;
+
+    private boolean mealAdded;
 
     /**
      * Constructor
@@ -267,11 +265,13 @@ public class DatabaseLib {
      * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
+     * @return                 Returns true or false if the meal was added successfully
      */
-    public void addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
+    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
+        mealAdded = false;
         if(!isMealParamFormattedCorrectly(mealType, date, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
-            return;
+            return mealAdded;
         }
 
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
@@ -291,6 +291,7 @@ public class DatabaseLib {
                                 Toast.makeText(context, "Meal already added", Toast.LENGTH_SHORT).show();
                             } else {
                                 mealsRef.child(date).child(mealType).setValue(meal);
+                                mealAdded = true;
                                 Toast.makeText(context, "Meal added successfully", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -312,6 +313,7 @@ public class DatabaseLib {
                 Toast.makeText(context, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        return mealAdded;
     }
 
     /**
@@ -409,6 +411,68 @@ public class DatabaseLib {
                             if (dataSnapshot.exists()) {
                                 mealsRef.child(date).child(mealType).setValue(meal);
                                 Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Meal does not exist", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            // Handle any database errors here
+                        }
+                    });
+                } else {
+                    // If the elderly user doesn't exist
+                    Toast.makeText(context, "Elderly does not exist", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any database errors here
+                Toast.makeText(context, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * Sets "type" for a meal which belongs to an elderly in the database.
+     *
+     * @param toEat Example: "pizza"
+     * @param firstNameElderly First name of the elderly in the database
+     * @param yearOfBirthElderly Example: 1920
+     * @param date             Formatting: YYYY-MM-DD
+     * @param time             Formatting: hh:mm
+     * @param mealType         "breakfast" || "lunch" || "dinner"
+     * @param newMealType      ""breakfast" || "lunch" || "dinner" the new type of the meal
+     */
+    public void setType(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType, String newMealType) {
+        if(!isMealParamFormattedCorrectly(mealType, date, time)) {
+            Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
+
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
+                if (elderlySnapshot.exists()) {
+                    DatabaseReference mealsRef = elderlyRef.child("meals");
+                    Meal meal = new Meal(date, time, toEat, mealType);
+                    DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
+
+                    specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                if(addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, date, time, newMealType)){
+                                    removeMealFromElderly(firstNameElderly, yearOfBirthElderly, date, mealType);
+                                    Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
+                                }
+                                else{
+                                    Toast.makeText(context, "Meal type already exists", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Toast.makeText(context, "Meal does not exist", Toast.LENGTH_SHORT).show();
                             }
