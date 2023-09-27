@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:orientation="vertical"
+    android:padding="15dp">
+    <!-- Arrow & text to go back to the previous page -->
+    <LinearLayout
+        android:id="@+id/backToPatientsList"
+        android:clickable="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/back_arrow_icon"
+            android:contentDescription="@string/back_to_patients_list" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/back_to_patients_list"
+            android:textSize="17sp" />
+    </LinearLayout>
+
+    <!-- Patient Cards -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/patient_name_placeholder"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/patient_name_placeholder"
+            android:textSize="24sp"
+            android:textColor="@color/purple"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"/>
+        <!-- Meals Card -->
+        <LinearLayout
+            android:id="@+id/mealsCard"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="7sp"
+            android:layout_marginBottom="7sp"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="@string/meals"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:paddingStart="15sp"
+                android:paddingEnd="30sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/meals_img"
+                android:contentDescription="@string/meals"
+                />
+
+        </LinearLayout>
+
+        <!-- Allergies Card -->
+        <LinearLayout
+            android:id="@+id/allergiesCard"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="7sp"
+            android:layout_marginBottom="7sp"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="@string/allergies"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:paddingStart="15sp"
+                android:paddingEnd="30sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/allergies_img"
+                android:contentDescription="@string/allergies"
+                />
+
+        </LinearLayout>
+
+        <!-- Alert History Card -->
+        <LinearLayout
+            android:id="@+id/alertHistoryCard"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="7sp"
+            android:layout_marginBottom="7sp"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="@string/alert_history"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:paddingStart="15sp"
+                android:paddingEnd="30sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/alert_img"
+                android:contentDescription="@string/alert_history"
+                />
+
+        </LinearLayout>
+
+        <!-- Elderly Settings Card -->
+        <LinearLayout
+            android:id="@+id/elderlySettingsCard"
+            android:clickable="true"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="7sp"
+            android:layout_marginBottom="7sp"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="@string/elderly_settings"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:paddingStart="15sp"
+                android:paddingEnd="30sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/elderly_settings"
+                android:src="@drawable/elderly_settings_img"
+                tools:ignore="ImageContrastCheck" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
