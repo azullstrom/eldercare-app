@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
 import android.widget.ImageView;
@@ -143,9 +144,8 @@ public class MealCalendar extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar);
 
-        //TODO: get elderlyName/year from intent.getExtra() from previous activity
-        elderlyName = "Fredrik";
-        elderlyYear = "1919";
+        elderlyName = getIntent().getStringExtra("ElderlyFirstName");
+        elderlyYear = getIntent().getStringExtra("ElderlyYearOfBirth");
 
 
         auth = FirebaseAuth.getInstance();
