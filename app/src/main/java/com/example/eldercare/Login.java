@@ -105,7 +105,7 @@ public class Login extends AppCompatActivity {
                         if (dataSnapshot.exists()) {
                             String email = dataSnapshot.getValue(String.class);
 
-                            databaseLib.loginUser(email, password, "caregiver");
+                            databaseLib.loginUser(username, email, password, "caregiver");
                         } else {
                             Toast.makeText(Login.this, "Username not found", Toast.LENGTH_SHORT).show();
                         }
@@ -139,7 +139,7 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
 
-                databaseLib.loginUser(email, pin, "elderly");
+                databaseLib.loginUser("", email, pin, "elderly");
             }
         });
     }

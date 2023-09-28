@@ -583,7 +583,7 @@ public class DatabaseLib {
      * @param password 6-digit PIN for elderly
      * @param userType "elderly" || "caregiver"
      */
-    public void loginUser(String email, String password, String userType) {
+    public void loginUser(String username, String email, String password, String userType) {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(context, "Enter username", Toast.LENGTH_SHORT).show();
             return;
@@ -611,6 +611,8 @@ public class DatabaseLib {
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
                                 //SEND EXTRAAAAAAAAAA
+                                // Anders fixar vettu
+                                intent.putExtra("usernameCaregiver", username.trim());
                             }
                             context.startActivity(intent);
 
