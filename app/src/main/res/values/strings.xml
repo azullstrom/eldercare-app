@@ -34,7 +34,7 @@
     <string name="enter_elderly_email">Enter elderly email</string>
     <string name="add_new_elder_text">Add new patient</string>
     <string name="add_existing_elder_text">Add existing patient</string>
-    <string name="confirm_new_elder">Confirm</string>
+    <string name="add_new_elderly">Add</string>
     <string name="back_to_patients_list">Back to Patients list</string>
     <string name="patient_name_placeholder">Patient Name</string>
     <string name="meals">Meals</string>
@@ -53,4 +53,11 @@
     <string name="elderlySettings">Elderly Settings</string>
     <string name="language">Language</string>
     <string name="name">Name: </string>
+    <string name="enter_elderly_first_name">Enter elderly first name: </string>
+    <string name="enter_elderly_last_name">Enter elder last name: </string>
+    <string name="enter_your_first_name">Enter your first name: </string>
+    <string name="enter_year_of_birth">Enter year of birth: </string>
+    <string name="enter_elderly_pin">Enter new elderly pin: </string>
+    <string name="enter_elderly_phone_number">Enter elderly phone number: </string>
+    <string name="enter_allergies_if_any">Enter allergies (if any): </string>
 </resources>
