@@ -9,14 +9,14 @@
     <string name="last_name">Last name</string>
     <string name="phone_number">Phone number</string>
     <string name="click_to_login">Click to login</string>
-    <string name="click_to_register">Click to register</string>
+    <string name="sign_up">Sign Up</string>
     <string name="elderly">Elderly</string>
     <string name="caregiver">Caregiver</string>
     <string name="welcome_to">Welcome to</string>
     <string name="choose_role">Choose role:</string>
     <string name="elderly_pin">Enter PIN code</string>
     <string name="welcome_elderly">Welcome Elderly</string>
-    <string name="welcome_caregiver">Welcome Caregiver</string>
+    <string name="welcome_back">Welcome Back</string>
     <string name="your_patients">Your Patients</string>
     <string name="no_patients_text">You dont have any patients</string>
     <string name="add_patient_button">Add patient button</string>
@@ -60,4 +60,5 @@
     <string name="enter_elderly_pin">Enter new elderly pin: </string>
     <string name="enter_elderly_phone_number">Enter elderly phone number: </string>
     <string name="enter_allergies_if_any">Enter allergies (if any): </string>
+    <string name="dont_have_account">Don’t have an account? </string>
 </resources>
