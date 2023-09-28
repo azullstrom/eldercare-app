@@ -4,11 +4,9 @@
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="register">Register</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="phone_number">Phone number</string>
-    <string name="click_to_login">Click to login</string>
     <string name="sign_up">Sign Up</string>
     <string name="elderly">Elderly</string>
     <string name="caregiver">Caregiver</string>
@@ -60,4 +58,6 @@
     <string name="enter_elderly_phone_number">Enter elderly phone number: </string>
     <string name="enter_allergies_if_any">Enter allergies (if any): </string>
     <string name="dont_have_account">Don’t have an account? </string>
+    <string name="hello_caregiver">Hello CareGiver</string>
+    <string name="already_have_an_account">Already have an account?</string>
 </resources>
