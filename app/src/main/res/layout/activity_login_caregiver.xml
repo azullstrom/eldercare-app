@@ -71,17 +71,21 @@
         android:layout_marginBottom="10dp"
         android:text="@string/login" />
 
+    <!-- Don't have an account text + Sign Up text -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center">
 
+        <!-- Don't have an account Text -->
         <TextView
             android:textSize="17sp"
             android:text="@string/dont_have_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+
+        <!-- Sign Up Text -->
         <TextView
             android:textStyle="bold"
             android:textSize="18sp"
