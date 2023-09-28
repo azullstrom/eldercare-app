@@ -2,7 +2,7 @@
     <string name="app_name">ElderCare</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
-    <string name="email">Email</string>
+    <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="register">Register</string>
     <string name="first_name">First name</string>
@@ -31,7 +31,7 @@
     <string name="save">Save</string>
     <string name="delete">Delete</string>
     <string name="enter_pin">Enter PIN code</string>
-    <string name="enter_elderly_email">Enter elderly email</string>
+    <string name="enter_elderly_username">Enter elderly username</string>
     <string name="add_new_elder_text">Add new patient</string>
     <string name="add_existing_elder_text">Add existing patient</string>
     <string name="confirm_new_elder">Confirm</string>
@@ -53,5 +53,6 @@
     <string name="elderlySettings">Elderly Settings</string>
     <string name="language">Language</string>
     <string name="name">Name: </string>
+    <string name="email">Email</string>
     <string name="patient_allergies">Patient Allergies:</string>
 </resources>

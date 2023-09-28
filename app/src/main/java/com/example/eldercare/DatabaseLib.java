@@ -67,13 +67,29 @@ public class DatabaseLib {
     /**
      * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
      *
-     * @param firstNameCaregiver
+     * @param usernameCaregiver Username of the caregiver.
      * @param callback Async. Add new ValueEventListener() {} and follow the automated functions.
      */
-    public void getAssignedElderlyDataSnapshot(String firstNameCaregiver, ValueEventListener callback) {
-        DatabaseReference assignedRef = rootRef.child("caregiver-users").child(firstNameCaregiver.trim()).child("assigned-elderly");
+    public void getAssignedElderlyDataSnapshot(String usernameCaregiver, ValueEventListener callback) {
+        DatabaseReference assignedRef = rootRef.child("caregiver-users").child(usernameCaregiver.trim()).child("assigned-elderly");
 
         assignedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    public void getEmailByUsername(String username, ValueEventListener callback) {
+        DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
+
+        emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 callback.onDataChange(snapshot);
@@ -117,11 +133,11 @@ public class DatabaseLib {
      *
      * @param firstNameElderly First name of the elderly in the database.
      * @param yearOfBirthElderly Example: 1920
-     * @param firstNameCaregiver First name of the caregiver in the database.
+     * @param usernameCaregiver Username of the caregiver in the database.
      */
-    public void assignElderlyToCaregiver(String firstNameElderly, String yearOfBirthElderly, String firstNameCaregiver) {
+    public void assignElderlyToCaregiver(String firstNameElderly, String yearOfBirthElderly, String usernameCaregiver) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
-        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
+        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -163,16 +179,16 @@ public class DatabaseLib {
      *
      * @param firstNameElderly First name of the elderly in the database.
      * @param lastNameElderly Last name of the elderly in the database.
-     * @param firstNameCaregiver First name of the caregiver in the database.
-     * @param email Elderlys new email. Example: example@elderly.eldercare.com
+     * @param usernameCaregiver First name of the caregiver in the database.
+     * @param username Elderlys new username. Example: gregerboy
      * @param pin Elderlys new 6-digit PIN code. Example: 123456
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1900
      * @param allergies String list of allergies. Call like this: Arrays.asList("peanuts", "shrimp")
      */
-    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String firstNameCaregiver, String email, String pin, String phoneNumber, String yearOfBirth, List<String> allergies) {
+    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String usernameCaregiver, String username, String pin, String phoneNumber, String yearOfBirth, List<String> allergies) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
-        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
+        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -185,8 +201,10 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Assign the elderly to the caregiver by updating caregiver's node
+                                String email = username.trim() + "@elderly.eldercare.com";
+                                String pinCode = pin.trim() + "00";
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
-                                registerUser(firstNameElderly, lastNameElderly, email, pin, phoneNumber, yearOfBirth, "elderly");
+                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly");
                                 elderlyRef.child("allergies").setValue(allergies);
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -215,11 +233,11 @@ public class DatabaseLib {
      *
      * @param firstNameElderly First name of the elderly in the database.
      * @param yearOfBirthElderly Example: 1920
-     * @param firstNameCaregiver First name of the caregiver in the database.
+     * @param usernameCaregiver Username of the caregiver in the database.
      */
-    public void removeElderlyFromCaregiver(String firstNameElderly, String yearOfBirthElderly, String firstNameCaregiver) {
+    public void removeElderlyFromCaregiver(String firstNameElderly, String yearOfBirthElderly, String usernameCaregiver) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
-        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameCaregiver);
+        DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -459,7 +477,6 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(date, time, toEat, mealType);
                     DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -508,7 +525,7 @@ public class DatabaseLib {
      * @param yearOfBirth Example: 1919
      * @param userType "elderly" || "caregiver"
      */
-    public void registerUser(String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
+    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
         String firstNameUser = firstName.trim();
         String lastNameUser = lastName.trim();
         String emailUser = email.trim();
@@ -517,7 +534,7 @@ public class DatabaseLib {
         String yearOfBirthUser = yearOfBirth.trim();
         String userTypeUser = userType.trim();
 
-        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(firstName) ||
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(email) || TextUtils.isEmpty(firstName) ||
                 TextUtils.isEmpty(lastName) || TextUtils.isEmpty(phoneNumber) ||
                 TextUtils.isEmpty(password)) {
             Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show();
@@ -537,7 +554,7 @@ public class DatabaseLib {
                 if (task.isSuccessful()) {
                     // User registration successful
                     DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameUser+yearOfBirthUser);
-                    DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(firstNameUser);
+                    DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(username);
                     DatabaseReference userReference;
                     if(userTypeUser.contains("caregiver")) {
                         userReference = caregiverRef;
@@ -568,15 +585,19 @@ public class DatabaseLib {
      */
     public void loginUser(String email, String password, String userType) {
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(context, "Enter email", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Enter username", Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(password)) {
             Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
             return;
         }
+        String passwordUser = password.trim();
+        if(userType.contains("elderly")) {
+            passwordUser = passwordUser + "00";
+        }
 
-        mAuth.signInWithEmailAndPassword(email, password)
+        mAuth.signInWithEmailAndPassword(email, passwordUser)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
