@@ -3,6 +3,7 @@ package com.example.eldercare;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,7 +22,7 @@ import java.util.List;
 
 public class Register extends AppCompatActivity {
 
-    private TextInputEditText editTextEmail, editTextFirstName, editTextLastName, editTextPhoneNumber, editTextPassword;
+    private TextInputEditText editTextUsername, editTextEmail, editTextFirstName, editTextLastName, editTextPhoneNumber, editTextPassword;
     private Button registerButton;
     private TextView textView;
     private DatabaseLib databaseLib;
@@ -33,6 +34,7 @@ public class Register extends AppCompatActivity {
 
         databaseLib = new DatabaseLib(this);
 
+        editTextUsername = findViewById(R.id.username);
         editTextEmail = findViewById(R.id.email);
         editTextFirstName = findViewById(R.id.firstname);
         editTextLastName = findViewById(R.id.lastname);
@@ -53,12 +55,13 @@ public class Register extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String username = editTextUsername.getText().toString();
                 String firstName = editTextFirstName.getText().toString();
                 String lastName = editTextLastName.getText().toString();
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String phone = editTextPhoneNumber.getText().toString();
-                databaseLib.registerUser(firstName, lastName, email, password, phone, "", "caregiver");
+                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver");
 
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);

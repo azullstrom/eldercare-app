@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,6 +53,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     private boolean eldersExist = true;
     LinearLayout eldersContainer;
+    // Anders: Gjorde denna global i klassen så att man slipper hämta den hela tiden.
+    private String usernameCaregiver;
 
 
     @Override
@@ -64,11 +68,12 @@ public class CaregiverMainActivity extends AppCompatActivity {
         ImageButton addPatientButton = findViewById(R.id.addImageButton);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        String currentUserLoggedIn = currentUser.getEmail();
-
+        // Anders: instansierar variabeln
+        usernameCaregiver = getIntent().getStringExtra("usernameCaregiver");
 
         /*  Checks if the caregiver has any elders assigned   */
-        databaseLib.getAssignedElderlyDataSnapshot("Bengan", new ValueEventListener() {
+        // Anders: usernameCaregiver istället för "Bengan"
+        databaseLib.getAssignedElderlyDataSnapshot(usernameCaregiver, new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists() && snapshot.hasChildren()) {
@@ -96,7 +101,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
         eldersContainer = findViewById(R.id.eldersContainer);
         eldersContainer.removeAllViews();
         List<String> elderKeys = new ArrayList<>();
-        databaseLib.getAssignedElderlyDataSnapshot("Bengan", new ValueEventListener() {
+
+        // Anders: usernameCaregiver istället för "Bengan"
+        databaseLib.getAssignedElderlyDataSnapshot(usernameCaregiver, new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 JSONObject json = databaseLib.convertSnapshotToJson(snapshot);
@@ -188,7 +195,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         Button addNewElderButton = dialogView.findViewById(R.id.add_new_elder_button);
         Button addExistingElderButton = dialogView.findViewById(R.id.add_existing_elder_button);
 
-
         builder.setView(dialogView);
         AlertDialog addNewOrExistingAlertDialog = builder.create();
 
@@ -231,11 +237,11 @@ public class CaregiverMainActivity extends AppCompatActivity {
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.activity_caregiver_main_add_new_popup, null);
 
-        EditText caregiverFirstName = dialogView.findViewById(R.id.caregiver_first_name);
+        // Anders: EditText caregiverFirstName = dialogView.findViewById(R.id.caregiver_first_name);
         EditText elderFirstName = dialogView.findViewById(R.id.elder_first_name);
         EditText elderLastName = dialogView.findViewById(R.id.elder_last_name);
         EditText elderYearOfBirth = dialogView.findViewById(R.id.elder_year_of_birth);
-        EditText elderEmail = dialogView.findViewById(R.id.elder_email);
+        EditText elderUsername = dialogView.findViewById(R.id.elder_username);
         EditText elderPinCode = dialogView.findViewById(R.id.elder_pin_code);
         EditText elderPhoneNumber = dialogView.findViewById(R.id.elder_phone_number);
         EditText elderAllergies = dialogView.findViewById(R.id.elder_allergies);
@@ -263,6 +269,20 @@ public class CaregiverMainActivity extends AppCompatActivity {
                  * separerat med ett kommatecken
                  * Tomt innehåll bör även accepteras. Inte testat
                  */
+
+                // Anders: Lade till safe input och lade in alla editTexts i strängar.
+                String firstName = elderFirstName.getText().toString().trim();
+                String lastName = elderLastName.getText().toString().trim();
+                String yearOfBirth = elderYearOfBirth.getText().toString().trim();
+                String username = elderUsername.getText().toString().trim();
+                String pin = elderPinCode.getText().toString().trim();
+                String phone = elderPhoneNumber.getText().toString().trim();
+                if(TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName) || TextUtils.isEmpty(yearOfBirth) ||
+                        TextUtils.isEmpty(username) || TextUtils.isEmpty(pin) || TextUtils.isEmpty(phone)) {
+                    Toast.makeText(CaregiverMainActivity.this, "Required fields missing", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 String input = elderAllergies.getText().toString().trim();
                 List<String> allergiesList = new ArrayList<>();
                 if(!input.isEmpty()) {
@@ -272,14 +292,15 @@ public class CaregiverMainActivity extends AppCompatActivity {
                     }
                 }
 
+                // Anders: usernameCaregiver och elderUsername istället för mail. Ändrade även till nya variablerna på allt annat. Se nedan
                 databaseLib.assignAndCreateNewElderlyToCaregiver(
-                        elderFirstName.getText().toString().trim(),
-                        elderLastName.getText().toString().trim(),
-                        caregiverFirstName.getText().toString().trim(),
-                        elderEmail.getText().toString().trim(),
-                        elderPinCode.getText().toString().trim(),
-                        elderPhoneNumber.getText().toString().trim(),
-                        elderYearOfBirth.getText().toString().trim(),
+                        firstName,
+                        lastName,
+                        usernameCaregiver.trim(),
+                        username,
+                        pin,
+                        phone,
+                        yearOfBirth,
                         allergiesList);
 
                 addNewElderAlertDialog.dismiss();

@@ -28,7 +28,7 @@ import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = false;
+    private static final boolean TEST_MODE = true;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -69,10 +69,10 @@ public class Login extends AppCompatActivity {
     private void showLoginCaregiverLayout() {
         setContentView(R.layout.activity_login_caregiver);
 
-        TextInputEditText editTextEmail, editTextPassword;
+        TextInputEditText editTextUsername, editTextPassword;
         TextView registerNow;
 
-        editTextEmail = findViewById(R.id.email);
+        editTextUsername = findViewById(R.id.username);
         editTextPassword = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
@@ -90,13 +90,36 @@ public class Login extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email, password;
-                email = String.valueOf(editTextEmail.getText());
-                password = String.valueOf(editTextPassword.getText());
+                final String username, password;
+                username = String.valueOf(editTextUsername.getText()).trim();
+                password = String.valueOf(editTextPassword.getText()).trim();
 
-                databaseLib.loginUser(email, password, "caregiver");
+                if(username.contains("@") || username.contains(".")) {
+                    Toast.makeText(Login.this, "Invalid username", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                databaseLib.getEmailByUsername(username, new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            String email = dataSnapshot.getValue(String.class);
+
+                            databaseLib.loginUser(username, email, password, "caregiver");
+                        } else {
+                            Toast.makeText(Login.this, "Username not found", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle the database error
+                        Toast.makeText(Login.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+
     }
 
     private void showLoginElderlyLayout() {
@@ -116,7 +139,7 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
 
-                databaseLib.loginUser(email, pin, "elderly");
+                databaseLib.loginUser("", email, pin, "elderly");
             }
         });
     }
