@@ -39,8 +39,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_caregiver_main);
 
-        databaseLib.assignAndCreateNewElderlyToCaregiver("Dag", "Dagsson", "azullstrom", "dag", "1234", "0723233344", "1930", null);
-
         //Things that Will be moved somewhere else?
         TextView welcomeTextView = findViewById(R.id.your_patients);
         welcomeTextView.setText("Your Patients");
