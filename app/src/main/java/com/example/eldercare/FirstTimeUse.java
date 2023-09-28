@@ -80,7 +80,7 @@ public class FirstTimeUse extends AppCompatActivity {
     private void showElderlyMailDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.activity_elderly_emailpopup, null);
 
-        TextInputEditText email = dialogView.findViewById(R.id.email);
+        TextInputEditText username = dialogView.findViewById(R.id.username);
         TextInputEditText pin = dialogView.findViewById(R.id.pin);
 
         new AlertDialog.Builder(FirstTimeUse.this)
@@ -88,12 +88,11 @@ public class FirstTimeUse extends AppCompatActivity {
                 .setPositiveButton("Submit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String elderlyMail = String.valueOf(email.getText());
-                        String elderlyPin = String.valueOf(pin.getText());
-                        if (TextUtils.isEmpty(elderlyMail) || elderlyMail.contains("caregiver")) {
-                            Toast.makeText(FirstTimeUse.this, "Enter a valid email.", Toast.LENGTH_SHORT).show();
-                        } else if (TextUtils.isEmpty(elderlyPin)) {
-                            Toast.makeText(FirstTimeUse.this, "Enter PIN code", Toast.LENGTH_SHORT).show();
+                        String usernameElderly = username.getText().toString().trim();
+                        String elderlyMail =  usernameElderly + "@elderly.eldercare.com";
+                        String elderlyPin = pin.getText().toString().trim() + "00";
+                        if (TextUtils.isEmpty(usernameElderly) || TextUtils.isEmpty(elderlyPin)) {
+                            Toast.makeText(FirstTimeUse.this, "All fields required.", Toast.LENGTH_SHORT).show();
                         } else {
                             mAuth.signInWithEmailAndPassword(elderlyMail, elderlyPin)
                                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
