@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,34 +9,41 @@
 
     <TextView
         android:textStyle="bold"
-        android:textSize="30sp"
+        android:textSize="20sp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcome_to" />
+    <TextView
+        android:textStyle="bold"
+        android:textSize="32sp"
         android:layout_marginBottom="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/welcome_to_eldercare" />
-
+        android:text="@string/app_name" />
     <TextView
         android:textStyle="bold"
-        android:textSize="20sp"
+        android:textSize="32sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
         android:text="@string/choose_role" />
 
     <Button
         android:id="@+id/elderlyButton"
         android:text="@string/elderly"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:layout_marginHorizontal="30dp"
         android:layout_marginBottom="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="100dp" />
 
     <Button
         android:id="@+id/caregiverButton"
         android:text="@string/caregiver"
-        android:textSize="20sp"
+        android:textSize="30sp"
         android:layout_marginHorizontal="30dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="100dp" />
 
 </LinearLayout>

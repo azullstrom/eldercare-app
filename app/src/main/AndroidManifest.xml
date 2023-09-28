@@ -53,6 +53,9 @@
         <activity
             android:name=".CaregiverElderlyOverviewActivity"
             android:exported="false" />
+        <activity
+            android:name=".CaregiverElderlySettingsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
