@@ -94,7 +94,7 @@ public class MealCalendarAdd extends AppCompatActivity {
                 Toast.makeText(MealCalendarAdd.this, R.string.please_enter_all_info, Toast.LENGTH_SHORT).show();
                 return;
             }
-            database.addMealToElderly(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType());
+            database.addMealToElderly(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), false);
             finish();
         });
 

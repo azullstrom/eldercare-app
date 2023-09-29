@@ -29,9 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MealCalendar extends AppCompatActivity{
-    FirebaseAuth auth;
     ImageView backButton;
-    FirebaseUser currentCareGiver;
     LinearLayout mealButtonsLayout;
     ImageView addMealButton;
     RelativeLayout dimLayout;
@@ -126,6 +124,7 @@ public class MealCalendar extends AppCompatActivity{
             intent.putExtra("mealToEat", meal.getToEat());
             intent.putExtra("mealTime", meal.getTime());
             intent.putExtra("mealType", meal.getMealType());
+            intent.putExtra("mealEaten", meal.isEaten());
             intent.putExtra("elderlyName", elderlyName);
             intent.putExtra("elderlyYear", elderlyYear);
             animateActivityAlpha(0, 255);
