@@ -78,6 +78,8 @@ public class MealCalendarAdd extends AppCompatActivity {
         timePicker.setIs24HourView(true);
         
         meal = new Meal();
+        timePicker.setHour(12);
+        timePicker.setMinute(30);
         meal.setTime(timePicker.getHour() + ":" + timePicker.getMinute());
 
         ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner", "snack1", "snack2", "snack3"));

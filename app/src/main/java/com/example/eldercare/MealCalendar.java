@@ -166,12 +166,13 @@ public class MealCalendar extends AppCompatActivity{
     }
 
     /** Animates activity color when returning from edit/create
-     *
+     *  displays meals after a short delay
      */
     @Override
     protected void onResume() {
         super.onResume();
         animateActivityAlpha(255, 0);
+        mealButtonsLayout.removeAllViews();
         final Handler handler = new Handler();
         //delay before viewing meals so that database can catch up
         handler.postDelayed(() -> {
