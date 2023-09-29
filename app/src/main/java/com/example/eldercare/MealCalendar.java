@@ -176,6 +176,6 @@ public class MealCalendar extends AppCompatActivity{
         //delay before viewing meals so that database can catch up
         handler.postDelayed(() -> {
             displayMealsDate(elderlyName, elderlyYear);
-        }, 500);
+        }, 1000);
     }
 }
