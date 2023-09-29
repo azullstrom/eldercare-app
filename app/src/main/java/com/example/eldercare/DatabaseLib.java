@@ -280,14 +280,13 @@ public class DatabaseLib {
      * @param toEat Example: "hamburger"
      * @param firstNameElderly First name of the elderly in the database
      * @param yearOfBirthElderly Example: 1920
-     * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      * @return                 Returns true or false if the meal was added successfully
      */
-    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
+    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType) {
         mealAdded = false;
-        if(!isMealParamFormattedCorrectly(mealType, date, time)) {
+        if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return mealAdded;
         }
@@ -299,8 +298,8 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(date, time, toEat, mealType);
-                    DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
+                    Meal meal = new Meal(time, toEat, mealType);
+                    DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -308,7 +307,7 @@ public class DatabaseLib {
                             if (dataSnapshot.exists()) {
                                 Toast.makeText(context, "Meal already added", Toast.LENGTH_SHORT).show();
                             } else {
-                                mealsRef.child(date).child(mealType).setValue(meal);
+                                mealsRef.child(mealType).setValue(meal);
                                 mealAdded = true;
                                 Toast.makeText(context, "Meal added successfully", Toast.LENGTH_SHORT).show();
                             }
@@ -339,11 +338,10 @@ public class DatabaseLib {
      *
      * @param firstNameElderly First name of the elderly in the database
      * @param yearOfBirthElderly Example: 1920
-     * @param date             Formatting: YYYY-MM-DD
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void removeMealFromElderly(String firstNameElderly, String yearOfBirthElderly, String date, String mealType) {
-        if(!isMealParamFormattedCorrectly(mealType, date)) {
+    public void removeMealFromElderly(String firstNameElderly, String yearOfBirthElderly, String mealType) {
+        if(!isMealParamFormattedCorrectly(mealType)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -355,7 +353,7 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
+                    DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -403,12 +401,11 @@ public class DatabaseLib {
      * @param toEat Example: "pizza"
      * @param firstNameElderly First name of the elderly in the database
      * @param yearOfBirthElderly Example: 1920
-     * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void setToEat(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType) {
-        if(!isMealParamFormattedCorrectly(mealType, date, time)) {
+    public void setToEat(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType) {
+        if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -420,14 +417,14 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(date, time, toEat, mealType);
-                    DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
+                    Meal meal = new Meal(time, toEat, mealType);
+                    DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                mealsRef.child(date).child(mealType).setValue(meal);
+                                mealsRef.child(mealType).setValue(meal);
                                 Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(context, "Meal does not exist", Toast.LENGTH_SHORT).show();
@@ -459,13 +456,12 @@ public class DatabaseLib {
      * @param toEat Example: "pizza"
      * @param firstNameElderly First name of the elderly in the database
      * @param yearOfBirthElderly Example: 1920
-     * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      * @param newMealType      ""breakfast" || "lunch" || "dinner" the new type of the meal
      */
-    public void setType(String toEat, String firstNameElderly, String yearOfBirthElderly, String date, String time, String mealType, String newMealType) {
-        if(!isMealParamFormattedCorrectly(mealType, date, time)) {
+    public void setType(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, String newMealType) {
+        if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -477,14 +473,15 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    DatabaseReference specificMealRef = mealsRef.child(date).child(mealType);
+                    Meal meal = new Meal(time, toEat, mealType);
+                    DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                if(addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, date, time, newMealType)){
-                                    removeMealFromElderly(firstNameElderly, yearOfBirthElderly, date, mealType);
+                                if(addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, time, newMealType)){
+                                    removeMealFromElderly(firstNameElderly, yearOfBirthElderly, mealType);
                                     Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
                                 }
                                 else{
@@ -629,30 +626,28 @@ public class DatabaseLib {
     /**
      * Checks if parameters for meal functions are correctly formatted
      *
-     * @param date             Formatting: YYYY-MM-DD
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    private boolean isMealParamFormattedCorrectly(String mealType, String date, String time) {
+    private boolean isMealParamFormattedCorrectly(String mealType, String time) {
         boolean isRightMealTypeFormat = mealType.contains("breakfast")
-                || mealType.contains("lunch") || mealType.contains("dinner");
-        boolean isRightDateFormat = date.matches("\\d{4}-\\d{2}-\\d{2}");
+                || mealType.contains("lunch") || mealType.contains("dinner") ||
+                mealType.contains("snack1") || mealType.contains("snack2")
+                || mealType.contains("snack3");
         boolean isRightTimeFormat = time.matches("\\d{2}:\\d{2}");
 
-        return isRightMealTypeFormat && isRightDateFormat && isRightTimeFormat;
+        return isRightMealTypeFormat && isRightTimeFormat;
     }
 
     /**
      * Checks if parameters for meal functions are correctly formatted
      *
-     * @param date             Formatting: YYYY-MM-DD
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    private boolean isMealParamFormattedCorrectly(String mealType, String date) {
-        boolean isRightMealTypeFormat = mealType.contains("breakfast")
-                || mealType.contains("lunch") || mealType.contains("dinner");
-        boolean isRightDateFormat = date.matches("\\d{4}-\\d{2}-\\d{2}");
-
-        return isRightMealTypeFormat && isRightDateFormat;
+    private boolean isMealParamFormattedCorrectly(String mealType) {
+        return mealType.contains("breakfast")
+                || mealType.contains("lunch") || mealType.contains("dinner") ||
+                mealType.contains("snack1") || mealType.contains("snack2")
+                || mealType.contains("snack3");
     }
 }

@@ -1,26 +1,17 @@
 package com.example.eldercare;
 
 public class Meal {
-    private String date, time, toEat, mealType;
+    private String time, toEat, mealType;
 
     public Meal() {
         // Default constructor required for Firebase
     }
 
     // Constructor with all parameters
-    public Meal(String date, String time, String toEat, String mealType) {
-        this.date = date;
+    public Meal(String time, String toEat, String mealType) {
         this.time = time;
         this.toEat = toEat;
         this.mealType = mealType;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
     }
 
     public String getTime() {
