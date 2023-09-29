@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -283,13 +284,12 @@ public class DatabaseLib {
      * @param yearOfBirthElderly Example: 1920
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
-     * @return                 Returns true or false if the meal was added successfully
      */
-    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, boolean eaten) {
+    public void addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, boolean eaten) {
         mealAdded = false;
         if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
-            return mealAdded;
+            return;
         }
 
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
@@ -331,7 +331,6 @@ public class DatabaseLib {
                 Toast.makeText(context, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-        return mealAdded;
     }
 
     /**
@@ -481,11 +480,11 @@ public class DatabaseLib {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                boolean addedMeal = addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, time, newMealType, eaten);
+                                addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, time, newMealType, eaten);
                                 //delay so that database has time to create new meal before removing old one
                                 final Handler handler = new Handler();
                                 handler.postDelayed(() -> {
-                                    if(addedMeal){
+                                    if(mealAdded){
                                         removeMealFromElderly(firstNameElderly, yearOfBirthElderly, mealType);
                                         Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
                                     }
