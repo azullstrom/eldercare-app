@@ -3,6 +3,7 @@ package com.example.eldercare;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ public class MealCalendarEdit extends AppCompatActivity {
     CheckBox eatenBox;
     Meal meal;
     String typeInput, eatInput, elderlyName, elderlyYear;
+    boolean mealEaten;
     DatabaseLib database;
     int width, height;
     @Override
@@ -46,8 +48,8 @@ public class MealCalendarEdit extends AppCompatActivity {
 
         meal.setToEat(getIntent().getStringExtra("mealToEat"));
         meal.setTime(getIntent().getStringExtra("mealTime"));
-        meal.setDate(getIntent().getStringExtra("mealDate"));
         meal.setMealType(getIntent().getStringExtra("mealType"));
+        meal.setEaten(getIntent().getBooleanExtra("mealEaten", false));
         elderlyYear = getIntent().getStringExtra("elderlyYear");
         elderlyName = getIntent().getStringExtra("elderlyName");
 
@@ -60,6 +62,7 @@ public class MealCalendarEdit extends AppCompatActivity {
         patientAllergies = findViewById(R.id.patientAllergiesEditTextView);
 
         layoutMealToEat.setHint(meal.getToEat());
+        eatenBox.setChecked(meal.isEaten());
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         width = dm.widthPixels;
@@ -69,7 +72,7 @@ public class MealCalendarEdit extends AppCompatActivity {
 
         exit = findViewById(R.id.exitEditMeal);
         exit.setOnClickListener(view -> finish());
-        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner"));
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner", "snack1", "snack2", "snack3"));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealType.setAdapter(arrayAdapter);
@@ -82,6 +85,15 @@ public class MealCalendarEdit extends AppCompatActivity {
                 break;
             case "dinner":
                 mealType.setSelection(2);
+                break;
+            case "snack1":
+                mealType.setSelection(3);
+                break;
+            case "snack2":
+                mealType.setSelection(4);
+                break;
+            case "snack3":
+                mealType.setSelection(5);
                 break;
         }
 
@@ -108,6 +120,7 @@ public class MealCalendarEdit extends AppCompatActivity {
         saveButton.setOnClickListener(view -> {
             typeInput = String.valueOf(mealType.getSelectedItem());
             eatInput = String.valueOf(editMealToEat.getText());
+            mealEaten = eatenBox.isChecked();
             if(typeInput.matches("")){
                 typeInput = meal.getMealType();
             }
@@ -115,12 +128,12 @@ public class MealCalendarEdit extends AppCompatActivity {
                 eatInput = meal.getToEat();
             }
 
-            if(!eatInput.matches(meal.getToEat())){
+            if(!eatInput.matches(meal.getToEat()) || meal.isEaten() != mealEaten){
                 meal.setToEat(eatInput);
-                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
+                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), mealEaten);
             }
             if(!typeInput.matches(meal.getMealType())){
-                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType(), typeInput);
+                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), typeInput, meal.isEaten());
             }
             finish();
         });
@@ -129,7 +142,6 @@ public class MealCalendarEdit extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), MealCalendarConfirmDelete.class);
             intent.putExtra("elderlyName", elderlyName);
             intent.putExtra("elderlyYear", elderlyYear);
-            intent.putExtra("mealDate", meal.getDate());
             intent.putExtra("mealType", meal.getMealType());
             startActivity(intent);
             finish();

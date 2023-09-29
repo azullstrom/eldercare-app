@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ImageView;
@@ -28,7 +29,6 @@ import java.util.List;
 public class MealCalendarAdd extends AppCompatActivity {
     TextInputEditText editMealName;
     Spinner mealType;
-    CalendarView addMealCalendar;
     TimePicker timePicker;
     RelativeLayout addMealButton;
     ImageView exitButton;
@@ -43,7 +43,6 @@ public class MealCalendarAdd extends AppCompatActivity {
         setContentView(R.layout.activity_mealcalendar_add);
 
         editMealName = findViewById(R.id.editMealName);
-        addMealCalendar = findViewById(R.id.addMealCalendar);
         timePicker = findViewById(R.id.timePicker);
         exitButton = findViewById(R.id.exitAddMeal);
         addMealButton = findViewById(R.id.addNewMealButton);
@@ -77,13 +76,11 @@ public class MealCalendarAdd extends AppCompatActivity {
         });
 
         timePicker.setIs24HourView(true);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         
         meal = new Meal();
-        meal.setDate(df.format(Calendar.getInstance().getTime()));
         meal.setTime(timePicker.getHour() + ":" + timePicker.getMinute());
 
-        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner"));
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner", "snack1", "snack2", "snack3"));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealType.setAdapter(arrayAdapter);
@@ -97,7 +94,7 @@ public class MealCalendarAdd extends AppCompatActivity {
                 Toast.makeText(MealCalendarAdd.this, R.string.please_enter_all_info, Toast.LENGTH_SHORT).show();
                 return;
             }
-            database.addMealToElderly(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
+            database.addMealToElderly(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), false);
             finish();
         });
 
@@ -112,22 +109,6 @@ public class MealCalendarAdd extends AppCompatActivity {
             }
             time += i1;
             meal.setTime(time);
-        });
-        addMealCalendar.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            String date = i + "-";
-
-            //Weird bug where i1 (month) is -1 what its supposed to be
-            i1 += 1;
-
-            if(i1 < 10){
-                date += 0;
-            }
-            date += i1 + "-";
-            if(i2 < 10){
-                date += 0;
-            }
-            date += i2;
-            meal.setDate(date);
         });
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

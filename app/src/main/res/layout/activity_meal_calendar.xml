@@ -38,15 +38,6 @@
             android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:textSize="25dp" />
-
-        <CalendarView
-            android:id="@+id/mealCalendar"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:background="#edecf4"
-            android:layout_marginTop="5dp" />
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
