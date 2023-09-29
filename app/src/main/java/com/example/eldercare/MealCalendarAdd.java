@@ -28,7 +28,6 @@ import java.util.List;
 public class MealCalendarAdd extends AppCompatActivity {
     TextInputEditText editMealName;
     Spinner mealType;
-    CalendarView addMealCalendar;
     TimePicker timePicker;
     RelativeLayout addMealButton;
     ImageView exitButton;
@@ -43,7 +42,6 @@ public class MealCalendarAdd extends AppCompatActivity {
         setContentView(R.layout.activity_mealcalendar_add);
 
         editMealName = findViewById(R.id.editMealName);
-        addMealCalendar = findViewById(R.id.addMealCalendar);
         timePicker = findViewById(R.id.timePicker);
         exitButton = findViewById(R.id.exitAddMeal);
         addMealButton = findViewById(R.id.addNewMealButton);
@@ -112,22 +110,6 @@ public class MealCalendarAdd extends AppCompatActivity {
             }
             time += i1;
             meal.setTime(time);
-        });
-        addMealCalendar.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            String date = i + "-";
-
-            //Weird bug where i1 (month) is -1 what its supposed to be
-            i1 += 1;
-
-            if(i1 < 10){
-                date += 0;
-            }
-            date += i1 + "-";
-            if(i2 < 10){
-                date += 0;
-            }
-            date += i2;
-            meal.setDate(date);
         });
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

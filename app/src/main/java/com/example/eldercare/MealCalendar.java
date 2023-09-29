@@ -35,9 +35,7 @@ public class MealCalendar extends AppCompatActivity{
     ImageView addMealButton;
     RelativeLayout dimLayout;
     DatabaseLib database;
-    CalendarView calendar;
     String elderlyName, elderlyYear;
-    String selectedDate;
     
     /** Animates activity foreground alpha from startAlpha to endAlpha
      *
@@ -58,12 +56,11 @@ public class MealCalendar extends AppCompatActivity{
      *
      * @param elderlyName the name of the elderly
      * @param elderlyYear the year which the elderly is born
-     * @param date the date of which meals to display
      */
-    void displayMealsDate(String elderlyName, String elderlyYear, String date){
+    void displayMealsDate(String elderlyName, String elderlyYear){
         mealButtonsLayout.removeAllViews();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("elderly-users/" + elderlyName + elderlyYear + "/meals/" + date);
+        DatabaseReference ref = database.getReference("elderly-users/" + elderlyName + elderlyYear + "/meals");
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,16 +126,6 @@ public class MealCalendar extends AppCompatActivity{
         });
     }
 
-    /** Returns a string of the current date in the format "yyyy-mm-dd"
-     *
-     * @return current date in format "yyyy-mm-dd"
-     */
-    String getCalendarDate(){
-        Date date = new Date(calendar.getDate());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(date);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,10 +141,8 @@ public class MealCalendar extends AppCompatActivity{
 
         backButton = findViewById(R.id.backButton);
         mealButtonsLayout = findViewById(R.id.mealButtonsLayout);
-        calendar = findViewById(R.id.mealCalendar);
         addMealButton = findViewById(R.id.addMealButton);
 
-        selectedDate = getCalendarDate();
 
         dimLayout = findViewById(R.id.dimLayout);
         dimLayout.getForeground().setAlpha(0);
@@ -166,8 +151,6 @@ public class MealCalendar extends AppCompatActivity{
             startActivity(intent);
             finish();
         }
-
-        displayMealsDate(elderlyName, elderlyYear, getCalendarDate());
 
         backButton.setOnClickListener(view -> {
             //TODO: Change intent to patient home page
@@ -183,24 +166,6 @@ public class MealCalendar extends AppCompatActivity{
             animateActivityAlpha(0, 255);
             startActivity(intent);
         });
-
-        calendar.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            String date = i + "-";
-
-            //Weird bug where i1 (month) is -1 what its supposed to be
-            i1 += 1;
-
-            if(i1 < 10){
-                date += 0;
-            }
-            date += i1 + "-";
-            if(i2 < 10){
-                date += 0;
-            }
-            date += i2;
-            selectedDate = date;
-            displayMealsDate(elderlyName, elderlyYear, date);
-        });
     }
 
     /** Animates activity color when returning from edit/create
@@ -210,6 +175,6 @@ public class MealCalendar extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         animateActivityAlpha(255, 0);
-        displayMealsDate(elderlyName, elderlyYear, selectedDate);
+        displayMealsDate(elderlyName, elderlyYear);
     }
 }

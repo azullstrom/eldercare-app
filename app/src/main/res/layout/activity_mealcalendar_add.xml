@@ -91,13 +91,6 @@
                         android:layout_marginLeft="125dp"
                         android:background="@drawable/rounded_edit_text" />
                 </RelativeLayout>
-                <CalendarView
-                    android:id="@+id/addMealCalendar"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="wrap_content"
-                    android:background="#ffffff"
-                    android:layout_marginTop="20dp" />
                 <TimePicker
                     android:id="@+id/timePicker"
                     android:layout_width="wrap_content"
