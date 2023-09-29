@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
@@ -172,6 +173,10 @@ public class MealCalendar extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         animateActivityAlpha(255, 0);
-        displayMealsDate(elderlyName, elderlyYear);
+        final Handler handler = new Handler();
+        //delay before viewing meals so that database can catch up
+        handler.postDelayed(() -> {
+            displayMealsDate(elderlyName, elderlyYear);
+        }, 500);
     }
 }
