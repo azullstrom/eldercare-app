@@ -46,7 +46,6 @@ public class MealCalendarEdit extends AppCompatActivity {
 
         meal.setToEat(getIntent().getStringExtra("mealToEat"));
         meal.setTime(getIntent().getStringExtra("mealTime"));
-        meal.setDate(getIntent().getStringExtra("mealDate"));
         meal.setMealType(getIntent().getStringExtra("mealType"));
         elderlyYear = getIntent().getStringExtra("elderlyYear");
         elderlyName = getIntent().getStringExtra("elderlyName");
@@ -117,10 +116,10 @@ public class MealCalendarEdit extends AppCompatActivity {
 
             if(!eatInput.matches(meal.getToEat())){
                 meal.setToEat(eatInput);
-                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType());
+                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType());
             }
             if(!typeInput.matches(meal.getMealType())){
-                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getDate(), meal.getTime(), meal.getMealType(), typeInput);
+                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), typeInput);
             }
             finish();
         });
@@ -129,7 +128,6 @@ public class MealCalendarEdit extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), MealCalendarConfirmDelete.class);
             intent.putExtra("elderlyName", elderlyName);
             intent.putExtra("elderlyYear", elderlyYear);
-            intent.putExtra("mealDate", meal.getDate());
             intent.putExtra("mealType", meal.getMealType());
             startActivity(intent);
             finish();

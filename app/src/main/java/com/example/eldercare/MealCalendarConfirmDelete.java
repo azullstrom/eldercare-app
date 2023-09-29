@@ -28,7 +28,6 @@ public class MealCalendarConfirmDelete extends AppCompatActivity {
         deleteConfirmButton.setOnClickListener(view -> {
             database.removeMealFromElderly(getIntent().getStringExtra("elderlyName"),
                     getIntent().getStringExtra("elderlyYear"),
-                    getIntent().getStringExtra("mealDate"),
                     getIntent().getStringExtra("mealType"));
             finish();
         });

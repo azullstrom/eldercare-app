@@ -117,7 +117,6 @@ public class MealCalendar extends AppCompatActivity{
             Intent intent = new Intent(getApplicationContext(), MealCalendarEdit.class);
             intent.putExtra("mealToEat", meal.getToEat());
             intent.putExtra("mealTime", meal.getTime());
-            intent.putExtra("mealDate", meal.getDate());
             intent.putExtra("mealType", meal.getMealType());
             intent.putExtra("elderlyName", elderlyName);
             intent.putExtra("elderlyYear", elderlyYear);
