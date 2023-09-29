@@ -62,4 +62,7 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="email">Email</string>
     <string name="patient_allergies">Patient Allergies:</string>
+    <string name="enter_new_elder_pin">Enter new elder pin</string>
+    <string name="enter_the_elder_phone_number">Enter the elder phone number</string>
+    <string name="enter_elder_first_name">Enter elder first name</string>
 </resources>

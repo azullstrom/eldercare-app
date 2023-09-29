@@ -43,7 +43,8 @@
             android:id="@+id/pin"
             android:hint="@string/elderly_pin"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="numberPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ProgressBar

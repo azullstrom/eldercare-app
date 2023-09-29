@@ -23,14 +23,28 @@
         android:orientation="vertical"
         >
 
-    <EditText
-        android:id="@+id/elder_year_of_birth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter year of birth"
-        android:inputType="number" />
+        <EditText
+            android:id="@+id/elder_first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_elder_first_name"
+            android:inputType="text" />
 
-    <EditText
+        <EditText
+            android:id="@+id/elder_last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter elder last name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/elder_year_of_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_year_of_birth"
+            android:inputType="number" />
+
+        <EditText
         android:id="@+id/elder_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,27 +53,25 @@
 
         <!-- elderly Year of birth -->
         <EditText
-            android:id="@+id/elder_year_of_birth"
+            android:id="@+id/elder_pin_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_year_of_birth"
+            android:hint="@string/enter_new_elder_pin"
             android:inputType="number" />
 
-        <!-- elderly Email -->
-        <!-- TODO: change to username -->
         <EditText
-            android:id="@+id/elder_email"
+            android:id="@+id/elder_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/enter_elderly_email"
-            android:inputType="textEmailAddress" />
+            android:hint="@string/enter_the_elder_phone_number"
+            android:inputType="numberPassword" />
 
-    <EditText
-        android:id="@+id/elder_allergies"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter allergies (optional)"
-        android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/elder_allergies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter allergies (optional)"
+            android:inputType="textPersonName" />
 
 
 
