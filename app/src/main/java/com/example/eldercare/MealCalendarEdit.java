@@ -68,7 +68,7 @@ public class MealCalendarEdit extends AppCompatActivity {
 
         exit = findViewById(R.id.exitEditMeal);
         exit.setOnClickListener(view -> finish());
-        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner"));
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner", "snack1", "snack2", "snack3"));
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, arrayList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mealType.setAdapter(arrayAdapter);
@@ -81,6 +81,15 @@ public class MealCalendarEdit extends AppCompatActivity {
                 break;
             case "dinner":
                 mealType.setSelection(2);
+                break;
+            case "snack1":
+                mealType.setSelection(3);
+                break;
+            case "snack2":
+                mealType.setSelection(4);
+                break;
+            case "snack3":
+                mealType.setSelection(5);
                 break;
         }
 

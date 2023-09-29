@@ -65,8 +65,6 @@ public class MealCalendar extends AppCompatActivity{
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                //TODO: should meals have id? Right now there can only be one meal in each mealType
-                //
                 for (DataSnapshot mealTypeSnapshot: snapshot.getChildren()){
                     Meal meal = mealTypeSnapshot.getValue(Meal.class);
                     createMealButton(meal);
@@ -101,6 +99,15 @@ public class MealCalendar extends AppCompatActivity{
             case "lunch":
                 mealType.setText(R.string.lunch);
                 break;
+            case "snack1":
+                mealType.setText(R.string.snack1);
+                break;
+            case "snack2":
+                mealType.setText(R.string.snack2);
+                break;
+            case "snack3":
+                mealType.setText(R.string.snack3);
+                break;
         }
         mealType.setTextSize(20);
         mealType.setTextColor(Color.parseColor("#432c81"));
@@ -130,12 +137,11 @@ public class MealCalendar extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar);
 
-        elderlyName = getIntent().getStringExtra("ElderlyFirstName");
-        elderlyYear = getIntent().getStringExtra("ElderlyYearOfBirth");
+        //TODO: when all intents are pushed, this will work without substring
+        String elderlyInfo = getIntent().getStringExtra("elderlyName");
+        elderlyName = elderlyInfo.substring(0, elderlyInfo.length() - 4);
+        elderlyYear = elderlyInfo.substring(elderlyInfo.length()-4);
 
-
-        auth = FirebaseAuth.getInstance();
-        currentCareGiver = auth.getCurrentUser();
         database = new DatabaseLib(this);
 
         backButton = findViewById(R.id.backButton);
@@ -145,16 +151,8 @@ public class MealCalendar extends AppCompatActivity{
 
         dimLayout = findViewById(R.id.dimLayout);
         dimLayout.getForeground().setAlpha(0);
-        if (currentCareGiver == null) {
-            Intent intent = new Intent(getApplicationContext(), ElderlyMainActivity.class);
-            startActivity(intent);
-            finish();
-        }
 
         backButton.setOnClickListener(view -> {
-            //TODO: Change intent to patient home page
-            Intent intent = new Intent(getApplicationContext(), CaregiverMainActivity.class);
-            startActivity(intent);
             finish();
         });
 
