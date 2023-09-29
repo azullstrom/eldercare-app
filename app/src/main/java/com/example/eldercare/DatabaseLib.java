@@ -3,6 +3,7 @@ package com.example.eldercare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -284,7 +285,7 @@ public class DatabaseLib {
      * @param mealType         "breakfast" || "lunch" || "dinner"
      * @return                 Returns true or false if the meal was added successfully
      */
-    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType) {
+    public boolean addMealToElderly(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, boolean eaten) {
         mealAdded = false;
         if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
@@ -298,7 +299,7 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(time, toEat, mealType);
+                    Meal meal = new Meal(time, toEat, mealType, eaten);
                     DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -404,7 +405,7 @@ public class DatabaseLib {
      * @param time             Formatting: hh:mm
      * @param mealType         "breakfast" || "lunch" || "dinner"
      */
-    public void setToEat(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType) {
+    public void setToEat(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, boolean eaten) {
         if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
@@ -417,7 +418,7 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(time, toEat, mealType);
+                    Meal meal = new Meal(time, toEat, mealType, eaten);
                     DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -460,7 +461,7 @@ public class DatabaseLib {
      * @param mealType         "breakfast" || "lunch" || "dinner"
      * @param newMealType      ""breakfast" || "lunch" || "dinner" the new type of the meal
      */
-    public void setType(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, String newMealType) {
+    public void setType(String toEat, String firstNameElderly, String yearOfBirthElderly, String time, String mealType, String newMealType, boolean eaten) {
         if(!isMealParamFormattedCorrectly(mealType, time)) {
             Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
             return;
@@ -473,20 +474,25 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     DatabaseReference mealsRef = elderlyRef.child("meals");
-                    Meal meal = new Meal(time, toEat, mealType);
+                    Meal meal = new Meal(time, toEat, mealType, eaten);
                     DatabaseReference specificMealRef = mealsRef.child(mealType);
 
                     specificMealRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                if(addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, time, newMealType)){
-                                    removeMealFromElderly(firstNameElderly, yearOfBirthElderly, mealType);
-                                    Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    Toast.makeText(context, "Meal type already exists", Toast.LENGTH_SHORT).show();
-                                }
+                                boolean addedMeal = addMealToElderly(toEat, firstNameElderly, yearOfBirthElderly, time, newMealType, eaten);
+                                //delay so that database has time to create new meal before removing old one
+                                final Handler handler = new Handler();
+                                handler.postDelayed(() -> {
+                                    if(addedMeal){
+                                        removeMealFromElderly(firstNameElderly, yearOfBirthElderly, mealType);
+                                        Toast.makeText(context, "Meal successfully edited", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else{
+                                        Toast.makeText(context, "Meal type already exists", Toast.LENGTH_SHORT).show();
+                                    }
+                                }, 500);
                             } else {
                                 Toast.makeText(context, "Meal does not exist", Toast.LENGTH_SHORT).show();
                             }
