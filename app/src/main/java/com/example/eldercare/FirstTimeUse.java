@@ -1,12 +1,17 @@
 package com.example.eldercare;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -36,12 +41,16 @@ public class FirstTimeUse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Ask for permission to use notifications (only asks if permission not granted)
+        if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
+        }
         setContentView(R.layout.activity_first_time_use);
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
         caregiverButton = findViewById(R.id.caregiverButton);
-
         elderlyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
