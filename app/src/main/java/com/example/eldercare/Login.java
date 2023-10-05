@@ -70,18 +70,28 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login_caregiver);
 
         TextInputEditText editTextUsername, editTextPassword;
-        TextView registerNow;
+        TextView registerNow, forgotButton;
 
         editTextUsername = findViewById(R.id.username);
         editTextPassword = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
         registerNow = findViewById(R.id.registerNow);
+        forgotButton = findViewById(R.id.forgotPasswordButton);
 
         registerNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Register.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        forgotButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
                 startActivity(intent);
                 finish();
             }

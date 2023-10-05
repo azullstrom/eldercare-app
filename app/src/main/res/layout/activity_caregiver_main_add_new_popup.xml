@@ -57,14 +57,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_new_elder_pin"
-            android:inputType="number" />
+            android:inputType="numberPassword" />
 
         <EditText
             android:id="@+id/elder_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enter_the_elder_phone_number"
-            android:inputType="numberPassword" />
+            android:inputType="number" />
 
         <EditText
             android:id="@+id/elder_allergies"
