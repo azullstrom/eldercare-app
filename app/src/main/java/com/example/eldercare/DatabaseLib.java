@@ -608,12 +608,10 @@ public class DatabaseLib {
 
                             Intent intent;
                             if(userType.contains("elderly")) {
-                                intent = new Intent(context, ElderlyMainActivity.class);
+                                intent = new Intent(context, ElderlyOverview.class);
 
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
-                                //SEND EXTRAAAAAAAAAA
-                                // Anders fixar vettu
                                 intent.putExtra("usernameCaregiver", username.trim());
                             }
                             context.startActivity(intent);
