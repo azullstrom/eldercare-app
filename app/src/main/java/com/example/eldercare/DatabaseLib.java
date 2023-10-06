@@ -31,6 +31,7 @@ public class DatabaseLib {
     private Context context;
 
     private boolean mealAdded;
+    private String elderlyLastName;
 
     /**
      * Constructor
@@ -100,6 +101,22 @@ public class DatabaseLib {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    public void getElderlyLastName(String elderlyId, ValueEventListener callback){
+        DatabaseReference lastNameRef = rootRef.child("elderly-users").child(elderlyId).child("lastname");
+
+        lastNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onCancelled(error);
             }
         });
     }
@@ -274,6 +291,23 @@ public class DatabaseLib {
                 // Handle any database errors here
             }
         });
+    }
+
+    public String getElderlyLastName(String elderlyId){
+        DatabaseReference emailRef = rootRef.child("elderly-users").child(elderlyId.trim()).child("lastname");
+
+        emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                elderlyLastName = snapshot.getKey();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+        return elderlyLastName;
     }
 
     /**
