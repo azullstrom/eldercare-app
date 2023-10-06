@@ -41,8 +41,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *
      *
      * TODO:
-     *  - Error handling in the textfields (no empty spaces, numbers etc)?
-     *  - Display assigned elders
+     *  - Remove elder (reassign?!)
+     *  - Display assigned elders (Fix better buttons)
      *  - Add existing elder functionality
      *
      *
@@ -129,7 +129,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         //Connect to Ahmads code
                         String selectedElderKey = (String)view.getTag();
                         Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
-                        intent.putExtra("selectedElderkey", selectedElderKey);
+                        intent.putExtra("elderlyName", selectedElderKey.substring(0, selectedElderKey.length() - 4));
+                        intent.putExtra("elderlyYear", selectedElderKey.substring(selectedElderKey.length()-4));
                         startActivity(intent);
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -164,7 +165,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
         TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
         eldersContainer = findViewById(R.id.eldersContainer);
 
-        //If exists -> Hide a lot of text, Show patients (not yet here)
+        //If exists -> Hide a lot of text, Show patients
         if(eldersExist) {
             noPatientsImageView.setVisibility(View.INVISIBLE);
             noPatientsTextView.setVisibility(View.INVISIBLE);

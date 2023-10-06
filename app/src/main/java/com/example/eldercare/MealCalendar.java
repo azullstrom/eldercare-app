@@ -137,10 +137,8 @@ public class MealCalendar extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar);
 
-        //TODO: when all intents are pushed, this will work without substring
-        String elderlyInfo = getIntent().getStringExtra("elderlyName");
-        elderlyName = elderlyInfo.substring(0, elderlyInfo.length() - 4);
-        elderlyYear = elderlyInfo.substring(elderlyInfo.length()-4);
+        elderlyName = getIntent().getStringExtra("elderlyName");
+        elderlyYear = getIntent().getStringExtra("dateOfBirth");
 
         database = new DatabaseLib(this);
 
