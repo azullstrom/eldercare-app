@@ -49,7 +49,7 @@ public class FirstTimeUse extends AppCompatActivity {
         setContentView(R.layout.activity_first_time_use);
 
         NotificationLib lib = new NotificationLib(this, "test", "testing");
-        lib.createAndShowNotification("Meal", "You should eat now");
+        lib.createAndShowNotification("Notification", "notification text");
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
