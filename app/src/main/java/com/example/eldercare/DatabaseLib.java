@@ -647,6 +647,65 @@ public class DatabaseLib {
                 });
     }
 
+    public interface LoginCallback {
+        void onLoginSuccess();
+        void onLoginFailure();
+    }
+
+    /**
+     * Login a user with LoginCallback. Used if you want to achieve something only if it's success or not within the app.
+     *
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param userType "elderly" || "caregiver"
+     */
+    public void loginUser(String username, String email, String password, String userType, final LoginCallback callback) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(context, "Enter username", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String passwordUser = password.trim();
+        if (userType.contains("elderly")) {
+            passwordUser = passwordUser + "00";
+        }
+
+        mAuth.signInWithEmailAndPassword(email, passwordUser)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent;
+                            if (userType.contains("elderly")) {
+                                intent = new Intent(context, ElderlyOverview.class);
+                            } else {
+                                intent = new Intent(context, CaregiverMainActivity.class);
+                                intent.putExtra("usernameCaregiver", username.trim());
+                            }
+                            context.startActivity(intent);
+
+                            if (context instanceof Activity) {
+                                ((Activity) context).finish();
+                            }
+
+                            // Notify the caller that login was successful
+                            callback.onLoginSuccess();
+                        } else {
+                            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                            // Notify the caller that login failed
+                            callback.onLoginFailure();
+                        }
+                    }
+                });
+    }
+
+
     public void resetPassword(String email) {
         mAuth.sendPasswordResetEmail(email.trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
