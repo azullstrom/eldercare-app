@@ -49,6 +49,7 @@ public class FirstTimeUse extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
         }
+        FireBaseMessageReceiver rec = new FireBaseMessageReceiver();
         setContentView(R.layout.activity_first_time_use);
 
         //TODO: REMOVE, just for testing

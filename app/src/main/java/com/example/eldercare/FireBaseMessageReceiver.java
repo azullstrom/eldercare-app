@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-public class FireBaseMessageReciever extends FirebaseMessagingService {
+public class FireBaseMessageReceiver extends FirebaseMessagingService {
 
     // Override onNewToken to get new token
     @Override
@@ -22,27 +22,14 @@ public class FireBaseMessageReciever extends FirebaseMessagingService {
     public void
     onMessageReceived(RemoteMessage remoteMessage)
     {
-        // First case when notifications are received via
-        // data event
-        // Here, 'title' and 'message' are the assumed names
-        // of JSON
-        // attributes. Since here we do not have any data
-        // payload, This section is commented out. It is
-        // here only for reference purposes.
-        /*if(remoteMessage.getData().size()>0){
-            showNotification(remoteMessage.getData().get("title"),
-                          remoteMessage.getData().get("message"));
-        }*/
-
-        // Second case when notification payload is
-        // received.
         if (remoteMessage.getNotification() != null) {
             // Since the notification is received directly
             // from FCM, the title and the body can be
             // fetched directly as below.
-            showNotification(
-                    remoteMessage.getNotification().getTitle(),
+            NotificationLib notificationLib = new NotificationLib(this, "NotificationId",
+                    "NotificationChannel", remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody());
+            notificationLib.createAndShowNotification();
         }
     }
 }
