@@ -31,7 +31,6 @@ public class DatabaseLib {
     private Context context;
 
     private boolean mealAdded;
-    private String elderlyLastName;
 
     /**
      * Constructor
@@ -291,23 +290,6 @@ public class DatabaseLib {
                 // Handle any database errors here
             }
         });
-    }
-
-    public String getElderlyLastName(String elderlyId){
-        DatabaseReference emailRef = rootRef.child("elderly-users").child(elderlyId.trim()).child("lastname");
-
-        emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                elderlyLastName = snapshot.getKey();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
-            }
-        });
-        return elderlyLastName;
     }
 
     /**
