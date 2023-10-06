@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = false;
+    private static final boolean TEST_MODE = true;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -136,10 +137,12 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login_elderly);
 
         TextInputEditText editTextPin;
+        CheckBox checkBoxRememberMe;
 
         editTextPin = findViewById(R.id.pin);
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
+        checkBoxRememberMe = findViewById(R.id.rememberMeCheckbox);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +151,10 @@ public class Login extends AppCompatActivity {
                 pin = String.valueOf(editTextPin.getText());
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
+
+                if(checkBoxRememberMe.isChecked()) {
+
+                }
 
                 databaseLib.loginUser("", email, pin, "elderly");
             }
