@@ -11,8 +11,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.RemoteMessage;
+
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,10 +32,10 @@ public class NotificationLib extends TimerTask {
      *
      * @param context Just write the class you're in: "this" should be fine.
      */
-    public NotificationLib(Context context, String channelId, String channelName, String title, String text) {
+    public NotificationLib(Context context, String title, String text) {
         this.context = context;
-        this.channelId = channelId;
-        this.channelName = channelName;
+        this.channelId = "elderCareId";
+        this.channelName = "elderCareChannel";
         this.title = title;
         this.text = text;
         createNotificationChannel();
@@ -111,6 +116,15 @@ public class NotificationLib extends TimerTask {
         Timer scheduleTimer = new Timer();
         scheduleTimer.scheduleAtFixedRate(this, timeDeltaMillis, millisOneDay);
         return scheduleTimer;
+    }
+
+    public void sendNotification(String receiverToken){
+        Map<String, String> data = new HashMap<>();
+        data.put("title", title);
+        data.put("text", text);
+        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("101334957062" + "@gcm.googleapis.com")
+                .setData(data)
+                .build());
     }
 
     /**

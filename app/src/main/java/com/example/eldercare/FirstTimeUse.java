@@ -53,8 +53,9 @@ public class FirstTimeUse extends AppCompatActivity {
         setContentView(R.layout.activity_first_time_use);
 
         //TODO: REMOVE, just for testing
-        NotificationLib notificationLib = new NotificationLib(this, "test", "testing", "Notification title", "This is the text");
-        Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
+        NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is the text");
+        notificationLib.sendNotification("test");
+        //Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
         //notificationTimer.cancel();
 
         mAuth = FirebaseAuth.getInstance();
