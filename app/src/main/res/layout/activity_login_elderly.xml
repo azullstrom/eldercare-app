@@ -47,6 +47,13 @@
             android:inputType="numberPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Remember Me Checkbox -->
+    <CheckBox
+        android:id="@+id/rememberMeCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Remember Me" />
+
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,6 +67,5 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="@string/login" />
-
 
 </LinearLayout>
