@@ -15,9 +15,12 @@
         android:theme="@style/Theme.ElderCare"
         tools:targetApi="31">
         <activity
+            android:name=".ForgotPassword"
+            android:exported="false" />
+        <activity
             android:name=".MealCalendarConfirmDelete"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".MealCalendarAdd"
             android:exported="false"
@@ -29,8 +32,9 @@
         <activity
             android:name=".FirstTimeUse"
             android:exported="false" />
-        <activity android:name=".CaregiverElderlySettingsActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".CaregiverElderlySettingsActivity"
+            android:exported="false" />
         <activity
             android:name=".Register"
             android:exported="false" />
@@ -46,17 +50,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ElderlyMainActivity"
-            android:exported="true" />
+        <activity android:name=".ElderlyOverview"
+            android:exported="false"/>
         <activity
             android:name=".CaregiverMainActivity"
             android:exported="false" />
         <activity
             android:name=".CaregiverElderlyOverviewActivity"
-            android:exported="false" />
-        <activity
-            android:name=".CaregiverElderlySettingsActivity"
             android:exported="false" />
     </application>
 

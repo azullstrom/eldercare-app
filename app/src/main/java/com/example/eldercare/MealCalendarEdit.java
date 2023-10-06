@@ -146,9 +146,5 @@ public class MealCalendarEdit extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-
-        eatenBox.setOnClickListener(view -> {
-            //TODO: set eaten to true/false, not added in database structure yet
-        });
     }
 }

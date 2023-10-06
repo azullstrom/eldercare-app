@@ -137,10 +137,8 @@ public class MealCalendar extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_calendar);
 
-        //TODO: when all intents are pushed, this will work without substring
-        String elderlyInfo = getIntent().getStringExtra("elderlyName");
-        elderlyName = elderlyInfo.substring(0, elderlyInfo.length() - 4);
-        elderlyYear = elderlyInfo.substring(elderlyInfo.length()-4);
+        elderlyName = getIntent().getStringExtra("elderlyName");
+        elderlyYear = getIntent().getStringExtra("dateOfBirth");
 
         database = new DatabaseLib(this);
 
@@ -166,16 +164,17 @@ public class MealCalendar extends AppCompatActivity{
     }
 
     /** Animates activity color when returning from edit/create
-     *
+     *  displays meals after a short delay
      */
     @Override
     protected void onResume() {
         super.onResume();
         animateActivityAlpha(255, 0);
+        mealButtonsLayout.removeAllViews();
         final Handler handler = new Handler();
         //delay before viewing meals so that database can catch up
         handler.postDelayed(() -> {
             displayMealsDate(elderlyName, elderlyYear);
-        }, 500);
+        }, 1000);
     }
 }

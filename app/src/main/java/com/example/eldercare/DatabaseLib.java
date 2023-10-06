@@ -626,12 +626,10 @@ public class DatabaseLib {
 
                             Intent intent;
                             if(userType.contains("elderly")) {
-                                intent = new Intent(context, ElderlyMainActivity.class);
+                                intent = new Intent(context, ElderlyOverview.class);
 
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
-                                //SEND EXTRAAAAAAAAAA
-                                // Anders fixar vettu
                                 intent.putExtra("usernameCaregiver", username.trim());
                             }
                             context.startActivity(intent);
@@ -644,6 +642,26 @@ public class DatabaseLib {
                         }
                     }
                 });
+    }
+
+    public void resetPassword(String email) {
+        mAuth.sendPasswordResetEmail(email.trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(context, "Reset mail sent", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(context, Login.class);
+                    context.startActivity(intent);
+
+                    if (context instanceof Activity) {
+                        ((Activity) context).finish();
+                    }
+                } else {
+                    Toast.makeText(context, "Enter a valid email", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     /**
