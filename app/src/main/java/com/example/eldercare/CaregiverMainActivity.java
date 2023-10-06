@@ -3,10 +3,19 @@ package com.example.eldercare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -120,10 +130,26 @@ public class CaregiverMainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                //Dynamically creates buttons for every assigned elder in the loop below
+                Drawable patientIcon = ContextCompat.getDrawable(CaregiverMainActivity.this, R.drawable.patienticon);
+                patientIcon.setBounds(40, 0, 280, 240);
+                GradientDrawable roundedBackground = new GradientDrawable();
+                roundedBackground.setColor(0xFFf0f0f0); // Background color
+                roundedBackground.setCornerRadius(50);  // Set the corner radius in pixels
                 int index = 0;
+
                 for(String elderKey : elderKeys) {
                     Button elderButton = new Button(CaregiverMainActivity.this);
+                    //Button visuals
+                    elderButton.setBackground(roundedBackground);
+                    elderButton.setTypeface(Typeface.DEFAULT_BOLD);
                     elderButton.setText(elderKey);
+                    elderButton.setTextColor(0xFF808080);
+                    elderButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                    elderButton.setGravity(Gravity.CENTER_VERTICAL);
+                    elderButton.setCompoundDrawables(patientIcon, null, null, null);
+                    elderButton.setCompoundDrawablePadding(80);
+
                     elderButton.setTag(elderKey);
                     elderButton.setOnClickListener(view -> {
                         //Connect to Ahmads code
@@ -134,7 +160,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         startActivity(intent);
                     });
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT, 250,
                             ViewGroup.LayoutParams.WRAP_CONTENT
                     );
                     int topMargin = index == 0 ? 390 : 10; // Use counter variable here
@@ -155,12 +181,13 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
     /*  Updates the UI depending on if there is elders assigned or not should also take in "key" (i.e elder name/ID I guess)  */
     private void updateUI(boolean eldersExist) {
-        //Set to true if you want to see empty page layout
+        //Remove comment if you want to see empty page layout
         //eldersExist = false;
 
 
         ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
         ImageView arrowImageView = findViewById(R.id.arrowImageView);
+        ImageView elderSettingsImageView = findViewById(R.id.settings_homepage_caregiver);
         TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);
         TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
         eldersContainer = findViewById(R.id.eldersContainer);
@@ -171,8 +198,10 @@ public class CaregiverMainActivity extends AppCompatActivity {
             noPatientsTextView.setVisibility(View.INVISIBLE);
             clickToAddTextView.setVisibility(View.INVISIBLE);
             arrowImageView.setVisibility(View.INVISIBLE);
+            elderSettingsImageView.setVisibility(View.VISIBLE);
             eldersContainer.setVisibility(View.VISIBLE);
             eldersIterator();
+            eldersSettings();
 
         }
         //If not exists -> Show image, "no patients text"
@@ -183,6 +212,16 @@ public class CaregiverMainActivity extends AppCompatActivity {
             arrowImageView.setVisibility(View.VISIBLE);
             eldersContainer.setVisibility(View.GONE);
         }
+    }
+
+    private void eldersSettings() {
+        ImageView settingsButton = findViewById(R.id.settings_homepage_caregiver);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
+            }
+        });
     }
 
 
@@ -268,7 +307,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /* Tar input från allergirutan och skapar en lista av innehållet,
                  * separerat med ett kommatecken
-                 * Tomt innehåll bör även accepteras. Inte testat
                  */
 
                 // Anders: Lade till safe input och lade in alla editTexts i strängar.

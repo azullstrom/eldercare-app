@@ -69,6 +69,18 @@
         android:src="@drawable/arrow_image"
         android:visibility="visible" />
 
+    <ImageView
+        android:id="@+id/settings_homepage_caregiver"
+        android:clickable="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="290dp"
+        android:layout_marginTop="40dp"
+        android:gravity="top"
+        android:padding="16dp"
+        android:src="@drawable/settings_homepage_caregiver"
+        android:visibility="invisible" />
+
     <androidx.cardview.widget.CardView
         android:layout_width="70dp"
         android:layout_height="70dp"
@@ -87,6 +99,7 @@
             android:contentDescription="@string/add_patient_button"
             android:scaleType="centerCrop" />
     </androidx.cardview.widget.CardView>
+
 
     <LinearLayout
         android:id="@+id/eldersContainer"
