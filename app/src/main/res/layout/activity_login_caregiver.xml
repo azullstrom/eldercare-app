@@ -100,5 +100,22 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:id="@+id/forgotPasswordButton"
+            android:text="Forgot Password?"
+            android:textColor="@color/purple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 
 </LinearLayout>
