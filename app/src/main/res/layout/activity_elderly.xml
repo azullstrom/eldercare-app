@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="10dp"
         android:fontFamily="@font/raleway_bold"
         android:text="Hi Juila!"
         android:textColor="#432C81"
@@ -28,11 +28,11 @@
 
     <Button
         android:id="@+id/buttonElderly"
-        android:layout_width="343dp"
+        android:layout_width="match_parent"
         android:layout_height="214dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
         android:backgroundTint="@color/light_gray"
 
         android:drawableEnd="@drawable/stomach_svgrepo_com"
@@ -68,4 +68,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAlarm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonElderly" />
 </androidx.constraintlayout.widget.ConstraintLayout>
