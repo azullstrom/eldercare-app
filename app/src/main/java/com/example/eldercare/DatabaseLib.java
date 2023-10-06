@@ -23,7 +23,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
@@ -661,6 +666,37 @@ public class DatabaseLib {
             }
         });
     }
+
+    public interface MealCallback {
+        void onMealsReceived(ArrayList<Meal> meals);
+    }
+
+    public void getMeals(String firstNameElderly, String yearOfBirthElderly, MealCallback callback) {
+        DatabaseReference mealsRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim()).child("meals");
+
+        mealsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot mealSnapshot) {
+                ArrayList<Meal> mealList = new ArrayList<>();
+
+                for (DataSnapshot mealTypeSnapshot : mealSnapshot.getChildren()) {
+                    Meal meal = mealTypeSnapshot.getValue(Meal.class);
+                    if (meal != null) {
+                        mealList.add(meal);
+                    }
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onMealsReceived(mealList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the error
+            }
+        });
+    }
+
 
     /**
      * Checks if parameters for meal functions are correctly formatted
