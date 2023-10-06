@@ -42,7 +42,7 @@ public class ElderlyOverview extends AppCompatActivity {
        user= FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
-            Toast.makeText(this, "user is known", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "user is known " + user.getEmail() , Toast.LENGTH_SHORT).show();
         } else {
             // No user is signed in
             Toast.makeText(this, "user is unknown", Toast.LENGTH_SHORT).show();
