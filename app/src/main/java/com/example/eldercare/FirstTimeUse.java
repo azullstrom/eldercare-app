@@ -33,6 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Date;
+import java.util.Timer;
+
 public class FirstTimeUse extends AppCompatActivity {
 
     Button elderlyButton, caregiverButton;
@@ -48,8 +51,10 @@ public class FirstTimeUse extends AppCompatActivity {
         }
         setContentView(R.layout.activity_first_time_use);
 
-        NotificationLib lib = new NotificationLib(this, "test", "testing");
-        lib.createAndShowNotification("Notification", "notification text");
+        //TODO: REMOVE, just for testing
+        NotificationLib notificationLib = new NotificationLib(this, "test", "testing", "Notification title", "This is the text");
+        Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
+        //notificationTimer.cancel();
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
