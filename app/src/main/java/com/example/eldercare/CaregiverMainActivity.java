@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -51,8 +52,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *
      *
      * TODO:
-     *  - Remove elder (reassign?!)
-     *  - Display assigned elders (Fix better buttons)
+     *  - Finish eldersSettings() func line:217
+     *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
      *
      *
@@ -62,6 +63,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private boolean eldersExist = true;
+
+    private String elderlyLastName;
     LinearLayout eldersContainer;
     // Anders: Gjorde denna global i klassen så att man slipper hämta den hela tiden.
     private String usernameCaregiver;
@@ -107,6 +110,34 @@ public class CaregiverMainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
+
+    public interface ElderlyLastNameCallback {
+        void onLastNameReceived(String lastName);
+        void onError(String errorMessage);
+    }
+
+    private void getEldersLastName(String elderID, ElderlyLastNameCallback callback) {
+        databaseLib.getElderlyLastName(elderID, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String elderlyLastName = snapshot.getValue(String.class);
+                    callback.onLastNameReceived(elderlyLastName);
+                } else {
+                    callback.onError("ElderlyId not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError("Database error");
+            }
+        });
+    }
+
     private void eldersIterator() {
         eldersContainer = findViewById(R.id.eldersContainer);
         eldersContainer.removeAllViews();
@@ -131,43 +162,34 @@ public class CaregiverMainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 //Dynamically creates buttons for every assigned elder in the loop below
-                Drawable patientIcon = ContextCompat.getDrawable(CaregiverMainActivity.this, R.drawable.patienticon);
-                patientIcon.setBounds(40, 0, 280, 240);
-                GradientDrawable roundedBackground = new GradientDrawable();
-                roundedBackground.setColor(0xFFf0f0f0); // Background color
-                roundedBackground.setCornerRadius(50);  // Set the corner radius in pixels
-                int index = 0;
+                LayoutInflater inflater = LayoutInflater.from(CaregiverMainActivity.this);
+                for (String elderKey : elderKeys) {
+                    String elderlyFirstName = elderKey.substring(0, elderKey.length() - 4);
+                    getEldersLastName(elderKey, new ElderlyLastNameCallback() {
+                        @Override
+                        public void onLastNameReceived(String lastName) {
+                            View customView = inflater.inflate(R.layout.patient_card, null);
+                            eldersContainer.addView(customView);
+                            TextView patientFullName = customView.findViewById(R.id.patientFullName);
+                            TextView patientID = customView.findViewById(R.id.patientID);
+                            customView.setTag(elderKey);
+                            patientFullName.setText(elderlyFirstName + " " + lastName);
+                            patientID.setText("ID: " + elderKey);
 
-                for(String elderKey : elderKeys) {
-                    Button elderButton = new Button(CaregiverMainActivity.this);
-                    //Button visuals
-                    elderButton.setBackground(roundedBackground);
-                    elderButton.setTypeface(Typeface.DEFAULT_BOLD);
-                    elderButton.setText(elderKey);
-                    elderButton.setTextColor(0xFF808080);
-                    elderButton.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                    elderButton.setGravity(Gravity.CENTER_VERTICAL);
-                    elderButton.setCompoundDrawables(patientIcon, null, null, null);
-                    elderButton.setCompoundDrawablePadding(80);
+                            customView.setOnClickListener(v -> {
+                                String selectedElderKey = (String) v.getTag();
+                                Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
+                                intent.putExtra("elderlyName", selectedElderKey.substring(0, selectedElderKey.length() - 4));
+                                intent.putExtra("dateOfBirth", selectedElderKey.length() - 4);
+                                startActivity(intent);
+                            });
+                        }
 
-                    elderButton.setTag(elderKey);
-                    elderButton.setOnClickListener(view -> {
-                        //Connect to Ahmads code
-                        String selectedElderKey = (String)view.getTag();
-                        Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
-                        intent.putExtra("elderlyName", selectedElderKey.substring(0, selectedElderKey.length() - 4));
-                        intent.putExtra("elderlyYear", selectedElderKey.substring(selectedElderKey.length()-4));
-                        startActivity(intent);
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(CaregiverMainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        }
                     });
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, 250,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    );
-                    int topMargin = index == 0 ? 390 : 10; // Use counter variable here
-                    params.setMargins(0, topMargin, 0, 10); // Apply topMargin here
-                    elderButton.setLayoutParams(params);
-                    eldersContainer.addView(elderButton);
-                    index++;
                 }
             }
 
@@ -187,7 +209,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
         ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
         ImageView arrowImageView = findViewById(R.id.arrowImageView);
-        ImageView elderSettingsImageView = findViewById(R.id.settings_homepage_caregiver);
+        //ImageView elderSettingsImageView = findViewById(R.id.settings_homepage_caregiver);
         TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);
         TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
         eldersContainer = findViewById(R.id.eldersContainer);
@@ -198,10 +220,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
             noPatientsTextView.setVisibility(View.INVISIBLE);
             clickToAddTextView.setVisibility(View.INVISIBLE);
             arrowImageView.setVisibility(View.INVISIBLE);
-            elderSettingsImageView.setVisibility(View.VISIBLE);
             eldersContainer.setVisibility(View.VISIBLE);
             eldersIterator();
-            eldersSettings();
+            //eldersSettings(elderSettingsImageView);
 
         }
         //If not exists -> Show image, "no patients text"
@@ -210,16 +231,24 @@ public class CaregiverMainActivity extends AppCompatActivity {
             noPatientsTextView.setVisibility(View.VISIBLE);
             clickToAddTextView.setVisibility(View.VISIBLE);
             arrowImageView.setVisibility(View.VISIBLE);
+            //elderSettingsImageView.setVisibility(View.INVISIBLE);
             eldersContainer.setVisibility(View.GONE);
         }
     }
 
-    private void eldersSettings() {
-        ImageView settingsButton = findViewById(R.id.settings_homepage_caregiver);
-        settingsButton.setOnClickListener(new View.OnClickListener() {
+    private void eldersSettings(ImageView eldersSettings) {
+        eldersSettings.setVisibility(View.VISIBLE);
+        eldersSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
+                /******************************************************
+                 * TODO:
+                 * Change settings card when settings is pressed:
+                 * (SHOW TRASH BIN) delete_img.view(visible)
+                 * Implement functionality to move the patient cards up or down
+                 * Implement remove (unassign) functionality
+                 */
             }
         });
     }

@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:gravity="center">
 
     <TextView
         android:id="@+id/your_patients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="96dp"
-        android:layout_marginEnd="170dp"
         android:text="@string/your_patients"
+        android:layout_marginTop="20dp"
         android:textAppearance="@style/your_patients"
         android:lineSpacingExtra="4sp"
         android:translationY="-1.91sp"
-        android:gravity="top" />
+        />
+
+    <LinearLayout
+        android:id="@+id/eldersContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/noPatientsImageView"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="275dp"
+        android:layout_marginTop="50dp"
         android:contentDescription="@string/no_patients_text"
-        android:layout_marginTop="150dp"
-        android:layout_marginRight="15dp"
         android:gravity="center"
-        android:padding="16dp"
         android:src="@drawable/no_patients_image"
         android:visibility="visible" />
 
@@ -37,9 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/noPatientsImageView"
-        android:layout_marginLeft="30dp"
         android:layout_marginTop="-25dp"
-        android:gravity="center"
         android:maxLines="1"
         android:padding="16dp"
         android:text="You don't have any patients"
@@ -50,65 +53,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/noPatientsTextView"
-        android:layout_marginLeft="75dp"
         android:layout_marginTop="-22dp"
         android:gravity="center"
         android:maxLines="1"
-        android:padding="16dp"
+        android:padding="10dp"
         android:text="Click the plus button to add"
         android:textAppearance="@style/click_to_add" />
+
 
     <ImageView
         android:id="@+id/arrowImageView"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginLeft="140dp"
-        android:layout_marginTop="505dp"
-        android:gravity="bottom"
+        android:gravity="center"
         android:padding="16dp"
         android:src="@drawable/arrow_image"
         android:visibility="visible" />
 
-    <ImageView
-        android:id="@+id/settings_homepage_caregiver"
-        android:clickable="true"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginLeft="290dp"
-        android:layout_marginTop="40dp"
-        android:gravity="top"
-        android:padding="16dp"
-        android:src="@drawable/settings_homepage_caregiver"
-        android:visibility="invisible" />
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="580dp"
-        android:layout_marginEnd="10dp"
-        app:cardCornerRadius="35dp"
-        app:cardElevation="0dp">
-
-        <ImageButton
-            android:id="@+id/addImageButton"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/add_button_no_lines"
-            android:background="@null"
-            android:contentDescription="@string/add_patient_button"
-            android:scaleType="centerCrop" />
-    </androidx.cardview.widget.CardView>
-
-
     <LinearLayout
-        android:id="@+id/eldersContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:layout_marginTop="-60dp"
+        android:gravity="end">
+        <androidx.cardview.widget.CardView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="20dp"
+            app:cardCornerRadius="35dp"
+            app:cardElevation="0dp">
+
+            <ImageButton
+                android:id="@+id/addImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/add_button_no_lines"
+                android:background="@null"
+                android:contentDescription="@string/add_patient_button"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
 
 
-</RelativeLayout>
+</LinearLayout>
