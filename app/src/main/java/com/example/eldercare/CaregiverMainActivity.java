@@ -179,7 +179,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                             customView.setOnClickListener(v -> {
                                 String selectedElderKey = (String) v.getTag();
                                 Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
-                                intent.putExtra("elderlyName", selectedElderKey.substring(0, selectedElderKey.length() - 4));
+                                intent.putExtra("elderlyName", elderlyFirstName);
                                 intent.putExtra("dateOfBirth", selectedElderKey.length() - 4);
                                 startActivity(intent);
                             });
