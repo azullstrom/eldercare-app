@@ -105,6 +105,22 @@ public class DatabaseLib {
         });
     }
 
+    public void getElderlyLastName(String elderlyId, ValueEventListener callback){
+        DatabaseReference lastNameRef = rootRef.child("elderly-users").child(elderlyId).child("lastname");
+
+        lastNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onCancelled(error);
+            }
+        });
+    }
+
     /**
      * Converts snapshot into JSON.
      *
