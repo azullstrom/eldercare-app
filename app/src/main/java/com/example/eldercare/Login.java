@@ -47,11 +47,13 @@ public class Login extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstTimeUse = prefs.getBoolean("isFirstTimeUse", true);
+        boolean rememberMe = prefs.getBoolean("rememberMe", false);
 
         // If the coder wants to test the FirstTimeUse page each time the app starts
         if(TEST_MODE) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("isFirstTimeUse", true);
+            editor.putBoolean("rememberMe", false);
             editor.apply();
         }
 
@@ -63,7 +65,13 @@ public class Login extends AppCompatActivity {
         if(isCaregiver) {
             showLoginCaregiverLayout();
         } else {
-            showLoginElderlyLayout();
+            if(rememberMe) {
+                String email = prefs.getString("elderlyMail", "");
+                String pin = prefs.getString("elderlyPin", "");
+                databaseLib.loginUser("", email, pin, "elderly");
+            } else {
+                showLoginElderlyLayout();
+            }
         }
     }
 
@@ -152,11 +160,23 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
 
-                if(checkBoxRememberMe.isChecked()) {
+                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        // The user is successfully logged in, now check if "Remember Me" is checked
+                        if (checkBoxRememberMe.isChecked()) {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("rememberMe", true);
+                            editor.putString("elderlyPin", pin);
+                            editor.apply();
+                        }
+                    }
 
-                }
-
-                databaseLib.loginUser("", email, pin, "elderly");
+                    @Override
+                    public void onLoginFailure() {
+                        // Handle login failure
+                    }
+                });
             }
         });
     }
