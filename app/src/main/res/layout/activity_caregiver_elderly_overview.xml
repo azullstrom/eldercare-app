@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
     android:orientation="vertical"
     android:padding="15dp">
+
+
+    <!-- Include Language switcher button/toggle -_- -->
+    <include layout="@layout/activity_language_toggle"/>
+
     <!-- Arrow & text to go back to the previous page -->
     <LinearLayout
         android:id="@+id/backToPatientsList"
         android:clickable="true"
+        android:focusable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -47,6 +53,7 @@
         <LinearLayout
             android:id="@+id/mealsCard"
             android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -79,6 +86,7 @@
         <LinearLayout
             android:id="@+id/allergiesCard"
             android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -111,6 +119,7 @@
         <LinearLayout
             android:id="@+id/alertHistoryCard"
             android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -143,6 +152,7 @@
         <LinearLayout
             android:id="@+id/elderlySettingsCard"
             android:clickable="true"
+            android:focusable="true"
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@color/light_gray"
@@ -171,4 +181,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

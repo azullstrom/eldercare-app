@@ -67,4 +67,6 @@
     <string name="snack1">Första Snack</string>
     <string name="snack2">Andra Snack</string>
     <string name="snack3">Tredje Snack</string>
+    <string name="lang_en">en</string>
+    <string name="lang_sv">sv</string>
 </resources>

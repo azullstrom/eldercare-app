@@ -5,9 +5,9 @@
 
     <ImageView
         android:id="@+id/englishFlag"
-        android:contentDescription="en"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:contentDescription="@string/lang_en"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/en_lang_img"
         android:layout_alignParentEnd="true"
         android:clickable="true"
@@ -16,9 +16,9 @@
 
     <ImageView
         android:id="@+id/swedishFlag"
-        android:contentDescription="sv"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:contentDescription="@string/lang_sv"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/sv_lang_img"
         android:layout_alignParentEnd="true"
         android:clickable="true"
