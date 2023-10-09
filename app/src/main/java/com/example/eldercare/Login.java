@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +29,7 @@ import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = false;
+    private static final boolean TEST_MODE = true;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
@@ -46,11 +47,13 @@ public class Login extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstTimeUse = prefs.getBoolean("isFirstTimeUse", true);
+        boolean rememberMe = prefs.getBoolean("rememberMe", false);
 
         // If the coder wants to test the FirstTimeUse page each time the app starts
         if(TEST_MODE) {
             SharedPreferences.Editor editor = prefs.edit();
             editor.putBoolean("isFirstTimeUse", true);
+            editor.putBoolean("rememberMe", false);
             editor.apply();
         }
 
@@ -62,7 +65,13 @@ public class Login extends AppCompatActivity {
         if(isCaregiver) {
             showLoginCaregiverLayout();
         } else {
-            showLoginElderlyLayout();
+            if(rememberMe) {
+                String email = prefs.getString("elderlyMail", "");
+                String pin = prefs.getString("elderlyPin", "");
+                databaseLib.loginUser("", email, pin, "elderly");
+            } else {
+                showLoginElderlyLayout();
+            }
         }
     }
 
@@ -136,10 +145,12 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login_elderly);
 
         TextInputEditText editTextPin;
+        CheckBox checkBoxRememberMe;
 
         editTextPin = findViewById(R.id.pin);
         loginButton = findViewById(R.id.loginButton);
         progressBar = findViewById(R.id.progressBar);
+        checkBoxRememberMe = findViewById(R.id.rememberMeCheckbox);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,7 +160,23 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
 
-                databaseLib.loginUser("", email, pin, "elderly");
+                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                    @Override
+                    public void onLoginSuccess() {
+                        // The user is successfully logged in, now check if "Remember Me" is checked
+                        if (checkBoxRememberMe.isChecked()) {
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putBoolean("rememberMe", true);
+                            editor.putString("elderlyPin", pin);
+                            editor.apply();
+                        }
+                    }
+
+                    @Override
+                    public void onLoginFailure() {
+                        // Handle login failure
+                    }
+                });
             }
         });
     }

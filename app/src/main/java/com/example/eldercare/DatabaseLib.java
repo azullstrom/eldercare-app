@@ -23,7 +23,12 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
@@ -642,6 +647,65 @@ public class DatabaseLib {
                 });
     }
 
+    public interface LoginCallback {
+        void onLoginSuccess();
+        void onLoginFailure();
+    }
+
+    /**
+     * Login a user with LoginCallback. Used if you want to achieve something only if it's success or not within the app.
+     *
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param userType "elderly" || "caregiver"
+     */
+    public void loginUser(String username, String email, String password, String userType, final LoginCallback callback) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(context, "Enter username", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String passwordUser = password.trim();
+        if (userType.contains("elderly")) {
+            passwordUser = passwordUser + "00";
+        }
+
+        mAuth.signInWithEmailAndPassword(email, passwordUser)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent;
+                            if (userType.contains("elderly")) {
+                                intent = new Intent(context, ElderlyOverview.class);
+                            } else {
+                                intent = new Intent(context, CaregiverMainActivity.class);
+                                intent.putExtra("usernameCaregiver", username.trim());
+                            }
+                            context.startActivity(intent);
+
+                            if (context instanceof Activity) {
+                                ((Activity) context).finish();
+                            }
+
+                            // Notify the caller that login was successful
+                            callback.onLoginSuccess();
+                        } else {
+                            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                            // Notify the caller that login failed
+                            callback.onLoginFailure();
+                        }
+                    }
+                });
+    }
+
+
     public void resetPassword(String email) {
         mAuth.sendPasswordResetEmail(email.trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -661,6 +725,37 @@ public class DatabaseLib {
             }
         });
     }
+
+    public interface MealCallback {
+        void onMealsReceived(ArrayList<Meal> meals);
+    }
+
+    public void getMeals(String firstNameElderly, String yearOfBirthElderly, MealCallback callback) {
+        DatabaseReference mealsRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim()).child("meals");
+
+        mealsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot mealSnapshot) {
+                ArrayList<Meal> mealList = new ArrayList<>();
+
+                for (DataSnapshot mealTypeSnapshot : mealSnapshot.getChildren()) {
+                    Meal meal = mealTypeSnapshot.getValue(Meal.class);
+                    if (meal != null) {
+                        mealList.add(meal);
+                    }
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onMealsReceived(mealList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the error
+            }
+        });
+    }
+
 
     /**
      * Checks if parameters for meal functions are correctly formatted
