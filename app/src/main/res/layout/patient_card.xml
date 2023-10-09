@@ -35,31 +35,29 @@
                 tools:ignore="ImageContrastCheck" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/patientFullName"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:text="@string/patient_name_placeholder"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/purple"
-                    android:paddingStart="20sp"
-                    android:layout_weight="1"/>
+                    android:paddingStart="20sp"/>
                 <TextView
                     android:id="@+id/patientID"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
                     android:text="@string/patient_name_placeholder"
                     android:textSize="20sp"
                     android:textStyle="italic"
                     android:textColor="@color/gray"
-                    android:paddingStart="20sp"
-                    android:paddingEnd="10sp"
-                    android:layout_weight="1"/>
+                    android:paddingStart="20sp"/>
             </LinearLayout>
 
             <ImageView
@@ -67,9 +65,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:paddingLeft="35sp"
+                android:paddingLeft="25sp"
+                android:layout_marginRight="10dp"
                 android:src="@drawable/delete_img"
                 android:visibility="invisible"
+                android:layout_gravity="end|center_vertical"
                 tools:ignore="ImageContrastCheck" />
 
         </LinearLayout>
