@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
@@ -91,6 +92,40 @@ public class DatabaseLib {
                 callback.onCancelled(databaseError);
             }
         });
+    }
+
+    public void getElderlyIdByEmail(final String email, final ElderlyIdCallback callback) {
+        DatabaseReference databaseReference = rootRef.child("elderly-users");
+        Query query = databaseReference.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String elderlyId = snapshot.getKey();
+                        callback.onElderlyIdFound(elderlyId);
+                        break;
+                    }
+                } else {
+                    // No elderly user found with the given email
+                    callback.onElderlyIdNotFound();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors here
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public interface ElderlyIdCallback {
+        void onElderlyIdFound(String elderlyId);
+
+        void onElderlyIdNotFound();
+
+        void onError(String errorMessage);
     }
 
     public void getEmailByUsername(String username, ValueEventListener callback) {

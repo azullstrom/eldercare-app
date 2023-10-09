@@ -159,8 +159,10 @@ public class Login extends AppCompatActivity {
                 pin = String.valueOf(editTextPin.getText());
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
+                String[] parts = email.split("@");
+                String username = parts[0];
 
-                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                databaseLib.loginUser(username, email, pin, "elderly", new DatabaseLib.LoginCallback() {
                     @Override
                     public void onLoginSuccess() {
                         // The user is successfully logged in, now check if "Remember Me" is checked
