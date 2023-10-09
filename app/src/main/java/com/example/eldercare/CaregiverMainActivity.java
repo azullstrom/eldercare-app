@@ -25,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,11 +77,11 @@ public class CaregiverMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_caregiver_main);
+        setContentView(R.layout.activity_root_layout);
 
         //Things that Will be moved somewhere else?
-        TextView welcomeTextView = findViewById(R.id.your_patients);
-        welcomeTextView.setText("Your Patients");
+        //TextView welcomeTextView = findViewById(R.id.your_patients);
+        //welcomeTextView.setText("Your Patients");
         ImageButton addPatientButton = findViewById(R.id.addImageButton);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -141,8 +142,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
         });
     }
 
-    private void eldersIterator() {
-        eldersContainer = findViewById(R.id.display_elders_eldersContainer);
+    private void eldersIterator(View newContent) {
+        eldersContainer = newContent.findViewById(R.id.display_elders_eldersContainer);
         eldersContainer.removeAllViews();
         List<String> elderKeys = new ArrayList<>();
 
@@ -206,23 +207,29 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
     }
 
-    /*  Updates the UI depending on if there is elders assigned or not should also take in "key" (i.e elder name/ID I guess)  */
+    /*  Updates the UI depending on if there is elders assigned or not*/
     private void updateUI(boolean eldersExist) {
-        //Remove comment if you want to see empty page layout
+        FrameLayout contentView = findViewById(R.id.contentView);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View newContent;
         //eldersExist = false;
-        //If exists -> Hide a lot of text, Show patients
-        if(eldersExist) {
-            setContentView(R.layout.display_elders);
-            ImageView elderSettingsImageView = findViewById(R.id.elder_settings_icon);
-            eldersSettings(elderSettingsImageView);
-            eldersIterator();
 
+        //If exists -> Show patients
+        if(eldersExist) {
+            newContent = inflater.inflate(R.layout.display_elders, contentView, false);
+            ImageView elderSettingsImageView = newContent.findViewById(R.id.elder_settings_icon);
+            eldersSettings(elderSettingsImageView);
+            eldersIterator(newContent); // You still need to pass the newContent as the root for findViewById inside eldersIterator
         }
         //If not exists -> Show image, "no patients text"
         else {
-            setContentView(R.layout.activity_caregiver_main);
+            newContent = inflater.inflate(R.layout.activity_caregiver_main, contentView, false);
         }
+
+        contentView.removeAllViews();
+        contentView.addView(newContent);
     }
+
 
     private void eldersSettings(ImageView eldersSettings) {
         eldersSettings.setOnClickListener(new View.OnClickListener() {
