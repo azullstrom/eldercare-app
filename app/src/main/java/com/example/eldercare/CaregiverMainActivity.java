@@ -53,7 +53,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *
      *
      * TODO:
-     *  - Finish eldersSettings() func line:217
+     *  - Finish implementing deletion/unassign
      *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
      *
@@ -79,9 +79,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_root_layout);
 
-        //Things that Will be moved somewhere else?
-        //TextView welcomeTextView = findViewById(R.id.your_patients);
-        //welcomeTextView.setText("Your Patients");
         ImageButton addPatientButton = findViewById(R.id.addImageButton);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -219,7 +216,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
             newContent = inflater.inflate(R.layout.display_elders, contentView, false);
             ImageView elderSettingsImageView = newContent.findViewById(R.id.elder_settings_icon);
             eldersSettings(elderSettingsImageView);
-            eldersIterator(newContent); // You still need to pass the newContent as the root for findViewById inside eldersIterator
+            eldersIterator(newContent);
         }
         //If not exists -> Show image, "no patients text"
         else {
