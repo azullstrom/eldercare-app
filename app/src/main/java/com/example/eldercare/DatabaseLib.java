@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,12 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
@@ -94,6 +89,9 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get elderly-id by email.
+     */
     public void getElderlyIdByEmail(final String email, final ElderlyIdCallback callback) {
         DatabaseReference databaseReference = rootRef.child("elderly-users");
         Query query = databaseReference.orderByChild("email").equalTo(email);
@@ -128,7 +126,10 @@ public class DatabaseLib {
         void onError(String errorMessage);
     }
 
-    public void getEmailByUsername(String username, ValueEventListener callback) {
+    /**
+     * Get caregiver email by username.
+     */
+    public void getCaregiverEmailByUsername(String username, ValueEventListener callback) {
         DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
 
         emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -144,6 +145,9 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get elderly last name by elderly-id
+     */
     public void getElderlyLastName(String elderlyId, ValueEventListener callback){
         DatabaseReference lastNameRef = rootRef.child("elderly-users").child(elderlyId).child("lastname");
 
