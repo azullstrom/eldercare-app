@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:orientation="vertical"
     android:padding="15dp">
 
 
-    <!-- Include Language switcher button/toggle -_- -->
-    <include layout="@layout/activity_language_toggle"/>
 
     <!-- Arrow & text to go back to the previous page -->
     <LinearLayout
@@ -178,7 +176,6 @@
                 android:contentDescription="@string/elderly_settings"
                 android:src="@drawable/elderly_settings_img"
                 tools:ignore="ImageContrastCheck" />
-
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

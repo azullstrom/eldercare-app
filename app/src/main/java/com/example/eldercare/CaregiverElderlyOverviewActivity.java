@@ -2,8 +2,6 @@ package com.example.eldercare;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,16 +24,6 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         TextView patientNameTextView = findViewById(R.id.patient_name_placeholder);
         elderlyName  = getIntent().getStringExtra("elderlyName");
         dateOfBirth  = getIntent().getStringExtra("elderlyYear");
-
-
-        ////////// image views for the language switcher //////////
-        ImageView englishLang = findViewById(R.id.englishLang);
-        ImageView swedishLang = findViewById(R.id.swedishLang);
-
-        ////////// Set languageSwitcher visibility //////////
-        String currentLanguage = LanguageManager.getLanguage(this);
-        englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
-        swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
 
 
 
@@ -92,18 +80,6 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         intent.putExtra("dateOfBirth", dateOfBirth);
         startActivity(intent);
 
-    }
-
-    ////////// Change lang to the selected lang then refresh //////////
-    public void changeLanguageToEnglish(View view) {
-        LanguageManager.setLanguage(this, "en");
-        recreate();
-    }
-
-    ////////// Change the app's locale to Swedish //////////
-    public void changeLanguageToSwedish(View view) {
-        LanguageManager.setLanguage(this, "sv");
-        recreate();
     }
 
 }

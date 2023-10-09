@@ -15,6 +15,7 @@ public class CaregiverElderlySettingsActivity extends AppCompatActivity {
         // Set current activity to activity_caregiver_elderly_settings
         setContentView(R.layout.activity_caregiver_elderly_settings);
 
+
         // Get the name of the Elderly/patient from Intent
         TextView patientNameTextView = findViewById(R.id.patient_name_placeholder);
         String elderlyName  = getIntent().getStringExtra("elderlyName");
