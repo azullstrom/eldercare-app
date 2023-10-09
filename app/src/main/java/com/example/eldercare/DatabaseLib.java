@@ -683,6 +683,7 @@ public class DatabaseLib {
                             Intent intent;
                             if (userType.contains("elderly")) {
                                 intent = new Intent(context, ElderlyOverview.class);
+                                intent.putExtra("usernameElderly", username.trim());
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
                                 intent.putExtra("usernameCaregiver", username.trim());
