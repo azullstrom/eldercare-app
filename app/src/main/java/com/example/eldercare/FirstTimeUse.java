@@ -92,6 +92,7 @@ public class FirstTimeUse extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 setFirstTimeUsePreferences(false, false, elderlyMail);
                                                 Intent intent = new Intent(getApplicationContext(), ElderlyOverview.class);
+                                                intent.putExtra("usernameElderly",usernameElderly);
                                                 startActivity(intent);
                                                 finish();
                                             } else {
