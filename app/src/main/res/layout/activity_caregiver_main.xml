@@ -19,14 +19,6 @@
         android:translationY="-1.91sp"
         />
 
-    <LinearLayout
-        android:id="@+id/eldersContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
-    </LinearLayout>
-
     <ImageView
         android:id="@+id/noPatientsImageView"
         android:layout_width="match_parent"
@@ -64,9 +56,10 @@
     <ImageView
         android:id="@+id/arrowImageView"
         android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_height="120dp"
         android:gravity="center"
         android:padding="16dp"
+        android:layout_marginLeft="30dp"
         android:src="@drawable/arrow_image"
         android:visibility="visible" />
 

@@ -6,7 +6,6 @@
 
     android:orientation="vertical"
     android:padding="15dp">
-    <!-- Arrow & text to go back to the previous page -->
 
 
     <!-- Patient Cards Wrapper -->
@@ -20,19 +19,12 @@
             android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/light_gray"
+            android:background="@drawable/rounded_corners_elder_cards"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="7sp"
-            android:layout_marginBottom="7sp"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             >
-
-            <!--<ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/patient_name_placeholder"
-                android:src="@drawable/rearrange_img"
-                tools:ignore="ImageContrastCheck" />-->
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -49,7 +41,7 @@
 
                 <TextView
                     android:id="@+id/patientFullName"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_width="match_parent"
                     android:text="@string/patient_name_placeholder"
                     android:textSize="20sp"
@@ -59,7 +51,7 @@
                     android:layout_weight="1"/>
                 <TextView
                     android:id="@+id/patientID"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_width="match_parent"
                     android:text="@string/patient_name_placeholder"
                     android:textSize="20sp"
@@ -71,12 +63,13 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/delete_elder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:paddingLeft="70sp"
-                android:contentDescription="@string/patient_name_placeholder"
+                android:paddingLeft="35sp"
                 android:src="@drawable/delete_img"
+                android:visibility="invisible"
                 tools:ignore="ImageContrastCheck" />
 
         </LinearLayout>

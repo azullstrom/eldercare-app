@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <!-- Wrapper for "Your Patients" Text and settings icon -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="80dp">
+
+        <!-- "Your Patients" Text -->
+        <TextView
+            android:id="@+id/display_elders_yourPatients"
+            android:layout_width="354dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:lineSpacingExtra="4sp"
+            android:text="@string/your_patients"
+            android:textAppearance="@style/your_patients"
+            android:translationY="-1.91sp" />
+
+        <!-- Settings Icon -->
+        <ImageView
+            android:id="@+id/elder_settings_icon"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/no_patients_text"
+            android:src="@drawable/settings_homepage_caregiver"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <!-- Elders Container -->
+    <LinearLayout
+        android:id="@+id/display_elders_eldersContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:visibility="visible">
+    </LinearLayout>
+
+</LinearLayout>

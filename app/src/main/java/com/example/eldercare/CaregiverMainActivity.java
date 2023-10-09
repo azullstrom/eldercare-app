@@ -68,6 +68,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
     LinearLayout eldersContainer;
     // Anders: Gjorde denna global i klassen så att man slipper hämta den hela tiden.
     private String usernameCaregiver;
+    private boolean isDeleteModeEnabled = false;
+    private List<ImageView> deleteIcons = new ArrayList<>();
+
 
 
     @Override
@@ -139,7 +142,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
     }
 
     private void eldersIterator() {
-        eldersContainer = findViewById(R.id.eldersContainer);
+        eldersContainer = findViewById(R.id.display_elders_eldersContainer);
         eldersContainer.removeAllViews();
         List<String> elderKeys = new ArrayList<>();
 
@@ -170,6 +173,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         public void onLastNameReceived(String lastName) {
                             View customView = inflater.inflate(R.layout.patient_card, null);
                             eldersContainer.addView(customView);
+                            ImageView deleteElderIcon = customView.findViewById(R.id.delete_elder);
+                            deleteIcons.add(deleteElderIcon);
                             TextView patientFullName = customView.findViewById(R.id.patientFullName);
                             TextView patientID = customView.findViewById(R.id.patientID);
                             customView.setTag(elderKey);
@@ -205,53 +210,50 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private void updateUI(boolean eldersExist) {
         //Remove comment if you want to see empty page layout
         //eldersExist = false;
-
-
-        ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
-        ImageView arrowImageView = findViewById(R.id.arrowImageView);
-        //ImageView elderSettingsImageView = findViewById(R.id.settings_homepage_caregiver);
-        TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);
-        TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
-        eldersContainer = findViewById(R.id.eldersContainer);
-
         //If exists -> Hide a lot of text, Show patients
         if(eldersExist) {
-            noPatientsImageView.setVisibility(View.INVISIBLE);
-            noPatientsTextView.setVisibility(View.INVISIBLE);
-            clickToAddTextView.setVisibility(View.INVISIBLE);
-            arrowImageView.setVisibility(View.INVISIBLE);
-            eldersContainer.setVisibility(View.VISIBLE);
+            setContentView(R.layout.display_elders);
+            ImageView elderSettingsImageView = findViewById(R.id.elder_settings_icon);
+            eldersSettings(elderSettingsImageView);
             eldersIterator();
-            //eldersSettings(elderSettingsImageView);
 
         }
         //If not exists -> Show image, "no patients text"
         else {
-            noPatientsImageView.setVisibility(View.VISIBLE);
-            noPatientsTextView.setVisibility(View.VISIBLE);
-            clickToAddTextView.setVisibility(View.VISIBLE);
-            arrowImageView.setVisibility(View.VISIBLE);
-            //elderSettingsImageView.setVisibility(View.INVISIBLE);
-            eldersContainer.setVisibility(View.GONE);
+            setContentView(R.layout.activity_caregiver_main);
         }
     }
 
     private void eldersSettings(ImageView eldersSettings) {
-        eldersSettings.setVisibility(View.VISIBLE);
         eldersSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
+                isDeleteModeEnabled = !isDeleteModeEnabled;
+                toggleDeleteMode();
                 /******************************************************
                  * TODO:
-                 * Change settings card when settings is pressed:
-                 * (SHOW TRASH BIN) delete_img.view(visible)
-                 * Implement functionality to move the patient cards up or down
                  * Implement remove (unassign) functionality
                  */
             }
         });
     }
+
+    private void toggleDeleteMode() {
+        ImageView deleteElder = findViewById(R.id.delete_elder);
+
+        if (isDeleteModeEnabled) {
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.VISIBLE);
+            }
+        } else {
+            deleteElder.setVisibility(View.INVISIBLE);
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
 
 
 
