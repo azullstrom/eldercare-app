@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,17 +17,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
@@ -93,7 +89,47 @@ public class DatabaseLib {
         });
     }
 
-    public void getEmailByUsername(String username, ValueEventListener callback) {
+    /**
+     * Get elderly-id by email.
+     */
+    public void getElderlyIdByEmail(final String email, final ElderlyIdCallback callback) {
+        DatabaseReference databaseReference = rootRef.child("elderly-users");
+        Query query = databaseReference.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String elderlyId = snapshot.getKey();
+                        callback.onElderlyIdFound(elderlyId);
+                        break;
+                    }
+                } else {
+                    // No elderly user found with the given email
+                    callback.onElderlyIdNotFound();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors here
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public interface ElderlyIdCallback {
+        void onElderlyIdFound(String elderlyId);
+
+        void onElderlyIdNotFound();
+
+        void onError(String errorMessage);
+    }
+
+    /**
+     * Get caregiver email by username.
+     */
+    public void getCaregiverEmailByUsername(String username, ValueEventListener callback) {
         DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
 
         emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,6 +145,9 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get elderly last name by elderly-id
+     */
     public void getElderlyLastName(String elderlyId, ValueEventListener callback){
         DatabaseReference lastNameRef = rootRef.child("elderly-users").child(elderlyId).child("lastname");
 
@@ -683,6 +722,7 @@ public class DatabaseLib {
                             Intent intent;
                             if (userType.contains("elderly")) {
                                 intent = new Intent(context, ElderlyOverview.class);
+                                intent.putExtra("usernameElderly", username.trim());
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
                                 intent.putExtra("usernameCaregiver", username.trim());
