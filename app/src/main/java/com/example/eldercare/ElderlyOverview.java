@@ -19,7 +19,8 @@ public class ElderlyOverview extends AppCompatActivity {
 
 
     FirebaseDatabase firebaseDatabase ;
-    DatabaseReference databaseReference;
+    DatabaseReference databaseReference,dt;
+
     FirebaseUser user;
 //    String elderlyUser , mealType;
 
@@ -32,20 +33,27 @@ public class ElderlyOverview extends AppCompatActivity {
         setContentView(R.layout.activity_elderly);
         textView=findViewById(R.id.textViewTest);
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference()
-                    .child("elderly-users").child("Dag1930")
-                    .child("meals").child("breakfast")
-                    .child("time");
+        databaseReference =
+                FirebaseDatabase.getInstance().getReference().child("elderly-users");
+//        databaseReference = firebaseDatabase.getReference()
+//                    .child("elderly-users").child("Dag1930")
+//                    .child("meals").child("breakfast")
+//                    .child("time");
         //TODO Change "Dag1930" to currentUser and "breakfast" to mealTyep
 
-       getData();
+            String st = getIntent().getStringExtra("elderly");
+
+       //getData();
+
        user= FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // User is signed in
 
-            Toast.makeText(this, "user is known " + user.getEmail() , Toast.LENGTH_SHORT).show();
+            String loggedInUserId = user.getUid();
 
-
+             dt = databaseReference.child(loggedInUserId).child("firstname");
+            Toast.makeText(this, " IS " + loggedInUserId, Toast.LENGTH_SHORT).show();
+            getData();
 
         } else {
             // No user is signed in
@@ -55,10 +63,11 @@ public class ElderlyOverview extends AppCompatActivity {
     }
 
         public void getData(){
-        databaseReference.addValueEventListener(new ValueEventListener() {
+        dt.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String value = snapshot.getValue(String.class);
+                Toast.makeText(ElderlyOverview.this, "Firstname is  " + value, Toast.LENGTH_SHORT).show();
                 textView.setText(value);
             }
 
