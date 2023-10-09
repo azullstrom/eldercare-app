@@ -4,7 +4,7 @@
     android:layout_gravity="top|end">
 
     <ImageView
-        android:id="@+id/englishFlag"
+        android:id="@+id/englishLang"
         android:contentDescription="@string/lang_en"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -15,7 +15,7 @@
         android:onClick="changeLanguageToEnglish"/>
 
     <ImageView
-        android:id="@+id/swedishFlag"
+        android:id="@+id/swedishLang"
         android:contentDescription="@string/lang_sv"
         android:layout_width="50dp"
         android:layout_height="50dp"

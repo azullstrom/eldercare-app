@@ -2,6 +2,8 @@ package com.example.eldercare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
 
     // Strings to store the date of birth and elderly/patient name
-    private String elderlyName;
-    private String dateOfBirth;
+    private String elderlyName, dateOfBirth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,17 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         TextView patientNameTextView = findViewById(R.id.patient_name_placeholder);
         elderlyName  = getIntent().getStringExtra("elderlyName");
         dateOfBirth  = getIntent().getStringExtra("elderlyYear");
+
+        // Get language clickable img references
+        //image views for the language switcher
+        ImageView englishLang = findViewById(R.id.englishLang);
+        ImageView swedishLang = findViewById(R.id.swedishLang);
+
+        // Set languageSwitcher visibility
+        String currentLanguage = LanguageManager.getLanguage(this);
+
+        englishLang.setVisibility(currentLanguage.equals("en-IN") ? View.VISIBLE : View.GONE);
+        swedishLang.setVisibility(currentLanguage.equals("sv-SE") ? View.VISIBLE : View.GONE);
 
         // Set Elderly name in the layout
         patientNameTextView.setText(elderlyName);
@@ -78,6 +91,17 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         intent.putExtra("dateOfBirth", dateOfBirth);
         startActivity(intent);
 
+    }
+
+    // Change lang to the selected lang then refresh
+    public void changeLanguageToEnglish(View view) {
+        LanguageManager.setLanguage(this, "en-IN");
+        recreate();
+    }
+
+    public void changeLanguageToSwedish(View view) {
+        LanguageManager.setLanguage(this, "sv");
+        recreate();
     }
 
 }
