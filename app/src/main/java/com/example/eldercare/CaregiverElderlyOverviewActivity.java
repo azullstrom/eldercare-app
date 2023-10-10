@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
 
     // Strings to store the date of birth and elderly/patient name
-    private String elderlyName;
-    private String dateOfBirth;
+    private String elderlyName, dateOfBirth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,8 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         TextView patientNameTextView = findViewById(R.id.patient_name_placeholder);
         elderlyName  = getIntent().getStringExtra("elderlyName");
         dateOfBirth  = getIntent().getStringExtra("elderlyYear");
+
+
 
         // Set Elderly name in the layout
         patientNameTextView.setText(elderlyName);

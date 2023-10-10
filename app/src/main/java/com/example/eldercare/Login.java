@@ -6,26 +6,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class Login extends AppCompatActivity {
 
@@ -73,6 +66,17 @@ public class Login extends AppCompatActivity {
                 showLoginElderlyLayout();
             }
         }
+
+        // Code to manage changing the language
+        ////////// image views for the language switcher //////////
+        ImageView englishLang = findViewById(R.id.englishLang);
+        ImageView swedishLang = findViewById(R.id.swedishLang);
+
+        ////////// Set languageSwitcher visibility //////////
+        String currentLanguage = LanguageManager.getLanguage(this);
+        englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
+        swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
+
     }
 
     private void showLoginCaregiverLayout() {
@@ -118,7 +122,7 @@ public class Login extends AppCompatActivity {
                     return;
                 }
 
-                databaseLib.getEmailByUsername(username, new ValueEventListener() {
+                databaseLib.getCaregiverEmailByUsername(username, new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
@@ -159,8 +163,10 @@ public class Login extends AppCompatActivity {
                 pin = String.valueOf(editTextPin.getText());
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
+                String[] parts = email.split("@");
+                String username = parts[0];
 
-                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                databaseLib.loginUser(username, email, pin, "elderly", new DatabaseLib.LoginCallback() {
                     @Override
                     public void onLoginSuccess() {
                         // The user is successfully logged in, now check if "Remember Me" is checked
@@ -185,5 +191,17 @@ public class Login extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), FirstTimeUse.class);
         startActivity(intent);
         finish();
+    }
+
+    ////////// Change lang to the selected lang then refresh //////////
+    public void changeLanguageToEnglish(View view) {
+        LanguageManager.setLanguage(this, "en");
+        recreate();
+    }
+
+    ////////// Change the app's locale to Swedish //////////
+    public void changeLanguageToSwedish(View view) {
+        LanguageManager.setLanguage(this, "sv");
+        recreate();
     }
 }

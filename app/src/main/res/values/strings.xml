@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ElderCare</string>
+    <string name="app_name" translatable="false">ElderCare</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="username">Username</string>
@@ -69,4 +69,7 @@
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>
+    <string name="lang_en">en</string>
+    <string name="lang_sv">sv</string>
+
 </resources>
