@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +33,7 @@ public class Register extends AppCompatActivity {
     private Button registerButton;
     private TextView textView;
     private DatabaseLib databaseLib;
-    private String token;
+    private String tokenString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +51,7 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         textView = findViewById(R.id.loginNow);
 
-        //gets token before pressing caregiver button so no async handling is needed
-        token = FirebaseMessaging.getInstance().getToken().getResult();
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(s -> tokenString = s);
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +70,7 @@ public class Register extends AppCompatActivity {
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String phone = editTextPhoneNumber.getText().toString();
-                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver", token);
+                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver", tokenString);
 
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
