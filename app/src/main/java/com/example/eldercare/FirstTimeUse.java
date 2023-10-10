@@ -60,9 +60,6 @@ public class FirstTimeUse extends AppCompatActivity {
         //notificationLib.sendNotification("etqhy-keTYOcryrOAbs2m5:APA91bFRjxxHsRwG4DAlzki6ANYNM266KbGWO2cSzZqRwGg_LGr3kYXKOH2xshsTzWqQmbRZPVIzn_1KFVsWW8mRe48iq7H1bRfJ5IVj2Nd2CTSULesEUFS8pTb5yUDiwEvr_1rQkAzI");
         //Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
         //notificationTimer.cancel();
-        NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is text");
-        DatabaseLib databaseLib = new DatabaseLib(this);
-        notificationLib.sendNotification("dMUcr6EBTSSjtvrd6X2tlF:APA91bG6F_kLPW9cnhDO0NFV6hAfroZH4Ev6RqVQ3dUb-8UNuZECC_GYYBQsdTWsq8Ev1zzxNMRUAA-cbpLoPo6odDPPNZNTYMY6A5nCuRN_4siVMQybXTH-oAmdVAl8pIFtH6GUYaZy");
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
