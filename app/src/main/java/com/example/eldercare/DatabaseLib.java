@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,17 +17,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class DatabaseLib {
     private DatabaseReference rootRef;
@@ -93,7 +89,47 @@ public class DatabaseLib {
         });
     }
 
-    public void getEmailByUsername(String username, ValueEventListener callback) {
+    /**
+     * Get elderly-id by email.
+     */
+    public void getElderlyIdByEmail(final String email, final ElderlyIdCallback callback) {
+        DatabaseReference databaseReference = rootRef.child("elderly-users");
+        Query query = databaseReference.orderByChild("email").equalTo(email);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String elderlyId = snapshot.getKey();
+                        callback.onElderlyIdFound(elderlyId);
+                        break;
+                    }
+                } else {
+                    // No elderly user found with the given email
+                    callback.onElderlyIdNotFound();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle any errors here
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    public interface ElderlyIdCallback {
+        void onElderlyIdFound(String elderlyId);
+
+        void onElderlyIdNotFound();
+
+        void onError(String errorMessage);
+    }
+
+    /**
+     * Get caregiver email by username.
+     */
+    public void getCaregiverEmailByUsername(String username, ValueEventListener callback) {
         DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
 
         emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -109,6 +145,9 @@ public class DatabaseLib {
         });
     }
 
+    /**
+     * Get elderly last name by elderly-id
+     */
     public void getElderlyLastName(String elderlyId, ValueEventListener callback){
         DatabaseReference lastNameRef = rootRef.child("elderly-users").child(elderlyId).child("lastname");
 
@@ -646,6 +685,66 @@ public class DatabaseLib {
                     }
                 });
     }
+
+    public interface LoginCallback {
+        void onLoginSuccess();
+        void onLoginFailure();
+    }
+
+    /**
+     * Login a user with LoginCallback. Used if you want to achieve something only if it's success or not within the app.
+     *
+     * @param email Email user
+     * @param password 6-digit PIN for elderly
+     * @param userType "elderly" || "caregiver"
+     */
+    public void loginUser(String username, String email, String password, String userType, final LoginCallback callback) {
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(context, "Enter username", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(context, "Enter password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String passwordUser = password.trim();
+        if (userType.contains("elderly")) {
+            passwordUser = passwordUser + "00";
+        }
+
+        mAuth.signInWithEmailAndPassword(email, passwordUser)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent;
+                            if (userType.contains("elderly")) {
+                                intent = new Intent(context, ElderlyOverview.class);
+                                intent.putExtra("usernameElderly", username.trim());
+                            } else {
+                                intent = new Intent(context, CaregiverMainActivity.class);
+                                intent.putExtra("usernameCaregiver", username.trim());
+                            }
+                            context.startActivity(intent);
+
+                            if (context instanceof Activity) {
+                                ((Activity) context).finish();
+                            }
+
+                            // Notify the caller that login was successful
+                            callback.onLoginSuccess();
+                        } else {
+                            Toast.makeText(context, "Authentication failed.", Toast.LENGTH_SHORT).show();
+
+                            // Notify the caller that login failed
+                            callback.onLoginFailure();
+                        }
+                    }
+                });
+    }
+
 
     public void resetPassword(String email) {
         mAuth.sendPasswordResetEmail(email.trim()).addOnCompleteListener(new OnCompleteListener<Void>() {

@@ -1,0 +1,28 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top|end"
+    android:padding="15dp">
+
+    <ImageView
+        android:id="@+id/englishLang"
+        android:contentDescription="@string/lang_en"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/en_lang_img"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="changeLanguageToEnglish"/>
+
+    <ImageView
+        android:id="@+id/swedishLang"
+        android:contentDescription="@string/lang_sv"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/sv_lang_img"
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="changeLanguageToSwedish"/>
+</RelativeLayout>

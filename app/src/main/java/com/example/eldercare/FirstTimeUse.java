@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,6 +62,18 @@ public class FirstTimeUse extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
         caregiverButton = findViewById(R.id.caregiverButton);
+
+
+        // Code to manage changing the language
+        ////////// image views for the language switcher //////////
+        ImageView englishLang = findViewById(R.id.englishLang);
+        ImageView swedishLang = findViewById(R.id.swedishLang);
+
+        ////////// Set languageSwitcher visibility //////////
+        String currentLanguage = LanguageManager.getLanguage(this);
+        englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
+        swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
+        
         elderlyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,5 +147,18 @@ public class FirstTimeUse extends AppCompatActivity {
                     }
                 })
                 .create().show();
+    }
+
+    // Code to manage changing the language
+    ////////// Change lang to the selected lang then refresh //////////
+    public void changeLanguageToEnglish(View view) {
+        LanguageManager.setLanguage(this, "en");
+        recreate();
+    }
+
+    ////////// Change the app's locale to Swedish //////////
+    public void changeLanguageToSwedish(View view) {
+        LanguageManager.setLanguage(this, "sv");
+        recreate();
     }
 }
