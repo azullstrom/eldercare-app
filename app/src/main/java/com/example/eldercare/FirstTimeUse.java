@@ -1,14 +1,20 @@
 package com.example.eldercare;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +34,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Date;
+import java.util.Timer;
 
 public class FirstTimeUse extends AppCompatActivity {
 
@@ -37,7 +47,19 @@ public class FirstTimeUse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Ask for permission to use notifications (only asks if permission not granted)
+        if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
+        }
+        FireBaseMessageReceiver rec = new FireBaseMessageReceiver();
         setContentView(R.layout.activity_first_time_use);
+
+        //TODO: REMOVE, just for testing
+        //NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is the text");
+        //notificationLib.sendNotification("etqhy-keTYOcryrOAbs2m5:APA91bFRjxxHsRwG4DAlzki6ANYNM266KbGWO2cSzZqRwGg_LGr3kYXKOH2xshsTzWqQmbRZPVIzn_1KFVsWW8mRe48iq7H1bRfJ5IVj2Nd2CTSULesEUFS8pTb5yUDiwEvr_1rQkAzI");
+        //Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
+        //notificationTimer.cancel();
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
@@ -53,7 +75,6 @@ public class FirstTimeUse extends AppCompatActivity {
         String currentLanguage = LanguageManager.getLanguage(this);
         englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
         swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
-
 
         elderlyButton.setOnClickListener(new View.OnClickListener() {
             @Override

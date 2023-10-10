@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,6 +132,27 @@ public class DatabaseLib {
      */
     public void getCaregiverEmailByUsername(String username, ValueEventListener callback) {
         DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
+
+        emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    /**
+     * Get firebaseMessaging token for caregiver
+     * @param username Caregiver username
+     * @param callback callback object
+     */
+    public void getCaregiverToken(String username, ValueEventListener callback) {
+        DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("token");
 
         emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -266,7 +288,7 @@ public class DatabaseLib {
                                 String email = username.trim() + "@elderly.eldercare.com";
                                 String pinCode = pin.trim() + "00";
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
-                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly");
+                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly", "EMPTY-TOKEN");
                                 elderlyRef.child("allergies").setValue(allergies);
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -586,8 +608,9 @@ public class DatabaseLib {
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1919
      * @param userType "elderly" || "caregiver"
+     * @param token fireBaseMessagingToken
      */
-    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
+    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType, String token) {
         String firstNameUser = firstName.trim();
         String lastNameUser = lastName.trim();
         String emailUser = email.trim();
@@ -628,6 +651,7 @@ public class DatabaseLib {
                     userReference.child("firstname").setValue(firstNameUser);
                     userReference.child("lastname").setValue(lastNameUser);
                     userReference.child("phone-number").setValue(phoneUser);
+                    userReference.child("token").setValue(token);
 
                     Toast.makeText(context, "Registration Successful.", Toast.LENGTH_SHORT).show();
                 } else {
