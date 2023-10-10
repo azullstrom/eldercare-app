@@ -25,7 +25,6 @@ public class ElderlyOverview extends AppCompatActivity {
 
     TextView textView;
     String elderlyId1 = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,38 +43,40 @@ public class ElderlyOverview extends AppCompatActivity {
         String elderlyUsername  = getIntent().getStringExtra("usernameElderly");
 
         DatabaseLib databaseLib = new DatabaseLib(this);
-        databaseLib.getElderlyIdByEmail(elderlyUsername + "@elderly.eldercare.com", new DatabaseLib.ElderlyIdCallback() {
-            @Override
-            public void onElderlyIdFound(String elderlyId) {
-                elderlyId1= elderlyId;
+              databaseLib.getElderlyIdByEmail(elderlyUsername + "@elderly.eldercare.com", new DatabaseLib.ElderlyIdCallback() {
+                  @Override
+                  public void onElderlyIdFound(String elderlyId) {
+                      elderlyId1=elderlyId;
 
-            }
+                      Toast.makeText(ElderlyOverview.this, elderlyId, Toast.LENGTH_SHORT).show();
+                      databaseReference = firebaseDatabase.getReference()
+                              .child("elderly-users").child(elderlyId)
+                              .child("meals").child("breakfast")
+                              .child("time");
+                      getData();
+                  }
 
-            @Override
-            public void onElderlyIdNotFound() {
-                Toast.makeText(ElderlyOverview.this, "Not Found", Toast.LENGTH_SHORT).show();
+                  @Override
+                  public void onElderlyIdNotFound() {
+                      Toast.makeText(ElderlyOverview.this, "Not Found", Toast.LENGTH_SHORT).show();
 
-            }
+                  }
 
-            @Override
-            public void onError(String errorMessage) {
-                Toast.makeText(ElderlyOverview.this, "on error", Toast.LENGTH_SHORT).show();
+                  @Override
+                  public void onError(String errorMessage) {
+                      Toast.makeText(ElderlyOverview.this, "on error", Toast.LENGTH_SHORT).show();
 
-            }
-        });
-        databaseReference = firebaseDatabase.getReference()
-                    .child("elderly-users").child("Dag1930")
-                    .child("meals").child("breakfast")
-                    .child("time");
+                  }
+              });
 
-       getData();
+
 
 
 
 
     }
 
-        public void getData(){
+    public void getData(){
             databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
