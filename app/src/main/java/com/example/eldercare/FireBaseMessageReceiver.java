@@ -23,9 +23,8 @@ public class FireBaseMessageReceiver extends FirebaseMessagingService {
     // body from the message passed in FCM
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Map<String, String> data = remoteMessage.getData();
-        String title = data.get("title");
-        String text = data.get("text");
+        String title = remoteMessage.getNotification().getTitle();
+        String text = remoteMessage.getNotification().getBody();
         NotificationLib notificationLib = new NotificationLib(this, title, text);
         notificationLib.createAndShowNotification();
     }
