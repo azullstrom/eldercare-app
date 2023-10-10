@@ -52,14 +52,10 @@ public class FirstTimeUse extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
         }
+        //FireBaseMessageReceiver is initialized so notifications can be received
         FireBaseMessageReceiver rec = new FireBaseMessageReceiver();
-        setContentView(R.layout.activity_first_time_use);
 
-        //TODO: REMOVE, just for testing
-        //NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is the text");
-        //notificationLib.sendNotification("etqhy-keTYOcryrOAbs2m5:APA91bFRjxxHsRwG4DAlzki6ANYNM266KbGWO2cSzZqRwGg_LGr3kYXKOH2xshsTzWqQmbRZPVIzn_1KFVsWW8mRe48iq7H1bRfJ5IVj2Nd2CTSULesEUFS8pTb5yUDiwEvr_1rQkAzI");
-        //Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
-        //notificationTimer.cancel();
+        setContentView(R.layout.activity_first_time_use);
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);

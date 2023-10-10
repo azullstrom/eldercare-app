@@ -5,13 +5,18 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
@@ -22,6 +27,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ThreadLocalRandom;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -61,14 +67,14 @@ public class NotificationLib extends TimerTask {
             manager.createNotificationChannel(channel);
         }
         else{
-            Toast.makeText(context, "Android version not supported", Toast.LENGTH_SHORT);
+            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT);
         }
     }
 
     /**
      * Creates and shows a notification. If permission for notification is not allowed no
-     * notification is sent. All notifications share the same ID which means they will replace
-     * the previous notification when a new one is created.
+     * notification is sent. Notification is assigned a random ID from 0-10000 so they will most
+     * likely not replace one another.
      */
     public void createAndShowNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
@@ -86,7 +92,7 @@ public class NotificationLib extends TimerTask {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        notificationManager.notify(1, builder.build());
+        notificationManager.notify(ThreadLocalRandom.current().nextInt(0, 10000), builder.build());
     }
 
     /**
@@ -118,7 +124,7 @@ public class NotificationLib extends TimerTask {
             }
         }
         else{
-            Toast.makeText(context, "Android version not supported", Toast.LENGTH_SHORT);
+            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT);
             return null;
         }
         Timer scheduleTimer = new Timer();
@@ -130,8 +136,7 @@ public class NotificationLib extends TimerTask {
      * Sends notification to a user with the specified firebase receiver-token.
      * @param receiverToken firebase device unique token.
      */
-    public void sendNotification(String receiverToken){
-
+    private void sendNotification(String receiverToken){
         OkHttpClient client = new OkHttpClient();
         MediaType mediaType = MediaType.parse("application/json");
         JSONObject jsonNotification = new JSONObject();
@@ -143,7 +148,7 @@ public class NotificationLib extends TimerTask {
             jsonContainer.put("notification", jsonNotification);
         }
         catch (JSONException e){
-            Log.d("CREATION", e.toString());
+            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT);
         }
 
         RequestBody rBody = RequestBody.create(mediaType, jsonContainer.toString());
@@ -156,16 +161,39 @@ public class NotificationLib extends TimerTask {
             try {
                 Response response = client.newCall(request).execute();
             } catch (IOException e) {
-                Log.d("CREATION", e.toString());
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT);
             }
         });
         thread.start();
     }
 
     /**
+     * Sends notification to a specific caregiver user.
+     * @param caregiverUsername
+     */
+    public void sendNotificationUsername(String caregiverUsername){
+        DatabaseLib databaseLib = new DatabaseLib(context);
+        databaseLib.getCaregiverToken(caregiverUsername, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    sendNotification(snapshot.getValue(String.class));
+                }
+                else{
+                    Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * Override from the extended class TimerTask, and is called by the function
      * scheduleRepeatableNotification when scheduleAtFixedRate delay is 0, once a day.
-     *
      */
     @Override
     public void run() {
