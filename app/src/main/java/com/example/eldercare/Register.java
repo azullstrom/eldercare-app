@@ -50,20 +50,8 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         textView = findViewById(R.id.loginNow);
 
-        Context con = this;
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(con, R.string.error, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        // Get new FCM registration token
-                        token = task.getResult();
-                    }
-                });
+        //gets token before pressing caregiver button so no async handling is needed
+        token = FirebaseMessaging.getInstance().getToken().getResult();
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,7 +70,7 @@ public class Register extends AppCompatActivity {
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String phone = editTextPhoneNumber.getText().toString();
-                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver");
+                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver", token);
 
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
