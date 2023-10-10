@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
@@ -12,14 +13,21 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class NotificationLib extends TimerTask {
@@ -118,13 +126,40 @@ public class NotificationLib extends TimerTask {
         return scheduleTimer;
     }
 
+    /**
+     * Sends notification to a user with the specified firebase receiver-token.
+     * @param receiverToken firebase device unique token.
+     */
     public void sendNotification(String receiverToken){
-        Map<String, String> data = new HashMap<>();
-        data.put("title", title);
-        data.put("text", text);
-        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("101334957062" + "@gcm.googleapis.com")
-                .setData(data)
-                .build());
+
+        OkHttpClient client = new OkHttpClient();
+        MediaType mediaType = MediaType.parse("application/json");
+        JSONObject jsonNotification = new JSONObject();
+        JSONObject jsonContainer = new JSONObject();
+        try{
+            jsonNotification.put("title", title);
+            jsonNotification.put("body", text);
+            jsonContainer.put("to", receiverToken);
+            jsonContainer.put("notification", jsonNotification);
+        }
+        catch (JSONException e){
+            Log.d("CREATION", e.toString());
+        }
+
+        RequestBody rBody = RequestBody.create(mediaType, jsonContainer.toString());
+        Request request = new Request.Builder().url("https://fcm.googleapis.com/fcm/send")
+                .post(rBody)
+                .addHeader("Authorization", "key=AAAAF5gIvAY:APA91bEu3HAXShyisIo3DpvSxWpGUDU3DJK_nVlrOB4wLrw-Kw87j7rxqHFPWEUPPGNpOmKbk2Fy5VkvlePSTqwzbucDTj9ia10nagDqut7hXv-Z0Yhs9bZrOz25CQNoT9zqIvzM36Uh")
+                .addHeader("Content-Type", "application/json")
+                .build();
+        Thread thread = new Thread(() -> {
+            try {
+                Response response = client.newCall(request).execute();
+            } catch (IOException e) {
+                Log.d("CREATION", e.toString());
+            }
+        });
+        thread.start();
     }
 
     /**

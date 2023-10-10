@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.Date;
 import java.util.Timer;
@@ -54,8 +56,8 @@ public class FirstTimeUse extends AppCompatActivity {
         setContentView(R.layout.activity_first_time_use);
 
         //TODO: REMOVE, just for testing
-        NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is the text");
-        notificationLib.sendNotification("test");
+        //NotificationLib notificationLib = new NotificationLib(this, "Notification title", "This is the text");
+        //notificationLib.sendNotification("etqhy-keTYOcryrOAbs2m5:APA91bFRjxxHsRwG4DAlzki6ANYNM266KbGWO2cSzZqRwGg_LGr3kYXKOH2xshsTzWqQmbRZPVIzn_1KFVsWW8mRe48iq7H1bRfJ5IVj2Nd2CTSULesEUFS8pTb5yUDiwEvr_1rQkAzI");
         //Timer notificationTimer = notificationLib.scheduleRepeatableNotification(13,15);
         //notificationTimer.cancel();
 
@@ -73,7 +75,7 @@ public class FirstTimeUse extends AppCompatActivity {
         String currentLanguage = LanguageManager.getLanguage(this);
         englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
         swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
-        
+
         elderlyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
