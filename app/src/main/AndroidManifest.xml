@@ -19,6 +19,9 @@
         android:theme="@style/Theme.ElderCare"
         tools:targetApi="31">
         <activity
+            android:name=".CaregiverElderlyNotifications"
+            android:exported="false" />
+        <activity
             android:name=".AllergiesActivity"
             android:exported="false" />
 
