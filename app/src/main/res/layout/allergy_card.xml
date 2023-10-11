@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:clickable="false"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@drawable/rounded_corners_elder_cards"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
+            >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="20sp"
+                android:contentDescription="Allergy"
+                tools:ignore="ImageContrastCheck" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/allergySection"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:text="Allergy"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/purple"
+                    android:paddingStart="20sp"/>
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/delete_elder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:paddingLeft="25sp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/delete_img"
+                android:visibility="invisible"
+                android:layout_gravity="end|center_vertical"
+                tools:ignore="ImageContrastCheck" />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</LinearLayout>
