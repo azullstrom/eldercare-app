@@ -1,7 +1,7 @@
 package com.example.eldercare;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,15 +23,20 @@ public class ElderlyOverview extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
     DatabaseLib databaseLib;
+    Button button;
     TextView textView;
     String elderlyId ;
+    ArrayList<Meal> mealList ;
+    ArrayList<String> mealType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set current activity to ac
         setContentView(R.layout.activity_elderly);
+        button=findViewById(R.id.buttonElderly);
         textView = findViewById(R.id.textViewTest);
+
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference().child("elderly-users");
 //        databaseReference = firebaseDatabase.getReference()
@@ -39,22 +44,54 @@ public class ElderlyOverview extends AppCompatActivity {
 //                    .child("meals").child("breakfast")
 //                    .child("time");
         databaseLib = new DatabaseLib(this);
+
         //TODO Change "Dag1930" to currentUser and "breakfast" to mealTyep
 
 
+
+        mealList = new ArrayList<>();
         elderlyId = getIntent().getStringExtra("usernameElderly");
+        String elderlyFirstName = elderlyId.replaceAll("[^a-zA-Z]", ""); // Extract alphabetic characters
+        String elderlyYear = elderlyId.replaceAll("[^0-9]", ""); // Extract numeric characters
+
         getData();
        databaseLib.getMeals(elderlyId, new DatabaseLib.MealCallback() {
+
            @Override
            public void onMealsReceived(ArrayList<Meal> meals) {
-               for (Meal meal: meals ) {
-                   Log.d("Meals",meal.getMealType());
-                   Log.d("Meals",meal.getTime());
-                   Log.d("Meals",String.valueOf(meal.isEaten()));
-                   Log.d("Meals","++++++++++++++++++++++++++++++++++");
-               }
+               databaseLib.setMealEaten(elderlyFirstName,elderlyYear,meals.get(0).getMealType(),false);
+            if (meals != null && !meals.get(0).isEaten()) {
+
+               String firstMeal = meals.get(0).getMealType();
+               String firstMealTime = meals.get(0).getTime();
+               button.setText("Next meal \n"+ firstMeal+" \nat "+ firstMealTime);
+                switch (meals.get(0).getMealType()){
+                    case "breakfast":
+                        button.setText("Next meal \n"+ mealType.get(0)+" \nat "+ firstMealTime);
+                        break;
+                    case "lunch":
+                        button.setText("Next meal \n"+ mealType.get(1)+" \nat "+ firstMealTime);
+                        break;
+                    case "dinner":
+                        button.setText("Next meal \n"+ mealType.get(2)+" \nat "+ firstMealTime);
+                        break;
+                    case "snack1":
+                        button.setText("Next meal \n"+ mealType.get(3)+" \nat "+ firstMealTime);
+                        break;
+                    case "snack2":
+                        button.setText("Next meal \n"+ mealType.get(4)+" \nat "+ firstMealTime);
+                        break;
+                    case "snack3":
+                        button.setText("Next meal \n"+ mealType.get(5)+" \nat "+ firstMealTime);
+                        break;
+                }
+
+            }
+
+
            }
        });
+
     }
 
 
@@ -63,7 +100,7 @@ public class ElderlyOverview extends AppCompatActivity {
     public void getData() {
         databaseReference = firebaseDatabase.getReference()
                 .child("elderly-users").child(elderlyId)
-                .child("meals").child("breakfast")
+                .child("meals").child("snack1")
                 .child("time");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -104,6 +141,7 @@ public class ElderlyOverview extends AppCompatActivity {
         return list;
 
     }
+
 
 
 
