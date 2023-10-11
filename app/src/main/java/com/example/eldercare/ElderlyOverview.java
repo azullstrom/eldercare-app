@@ -1,6 +1,7 @@
 package com.example.eldercare;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +22,7 @@ public class ElderlyOverview extends AppCompatActivity {
 
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
-
+    DatabaseLib databaseLib;
     TextView textView;
     String elderlyId ;
 
@@ -37,12 +38,23 @@ public class ElderlyOverview extends AppCompatActivity {
 //                    .child("elderly-users").child("Dag1930")
 //                    .child("meals").child("breakfast")
 //                    .child("time");
+        databaseLib = new DatabaseLib(this);
         //TODO Change "Dag1930" to currentUser and "breakfast" to mealTyep
 
 
         elderlyId = getIntent().getStringExtra("usernameElderly");
-       getData();
-
+        getData();
+       databaseLib.getMeals(elderlyId, new DatabaseLib.MealCallback() {
+           @Override
+           public void onMealsReceived(ArrayList<Meal> meals) {
+               for (Meal meal: meals ) {
+                   Log.d("Meals",meal.getMealType());
+                   Log.d("Meals",meal.getTime());
+                   Log.d("Meals",String.valueOf(meal.isEaten()));
+                   Log.d("Meals","++++++++++++++++++++++++++++++++++");
+               }
+           }
+       });
     }
 
 
