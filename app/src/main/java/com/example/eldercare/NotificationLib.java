@@ -5,8 +5,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,7 +15,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +24,7 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
@@ -177,28 +175,29 @@ public class NotificationLib extends TimerTask {
 
     /**
      * Sends notification to a specific caregiver user. It also adds notification to elderly history
-     * @param caregiverUsername
+     * @param caregiverUsernameList list of caregiver usernames
      */
-    public void sendNotificationUsername(String caregiverUsername, String elderlyName, String elderlyYear){
-        databaseLib.getCaregiverToken(caregiverUsername, new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){
-                    sendNotification(snapshot.getValue(String.class));
-                    String date = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date());
-                    databaseLib.addNotificationHistoryElderly(elderlyName, elderlyYear, title,
-                            text, date);
+    public void sendNotificationUsernameList(List<String> caregiverUsernameList, String elderlyName, String elderlyYear){
+        for(String caregiverUsername: caregiverUsernameList) {
+            databaseLib.getCaregiverToken(caregiverUsername, new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        sendNotification(snapshot.getValue(String.class));
+                        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date());
+                        databaseLib.addNotificationHistoryElderly(elderlyName, elderlyYear, title,
+                                text, date);
+                    } else {
+                        Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else{
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
-            }
-        });
+            });
+        }
     }
 
     /**
