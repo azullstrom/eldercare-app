@@ -64,10 +64,10 @@ public class AllergiesActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
         }
 
+        String allergyText = newAllergyText.getText().toString();
+
         submitButton.setOnClickListener(view -> {
-            String allergyText = newAllergyText.getText().toString();
-            Log.d("hej", allergyText + elderlyName + yearOfBirth);
-            // databaseLib.addAllergyToElderly(allergyText, elderlyName, yearOfBirth);
+            databaseLib.addAllergyToElderly(allergyText, elderlyName, yearOfBirth);
         });
 
         addNewOrExistingAlertDialog.show();
