@@ -533,6 +533,36 @@ public class DatabaseLib {
     }
 
     /**
+     *
+     * @param firstNameElderly
+     * @param yearOfBirthElderly
+     * @param mealType
+     * @param setEaten Set meal eaten to either true or false
+     */
+    public void setMealEaten(String firstNameElderly, String yearOfBirthElderly, String mealType, boolean setEaten) {
+        if(!isMealParamFormattedCorrectly(mealType)) {
+            Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference mealEatenRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("meals").child(mealType).child("eaten");
+
+        mealEatenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().setValue(setEaten);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * Sets "type" for a meal which belongs to an elderly in the database.
      *
      * @param toEat Example: "pizza"
