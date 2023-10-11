@@ -1,5 +1,6 @@
 package com.example.eldercare;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,9 +40,10 @@ public class ElderlyOverview extends AppCompatActivity {
 //                    .child("time");
         //TODO Change "Dag1930" to currentUser and "breakfast" to mealTyep
 
-
-        elderlyId = getIntent().getStringExtra("usernameElderly");
-       getData();
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        elderlyId = prefs.getString("elderlyId", "");
+        Toast.makeText(ElderlyOverview.this, "the id is  "+ elderlyId , Toast.LENGTH_SHORT).show();
+       //getData();
 
     }
 

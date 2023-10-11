@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -22,12 +23,13 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = true;
+    private static final boolean TEST_MODE = false;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
 
     DatabaseLib databaseLib;
+    boolean rememberMe;
 
     @Override
     public void onStart() { super.onStart(); }
@@ -40,7 +42,7 @@ public class Login extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstTimeUse = prefs.getBoolean("isFirstTimeUse", true);
-        boolean rememberMe = prefs.getBoolean("rememberMe", false);
+        rememberMe = prefs.getBoolean("rememberMe", false);
 
         // If the coder wants to test the FirstTimeUse page each time the app starts
         if(TEST_MODE) {
@@ -74,9 +76,12 @@ public class Login extends AppCompatActivity {
 
         ////////// Set languageSwitcher visibility //////////
         String currentLanguage = LanguageManager.getLanguage(this);
-        englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
-        swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
-
+        if(englishLang != null) {
+            englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
+        }
+        if(swedishLang != null) {
+            swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
+        }
     }
 
     private void showLoginCaregiverLayout() {
@@ -163,10 +168,8 @@ public class Login extends AppCompatActivity {
                 pin = String.valueOf(editTextPin.getText());
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
-                String[] parts = email.split("@");
-                String username = parts[0];
 
-                databaseLib.loginUser(username, email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
                     @Override
                     public void onLoginSuccess() {
                         // The user is successfully logged in, now check if "Remember Me" is checked

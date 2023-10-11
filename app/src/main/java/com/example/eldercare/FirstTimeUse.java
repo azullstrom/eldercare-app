@@ -139,8 +139,12 @@ public class FirstTimeUse extends AppCompatActivity {
                                                 databaseLib.getElderlyIdByEmail(elderlyMail, new DatabaseLib.ElderlyIdCallback() {
                                                     @Override
                                                     public void onElderlyIdFound(String elderlyId) {
-                                                        Intent intent = new Intent(getApplicationContext(), ElderlyOverview.class);
-                                                        intent.putExtra("usernameElderly",elderlyId);
+                                                        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+                                                        SharedPreferences.Editor editor = prefs.edit();
+                                                        editor.putString("elderlyId", elderlyId);
+                                                        editor.apply();
+
+                                                        Intent intent = new Intent(getApplicationContext(), Login.class);
                                                         startActivity(intent);
                                                         finish();
                                                     }
