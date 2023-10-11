@@ -23,8 +23,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
@@ -40,6 +42,7 @@ public class NotificationLib extends TimerTask {
 
     private Context context;
     private String channelId, channelName, title, text;
+    private DatabaseLib databaseLib;
 
     /**
      * Constructor
@@ -52,6 +55,7 @@ public class NotificationLib extends TimerTask {
         this.channelName = "elderCareChannel";
         this.title = title;
         this.text = text;
+        databaseLib = new DatabaseLib(context);
         createNotificationChannel();
     }
 
@@ -98,13 +102,14 @@ public class NotificationLib extends TimerTask {
     /**
      * Schedules a notification at specific time which will be repeated at the same time every
      * day until it is cancelled. To cancel the notification, call .cancel() on the returned timer
-     * object.
+     * object. It also adds notification to history.
      *
      * @param scheduleHour The hour of which the notification is sent
      * @param scheduleMinute The minute of which the notificaion is sent
      * @return A timer object which can be used to cancel the scheduled notification
      */
-    public Timer scheduleRepeatableNotification(int scheduleHour, int scheduleMinute){
+    public Timer scheduleRepeatableNotification(int scheduleHour, int scheduleMinute, String elderlyName,
+                                                String elderlyYear){
         LocalDateTime currentDate, scheduleDate;
         //Amount of milliseconds in one day: 1000*60*60*24 = 86400000
         long millisOneDay = 86400000;
@@ -129,6 +134,9 @@ public class NotificationLib extends TimerTask {
         }
         Timer scheduleTimer = new Timer();
         scheduleTimer.scheduleAtFixedRate(this, timeDeltaMillis, millisOneDay);
+        String date = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date());
+        databaseLib.addNotificationHistoryElderly(elderlyName, elderlyYear, title,
+                text, date);
         return scheduleTimer;
     }
 
@@ -168,16 +176,18 @@ public class NotificationLib extends TimerTask {
     }
 
     /**
-     * Sends notification to a specific caregiver user.
+     * Sends notification to a specific caregiver user. It also adds notification to elderly history
      * @param caregiverUsername
      */
-    public void sendNotificationUsername(String caregiverUsername){
-        DatabaseLib databaseLib = new DatabaseLib(context);
+    public void sendNotificationUsername(String caregiverUsername, String elderlyName, String elderlyYear){
         databaseLib.getCaregiverToken(caregiverUsername, new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     sendNotification(snapshot.getValue(String.class));
+                    String date = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(new Date());
+                    databaseLib.addNotificationHistoryElderly(elderlyName, elderlyYear, title,
+                            text, date);
                 }
                 else{
                     Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
