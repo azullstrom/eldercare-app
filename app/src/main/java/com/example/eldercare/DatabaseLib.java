@@ -619,6 +619,7 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<String> notificationList = new ArrayList<>();
                 for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
+                    notificationList.add(notificationSnapshot.getKey());
                     notificationList.add(notificationSnapshot.child("title").getValue(String.class));
                     notificationList.add(notificationSnapshot.child("text").getValue(String.class));
                 }
