@@ -181,9 +181,10 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
                             customView.setOnClickListener(v -> {
                                 String selectedElderKey = (String) v.getTag();
+                                String yearOfBirth = selectedElderKey.replaceAll("[^0-9]", ""); // Extract numeric part
                                 Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
                                 intent.putExtra("elderlyName", elderlyFirstName);
-                                intent.putExtra("dateOfBirth", selectedElderKey.length() - 4);
+                                intent.putExtra("dateOfBirth", yearOfBirth);
                                 startActivity(intent);
                             });
                         }
