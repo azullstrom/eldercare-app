@@ -131,38 +131,45 @@ public class DatabaseLib {
     }
 
     public interface CaregiverUsernameCallback {
-        void onUsernameFound(String elderlyId);
+        void onUsernameFound(List<String> usernames);
 
         void onUsernameNotFound();
 
         void onError(String errorMessage);
     }
 
-    public void getCaregiverUsernameByElderlyId(String elderlyId, CaregiverUsernameCallback callback) {
+    /**
+     * Returns a list of caregiver usernames with given assigned elderly.
+     */
+    public void getCaregiverUsernamesByElderlyId(String elderlyId, CaregiverUsernameCallback callback) {
         DatabaseReference caregiversRef = rootRef.child("caregiver-users");
-        Query query = caregiversRef.orderByChild("assigned-elderly").equalTo(elderlyId);
+        final List<String> caregiverUsernames = new ArrayList<>();
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        caregiversRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()) {
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        String userName = snapshot.getKey();
-                        callback.onUsernameFound(userName);
-                        break;
+                for (DataSnapshot caregiverSnapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot assignedElderlyNode = caregiverSnapshot.child("assigned-elderly");
+                    if (assignedElderlyNode.child(elderlyId).exists()) {
+                        caregiverUsernames.add(caregiverSnapshot.getKey());
                     }
+                }
+
+                if (!caregiverUsernames.isEmpty()) {
+                    callback.onUsernameFound(caregiverUsernames);
                 } else {
-                    // No elderly user found with the given email
                     callback.onUsernameNotFound();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                callback.onError(error.getMessage());
             }
         });
     }
+
+
 
 
     /**
