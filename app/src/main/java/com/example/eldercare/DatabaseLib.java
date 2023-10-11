@@ -586,19 +586,20 @@ public class DatabaseLib {
 
     public void addNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
                                               String notificationTitle, String notificationText,
-                                              String date, String time){
+                                              String dateAndTime){
         DatabaseReference notificationRef = rootRef.child("elderly-users")
                 .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
                 .child("notification-history");
         notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-
+                snapshot.getRef().child(dateAndTime).child("title").setValue(notificationTitle);
+                snapshot.getRef().child(dateAndTime).child("text").setValue(notificationText);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
             }
         });
     }
