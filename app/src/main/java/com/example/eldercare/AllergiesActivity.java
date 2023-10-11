@@ -14,7 +14,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -34,7 +33,6 @@ import java.util.List;
 public class AllergiesActivity extends AppCompatActivity {
 
     private DatabaseLib databaseLib;
-    private boolean isDeleteModeEnabled;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,13 +46,11 @@ public class AllergiesActivity extends AppCompatActivity {
         String elderlyName = getIntent().getStringExtra("elderlyName");
         String yearOfBirth = getIntent().getStringExtra("dateOfBirth");
         LinearLayout allergiesLayout = findViewById(R.id.allergies_layout);
-        isDeleteModeEnabled = false;
 
         databaseLib.getElderlyAllergiesDataSnapshot(elderlyName, yearOfBirth, new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 JSONObject json = databaseLib.convertSnapshotToJson(snapshot);
-                List<String> allergyValues = new ArrayList<>();
 
                 try {
                     Iterator<String> keys = json.keys();
@@ -69,9 +65,6 @@ public class AllergiesActivity extends AppCompatActivity {
 
                 // Dynamically creates buttons for every assigned elder in the loop below
                 LayoutInflater inflater = LayoutInflater.from(AllergiesActivity.this);
-
-                // Clear the existing allergiesLayout before adding the updated list of allergies
-                allergiesLayout.removeAllViews();
 
                 for (String allergyValue : allergyValues) {
                     String allergy = allergyValue;
