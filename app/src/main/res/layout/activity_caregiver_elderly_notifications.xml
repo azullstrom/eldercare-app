@@ -13,7 +13,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/back_button"
+                android:id="@+id/alert_back_button"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="40dp"
                 android:layout_width="35dp"
@@ -32,19 +32,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/your_patients"
-            android:text="Allergies"
+            android:text="@string/alert_history"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="15dp"
             android:textSize="25dp" />
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#edecf4"
             android:layout_marginTop="10dp">
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <LinearLayout
-                    android:id="@+id/allergies_layout"
+                    android:id="@+id/alertLayout"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -52,13 +53,4 @@
             </ScrollView>
         </FrameLayout>
     </LinearLayout>
-    <ImageView
-        android:id="@+id/new_allergy_button"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/add_button_no_lines"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="15dp"/>
 </RelativeLayout>
