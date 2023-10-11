@@ -129,6 +129,41 @@ public class DatabaseLib {
         void onError(String errorMessage);
     }
 
+    public interface CaregiverUsernameCallback {
+        void onUsernameFound(String elderlyId);
+
+        void onUsernameNotFound();
+
+        void onError(String errorMessage);
+    }
+
+    public void getCaregiverUsernameByElderlyId(String elderlyId, CaregiverUsernameCallback callback) {
+        DatabaseReference caregiversRef = rootRef.child("caregiver-users");
+        Query query = caregiversRef.orderByChild("assigned-elderly").equalTo(elderlyId);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        String userName = snapshot.getKey();
+                        callback.onUsernameFound(userName);
+                        break;
+                    }
+                } else {
+                    // No elderly user found with the given email
+                    callback.onUsernameNotFound();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+
     /**
      * Get caregiver email by username.
      */
