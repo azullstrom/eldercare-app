@@ -89,6 +89,7 @@ public class DatabaseLib {
         });
     }
 
+
     /**
      * Get elderly-id by email.
      */
@@ -110,15 +111,15 @@ public class DatabaseLib {
                 }
             }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
                 // Handle any errors here
                 callback.onError(databaseError.getMessage());
             }
         });
     }
 
-    public interface ElderlyIdCallback {
+   public interface ElderlyIdCallback {
         void onElderlyIdFound(String elderlyId);
 
         void onElderlyIdNotFound();
@@ -719,15 +720,34 @@ public class DatabaseLib {
                         if (task.isSuccessful()) {
                             Toast.makeText(context, "Login Successful.", Toast.LENGTH_SHORT).show();
 
-                            Intent intent;
+                             Intent intent;
                             if (userType.contains("elderly")) {
-                                intent = new Intent(context, ElderlyOverview.class);
-                                intent.putExtra("usernameElderly", username.trim());
+                                //Add getElderlyIdByEmail and send Id by Intent to ElderlyOverview
+                                getElderlyIdByEmail(email, new ElderlyIdCallback() {
+                                    @Override
+                                    public void onElderlyIdFound(String elderlyId) {
+                                       Intent intent = new Intent(context, ElderlyOverview.class);
+                                        intent.putExtra("usernameElderly", elderlyId);
+                                        context.startActivity(intent);
+                                    }
+
+                                    @Override
+                                    public void onElderlyIdNotFound() {
+
+                                    }
+
+                                    @Override
+                                    public void onError(String errorMessage) {
+
+                                    }
+                                });
+
                             } else {
                                 intent = new Intent(context, CaregiverMainActivity.class);
                                 intent.putExtra("usernameCaregiver", username.trim());
+                                context.startActivity(intent);
                             }
-                            context.startActivity(intent);
+
 
                             if (context instanceof Activity) {
                                 ((Activity) context).finish();
@@ -770,8 +790,8 @@ public class DatabaseLib {
         void onMealsReceived(ArrayList<Meal> meals);
     }
 
-    public void getMeals(String firstNameElderly, String yearOfBirthElderly, MealCallback callback) {
-        DatabaseReference mealsRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim()).child("meals");
+    public void getMeals(String elderlyId, MealCallback callback) {
+        DatabaseReference mealsRef = rootRef.child("elderly-users").child(elderlyId).child("meals");
 
         mealsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
