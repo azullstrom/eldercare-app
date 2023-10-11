@@ -1,12 +1,25 @@
 package com.example.eldercare;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +31,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Date;
+import java.util.Timer;
 
 public class FirstTimeUse extends AppCompatActivity {
 
@@ -28,12 +51,31 @@ public class FirstTimeUse extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Ask for permission to use notifications (only asks if permission not granted)
+        if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
+        }
+        //FireBaseMessageReceiver is initialized so notifications can be received
+        FireBaseMessageReceiver rec = new FireBaseMessageReceiver();
+
         setContentView(R.layout.activity_first_time_use);
 
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
         caregiverButton = findViewById(R.id.caregiverButton);
         databaseLib= new DatabaseLib(this);
+
+
+        // Code to manage changing the language
+        ////////// image views for the language switcher //////////
+        ImageView englishLang = findViewById(R.id.englishLang);
+        ImageView swedishLang = findViewById(R.id.swedishLang);
+
+        ////////// Set languageSwitcher visibility //////////
+        String currentLanguage = LanguageManager.getLanguage(this);
+        englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
+        swedishLang.setVisibility(currentLanguage.equals("en") ? View.VISIBLE : View.GONE);
 
         elderlyButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,5 +168,18 @@ public class FirstTimeUse extends AppCompatActivity {
                     }
                 })
                 .create().show();
+    }
+
+    // Code to manage changing the language
+    ////////// Change lang to the selected lang then refresh //////////
+    public void changeLanguageToEnglish(View view) {
+        LanguageManager.setLanguage(this, "en");
+        recreate();
+    }
+
+    ////////// Change the app's locale to Swedish //////////
+    public void changeLanguageToSwedish(View view) {
+        LanguageManager.setLanguage(this, "sv");
+        recreate();
     }
 }

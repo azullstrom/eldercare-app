@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ElderCare</string>
+    <string name="app_name" translatable="false">ElderCare</string>
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="username">Username</string>
@@ -32,6 +32,7 @@
     <string name="add_new_elder_text">Add new patient</string>
     <string name="add_existing_elder_text">Add existing patient</string>
     <string name="add_new_elderly">Add</string>
+    <string name="elder_settings_icon">Caregiver Settings Icon For Deletion</string>
     <string name="back_to_patients_list">Back to Patients list</string>
     <string name="patient_name_placeholder">Patient Name</string>
     <string name="meals">Meals</string>
@@ -68,4 +69,7 @@
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>
+    <string name="lang_en">en</string>
+    <string name="lang_sv">sv</string>
+
 </resources>
