@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -19,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,6 +135,27 @@ public class DatabaseLib {
      */
     public void getCaregiverEmailByUsername(String username, ValueEventListener callback) {
         DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("email");
+
+        emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                callback.onDataChange(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onCancelled(databaseError);
+            }
+        });
+    }
+
+    /**
+     * Get firebaseMessaging token for caregiver
+     * @param username Caregiver username
+     * @param callback callback object
+     */
+    public void getCaregiverToken(String username, ValueEventListener callback) {
+        DatabaseReference emailRef = rootRef.child("caregiver-users").child(username.trim()).child("token");
 
         emailRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -267,7 +291,7 @@ public class DatabaseLib {
                                 String email = username.trim() + "@elderly.eldercare.com";
                                 String pinCode = pin.trim() + "00";
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
-                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly");
+                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly", "EMPTY-TOKEN");
                                 elderlyRef.child("allergies").setValue(allergies);
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
                             } else {
@@ -394,6 +418,26 @@ public class DatabaseLib {
         });
     }
 
+    public void addAllergyToElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
+        Log.d("hej", firstNameElderly + yearOfBirthElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
+        DatabaseReference allergiesRef = elderlyRef.child("allergies");
+
+        // Use push() to generate a new key for the allergy and set its value
+        DatabaseReference newAllergyRef = allergiesRef.push();
+        newAllergyRef.setValue(allergy, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    // Allergy added successfully
+                    // You can implement a callback or refresh the data here
+                } else {
+                    // An error occurred
+                }
+            }
+        });
+    }
+
     /**
      * Removes a meal for an elderly in the database.
      *
@@ -512,6 +556,85 @@ public class DatabaseLib {
     }
 
     /**
+     *
+     * @param firstNameElderly
+     * @param yearOfBirthElderly
+     * @param mealType
+     * @param setEaten Set meal eaten to either true or false
+     */
+    public void setMealEaten(String firstNameElderly, String yearOfBirthElderly, String mealType, boolean setEaten) {
+        if(!isMealParamFormattedCorrectly(mealType)) {
+            Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference mealEatenRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("meals").child(mealType).child("eaten");
+
+        mealEatenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().setValue(setEaten);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void addNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              String notificationTitle, String notificationText,
+                                              String dateAndTime){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("notification-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().child(dateAndTime).child("title").setValue(notificationTitle);
+                snapshot.getRef().child(dateAndTime).child("text").setValue(notificationText);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public interface NotificationCallback{
+        void onNotificationReceived(ArrayList<String> notifications);
+    }
+
+    public void getNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              NotificationCallback callback){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("notification-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> notificationList = new ArrayList<>();
+                for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
+                    notificationList.add(notificationSnapshot.child("title").getValue(String.class));
+                    notificationList.add(notificationSnapshot.child("text").getValue(String.class));
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onNotificationReceived(notificationList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * Sets "type" for a meal which belongs to an elderly in the database.
      *
      * @param toEat Example: "pizza"
@@ -587,8 +710,9 @@ public class DatabaseLib {
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1919
      * @param userType "elderly" || "caregiver"
+     * @param token fireBaseMessagingToken
      */
-    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType) {
+    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType, String token) {
         String firstNameUser = firstName.trim();
         String lastNameUser = lastName.trim();
         String emailUser = email.trim();
@@ -629,6 +753,7 @@ public class DatabaseLib {
                     userReference.child("firstname").setValue(firstNameUser);
                     userReference.child("lastname").setValue(lastNameUser);
                     userReference.child("phone-number").setValue(phoneUser);
+                    userReference.child("token").setValue(token);
 
                     Toast.makeText(context, "Registration Successful.", Toast.LENGTH_SHORT).show();
                 } else {

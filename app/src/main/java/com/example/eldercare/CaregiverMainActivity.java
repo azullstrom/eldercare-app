@@ -3,10 +3,20 @@ package com.example.eldercare;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +25,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +53,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *
      *
      * TODO:
-     *  - Remove elder (reassign?!)
-     *  - Display assigned elders (Fix better buttons)
+     *  - Finish implementing deletion/unassign
+     *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
      *
      *
@@ -52,19 +64,21 @@ public class CaregiverMainActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     FirebaseUser currentUser;
     private boolean eldersExist = true;
+
+    private String elderlyLastName;
     LinearLayout eldersContainer;
     // Anders: Gjorde denna global i klassen så att man slipper hämta den hela tiden.
     private String usernameCaregiver;
+    private boolean isDeleteModeEnabled = false;
+    private List<ImageView> deleteIcons = new ArrayList<>();
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_caregiver_main);
+        setContentView(R.layout.activity_root_layout);
 
-        //Things that Will be moved somewhere else?
-        TextView welcomeTextView = findViewById(R.id.your_patients);
-        welcomeTextView.setText("Your Patients");
         ImageButton addPatientButton = findViewById(R.id.addImageButton);
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -97,8 +111,36 @@ public class CaregiverMainActivity extends AppCompatActivity {
         });
     }
 
-    private void eldersIterator() {
-        eldersContainer = findViewById(R.id.eldersContainer);
+
+
+
+
+    public interface ElderlyLastNameCallback {
+        void onLastNameReceived(String lastName);
+        void onError(String errorMessage);
+    }
+
+    private void getEldersLastName(String elderID, ElderlyLastNameCallback callback) {
+        databaseLib.getElderlyLastName(elderID, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String elderlyLastName = snapshot.getValue(String.class);
+                    callback.onLastNameReceived(elderlyLastName);
+                } else {
+                    callback.onError("ElderlyId not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError("Database error");
+            }
+        });
+    }
+
+    private void eldersIterator(View newContent) {
+        eldersContainer = newContent.findViewById(R.id.display_elders_eldersContainer);
         eldersContainer.removeAllViews();
         List<String> elderKeys = new ArrayList<>();
 
@@ -120,28 +162,38 @@ public class CaregiverMainActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                int index = 0;
-                for(String elderKey : elderKeys) {
-                    Button elderButton = new Button(CaregiverMainActivity.this);
-                    elderButton.setText(elderKey);
-                    elderButton.setTag(elderKey);
-                    elderButton.setOnClickListener(view -> {
-                        //Connect to Ahmads code
-                        String selectedElderKey = (String)view.getTag();
-                        Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
-                        intent.putExtra("elderlyName", selectedElderKey.substring(0, selectedElderKey.length() - 4));
-                        intent.putExtra("elderlyYear", selectedElderKey.substring(selectedElderKey.length()-4));
-                        startActivity(intent);
+                //Dynamically creates buttons for every assigned elder in the loop below
+                LayoutInflater inflater = LayoutInflater.from(CaregiverMainActivity.this);
+                for (String elderKey : elderKeys) {
+                    String elderlyFirstName = elderKey.substring(0, elderKey.length() - 4);
+                    getEldersLastName(elderKey, new ElderlyLastNameCallback() {
+                        @Override
+                        public void onLastNameReceived(String lastName) {
+                            View customView = inflater.inflate(R.layout.patient_card, null);
+                            eldersContainer.addView(customView);
+                            ImageView deleteElderIcon = customView.findViewById(R.id.delete_elder);
+                            deleteIcons.add(deleteElderIcon);
+                            TextView patientFullName = customView.findViewById(R.id.patientFullName);
+                            TextView patientID = customView.findViewById(R.id.patientID);
+                            customView.setTag(elderKey);
+                            patientFullName.setText(elderlyFirstName + " " + lastName);
+                            patientID.setText("ID: " + elderKey);
+
+                            customView.setOnClickListener(v -> {
+                                String selectedElderKey = (String) v.getTag();
+                                String yearOfBirth = selectedElderKey.replaceAll("[^0-9]", ""); // Extract numeric part
+                                Intent intent = new Intent(CaregiverMainActivity.this, CaregiverElderlyOverviewActivity.class);
+                                intent.putExtra("elderlyName", elderlyFirstName);
+                                intent.putExtra("dateOfBirth", yearOfBirth);
+                                startActivity(intent);
+                            });
+                        }
+
+                        @Override
+                        public void onError(String errorMessage) {
+                            Toast.makeText(CaregiverMainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                        }
                     });
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    );
-                    int topMargin = index == 0 ? 390 : 10; // Use counter variable here
-                    params.setMargins(0, topMargin, 0, 10); // Apply topMargin here
-                    elderButton.setLayoutParams(params);
-                    eldersContainer.addView(elderButton);
-                    index++;
                 }
             }
 
@@ -153,37 +205,60 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
     }
 
-    /*  Updates the UI depending on if there is elders assigned or not should also take in "key" (i.e elder name/ID I guess)  */
+    /*  Updates the UI depending on if there is elders assigned or not*/
     private void updateUI(boolean eldersExist) {
-        //Set to true if you want to see empty page layout
+        FrameLayout contentView = findViewById(R.id.contentView);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View newContent;
         //eldersExist = false;
 
-
-        ImageView noPatientsImageView = findViewById(R.id.noPatientsImageView);
-        ImageView arrowImageView = findViewById(R.id.arrowImageView);
-        TextView noPatientsTextView = findViewById(R.id.noPatientsTextView);
-        TextView clickToAddTextView = findViewById(R.id.clickToAddTextView);
-        eldersContainer = findViewById(R.id.eldersContainer);
-
-        //If exists -> Hide a lot of text, Show patients
+        //If exists -> Show patients
         if(eldersExist) {
-            noPatientsImageView.setVisibility(View.INVISIBLE);
-            noPatientsTextView.setVisibility(View.INVISIBLE);
-            clickToAddTextView.setVisibility(View.INVISIBLE);
-            arrowImageView.setVisibility(View.INVISIBLE);
-            eldersContainer.setVisibility(View.VISIBLE);
-            eldersIterator();
-
+            newContent = inflater.inflate(R.layout.display_elders, contentView, false);
+            ImageView elderSettingsImageView = newContent.findViewById(R.id.elder_settings_icon);
+            eldersSettings(elderSettingsImageView);
+            eldersIterator(newContent);
         }
         //If not exists -> Show image, "no patients text"
         else {
-            noPatientsImageView.setVisibility(View.VISIBLE);
-            noPatientsTextView.setVisibility(View.VISIBLE);
-            clickToAddTextView.setVisibility(View.VISIBLE);
-            arrowImageView.setVisibility(View.VISIBLE);
-            eldersContainer.setVisibility(View.GONE);
+            newContent = inflater.inflate(R.layout.activity_caregiver_main, contentView, false);
+        }
+
+        contentView.removeAllViews();
+        contentView.addView(newContent);
+    }
+
+
+    private void eldersSettings(ImageView eldersSettings) {
+        eldersSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
+                isDeleteModeEnabled = !isDeleteModeEnabled;
+                toggleDeleteMode();
+                /******************************************************
+                 * TODO:
+                 * Implement remove (unassign) functionality
+                 */
+            }
+        });
+    }
+
+    private void toggleDeleteMode() {
+        ImageView deleteElder = findViewById(R.id.delete_elder);
+
+        if (isDeleteModeEnabled) {
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.VISIBLE);
+            }
+        } else {
+            deleteElder.setVisibility(View.INVISIBLE);
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.INVISIBLE);
+            }
         }
     }
+
 
 
 
@@ -268,7 +343,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 /* Tar input från allergirutan och skapar en lista av innehållet,
                  * separerat med ett kommatecken
-                 * Tomt innehåll bör även accepteras. Inte testat
                  */
 
                 // Anders: Lade till safe input och lade in alla editTexts i strängar.

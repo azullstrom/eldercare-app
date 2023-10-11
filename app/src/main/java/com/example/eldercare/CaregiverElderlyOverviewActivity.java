@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
 
     // Strings to store the date of birth and elderly/patient name
-    private String elderlyName;
-    private String dateOfBirth;
+    private String elderlyName, dateOfBirth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,10 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // Get the name of the Elderly/patient from Intent
         TextView patientNameTextView = findViewById(R.id.patient_name_placeholder);
         elderlyName  = getIntent().getStringExtra("elderlyName");
-        dateOfBirth  = getIntent().getStringExtra("elderlyYear");
+        // Anders: Ändrade strängen så att den stämmer överens med den som skickar.
+        dateOfBirth  = getIntent().getStringExtra("dateOfBirth");
+
+
 
         // Set Elderly name in the layout
         patientNameTextView.setText(elderlyName);
@@ -52,8 +55,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // OnClickListener for the allergiesCardLinearLayout
         allergiesCardLinearLayout.setOnClickListener(v -> {
             // Start allergies activity
-            // TODO: waiting for the allergies class
-            // startTargetActivity(allergies.class);
+            startTargetActivity(AllergiesActivity.class);
         });
 
         // OnClickListener for the alertHistoryCardLinearLayout
