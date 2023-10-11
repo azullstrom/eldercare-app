@@ -7,7 +7,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +21,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -43,6 +46,7 @@ public class FirstTimeUse extends AppCompatActivity {
 
     Button elderlyButton, caregiverButton;
     FirebaseAuth mAuth;
+    DatabaseLib databaseLib ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class FirstTimeUse extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         elderlyButton = findViewById(R.id.elderlyButton);
         caregiverButton = findViewById(R.id.caregiverButton);
+        databaseLib= new DatabaseLib(this);
 
 
         // Code to manage changing the language
@@ -130,9 +135,27 @@ public class FirstTimeUse extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
                                                 setFirstTimeUsePreferences(false, false, elderlyMail);
-                                                Intent intent = new Intent(getApplicationContext(), Login.class);
-                                                startActivity(intent);
-                                                finish();
+                                                //Add getElderlyIdByEmail and send Id by Intent to ElderlyOverview
+                                                databaseLib.getElderlyIdByEmail(elderlyMail, new DatabaseLib.ElderlyIdCallback() {
+                                                    @Override
+                                                    public void onElderlyIdFound(String elderlyId) {
+                                                        Intent intent = new Intent(getApplicationContext(), ElderlyOverview.class);
+                                                        intent.putExtra("usernameElderly",elderlyId);
+                                                        startActivity(intent);
+                                                        finish();
+                                                    }
+
+                                                    @Override
+                                                    public void onElderlyIdNotFound() {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onError(String errorMessage) {
+
+                                                    }
+                                                });
+
                                             } else {
                                                 // If sign in fails, display a message to the user.
                                                 Toast.makeText(FirstTimeUse.this, "Authentication failed.",
