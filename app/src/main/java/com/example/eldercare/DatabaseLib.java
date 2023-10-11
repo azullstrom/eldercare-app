@@ -54,8 +54,8 @@ public class DatabaseLib {
      * @param yearOfBirth Example: 1920
      * @param callback Async. Add new ValueEventListener() {} and follow the automated functions.
      */
-    public void getElderlyDataSnapshot(String firstNameElderly, String yearOfBirth, ValueEventListener callback) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
+    public void getElderlyAllergiesDataSnapshot(String firstNameElderly, String yearOfBirth, ValueEventListener callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim()).child("allergies");
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

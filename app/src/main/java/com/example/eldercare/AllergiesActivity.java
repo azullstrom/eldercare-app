@@ -1,5 +1,6 @@
 package com.example.eldercare;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +15,20 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class AllergiesActivity extends AppCompatActivity {
 
@@ -25,10 +40,47 @@ public class AllergiesActivity extends AppCompatActivity {
 
         databaseLib = new DatabaseLib(this);
 
+        List<String> allergyValues = new ArrayList<>();
         ImageView backButton = findViewById(R.id.back_button);
         ImageView newAllergy = findViewById(R.id.new_allergy_button);
         String elderlyName = getIntent().getStringExtra("elderlyName");
         String yearOfBirth = getIntent().getStringExtra("dateOfBirth");
+        LinearLayout allergiesLayout = findViewById(R.id.allergies_layout);
+
+        databaseLib.getElderlyAllergiesDataSnapshot(elderlyName, yearOfBirth, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                JSONObject json = databaseLib.convertSnapshotToJson(snapshot);
+
+                try {
+                    Iterator<String> keys = json.keys();
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        Object value = json.get(key);
+                        allergyValues.add(value.toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                //Dynamically creates buttons for every assigned elder in the loop below
+                LayoutInflater inflater = LayoutInflater.from(AllergiesActivity.this);
+                for (String allergyValue : allergyValues) {
+                    String allergy = allergyValue;
+
+                    View customView = inflater.inflate(R.layout.allergy_card, null);
+                    allergiesLayout.addView(customView);
+                    TextView allergyName = customView.findViewById(R.id.allergySection);
+                    customView.setTag(allergy);
+                    allergyName.setText(allergy);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         backButton.setOnClickListener(view -> {
             finish();
@@ -48,13 +100,9 @@ public class AllergiesActivity extends AppCompatActivity {
         Button submitButton = dialogView.findViewById(R.id.submit_allergy_button);
 
         builder.setView(dialogView);
-        AlertDialog addNewOrExistingAlertDialog = builder.create();
+        AlertDialog addAllergyDialog = builder.create();
 
-        //**
-        //Code below changes the dimension and position of the dialog box.
-        //Should probably be abstracted away in a function
-        //**
-        Window window = addNewOrExistingAlertDialog.getWindow();
+        Window window = addAllergyDialog.getWindow();
         if (window != null) {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.copyFrom(window.getAttributes());
@@ -64,12 +112,12 @@ public class AllergiesActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
         }
 
-        String allergyText = newAllergyText.getText().toString();
-
         submitButton.setOnClickListener(view -> {
+            String allergyText = newAllergyText.getText().toString();
             databaseLib.addAllergyToElderly(allergyText, elderlyName, yearOfBirth);
+            addAllergyDialog.dismiss();
         });
 
-        addNewOrExistingAlertDialog.show();
+        addAllergyDialog.show();
     }
 }
