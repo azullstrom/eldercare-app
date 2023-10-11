@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -411,6 +413,26 @@ public class DatabaseLib {
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any database errors here
                 Toast.makeText(context, "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void addAllergyToElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
+        Log.d("hej", firstNameElderly + yearOfBirthElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
+        DatabaseReference allergiesRef = elderlyRef.child("allergies");
+
+        // Use push() to generate a new key for the allergy and set its value
+        DatabaseReference newAllergyRef = allergiesRef.push();
+        newAllergyRef.setValue(allergy, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    // Allergy added successfully
+                    // You can implement a callback or refresh the data here
+                } else {
+                    // An error occurred
+                }
             }
         });
     }
