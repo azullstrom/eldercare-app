@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,10 +64,10 @@ public class AllergiesActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
         }
 
-        String allergyText = newAllergyText.getText().toString();
-
         submitButton.setOnClickListener(view -> {
-            databaseLib.addAllergyToElderly(allergyText, elderlyName, yearOfBirth);
+            String allergyText = newAllergyText.getText().toString();
+            Log.d("hej", allergyText + elderlyName + yearOfBirth);
+            // databaseLib.addAllergyToElderly(allergyText, elderlyName, yearOfBirth);
         });
 
         addNewOrExistingAlertDialog.show();
