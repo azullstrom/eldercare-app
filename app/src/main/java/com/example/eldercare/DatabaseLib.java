@@ -438,6 +438,39 @@ public class DatabaseLib {
         });
     }
 
+    public void removeAllergyFromElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
+        DatabaseReference allergiesRef = elderlyRef.child("allergies");
+
+        // Find the specific child node with the allergy value and remove it
+        Query query = allergiesRef.orderByValue().equalTo(allergy);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    // Remove the allergy node from the database
+                    childSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                // Allergy removed successfully
+                                // You can implement a callback or refresh the data here
+                            } else {
+                                // An error occurred
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle any errors
+            }
+        });
+    }
+
+
     /**
      * Removes a meal for an elderly in the database.
      *

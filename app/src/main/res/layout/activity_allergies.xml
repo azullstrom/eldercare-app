@@ -28,14 +28,18 @@
                 android:textSize="18dp"
                 android:paddingLeft="10dp"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/your_patients"
-            android:text="Allergies"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:textSize="25dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/your_patients"
+                android:text="Allergies"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="25dp" />
+        </LinearLayout>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
