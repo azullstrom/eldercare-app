@@ -54,8 +54,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         // OnClickListener for the allergiesCardLinearLayout
         allergiesCardLinearLayout.setOnClickListener(v -> {
             // Start allergies activity
-            // TODO: waiting for the allergies class
-            // startTargetActivity(allergies.class);
+            startTargetActivity(AllergiesActivity.class);
         });
 
         // OnClickListener for the alertHistoryCardLinearLayout
