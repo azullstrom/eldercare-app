@@ -606,7 +606,7 @@ public class DatabaseLib {
     }
 
     public interface NotificationCallback{
-        void onNotificationReceived(ArrayList<ArrayList> notifications);
+        void onNotificationReceived(ArrayList<String> notifications);
     }
 
     public void getNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
@@ -617,14 +617,10 @@ public class DatabaseLib {
         notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<ArrayList> notificationList = new ArrayList<>();
+                ArrayList<String> notificationList = new ArrayList<>();
                 for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
-                    ArrayList<String> notification = new ArrayList<>();
-                    notification.add(notificationSnapshot.child("title").getValue(String.class));
-                    notification.add(notificationSnapshot.child("text").getValue(String.class));
-                    if(!notificationList.isEmpty()){
-                        notificationList.add(notification);
-                    }
+                    notificationList.add(notificationSnapshot.child("title").getValue(String.class));
+                    notificationList.add(notificationSnapshot.child("text").getValue(String.class));
                 }
 
                 // Pass the ArrayList to the custom callback
