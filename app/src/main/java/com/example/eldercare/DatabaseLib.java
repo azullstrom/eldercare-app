@@ -562,6 +562,25 @@ public class DatabaseLib {
         });
     }
 
+    public void addNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              String notificationTitle, String notificationText,
+                                              String date, String time){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("notification-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     /**
      * Sets "type" for a meal which belongs to an elderly in the database.
      *
