@@ -556,6 +556,85 @@ public class DatabaseLib {
     }
 
     /**
+     *
+     * @param firstNameElderly
+     * @param yearOfBirthElderly
+     * @param mealType
+     * @param setEaten Set meal eaten to either true or false
+     */
+    public void setMealEaten(String firstNameElderly, String yearOfBirthElderly, String mealType, boolean setEaten) {
+        if(!isMealParamFormattedCorrectly(mealType)) {
+            Toast.makeText(context, "Not right formatting on parameters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        DatabaseReference mealEatenRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("meals").child(mealType).child("eaten");
+
+        mealEatenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().setValue(setEaten);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void addNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              String notificationTitle, String notificationText,
+                                              String dateAndTime){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("notification-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().child(dateAndTime).child("title").setValue(notificationTitle);
+                snapshot.getRef().child(dateAndTime).child("text").setValue(notificationText);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public interface NotificationCallback{
+        void onNotificationReceived(ArrayList<String> notifications);
+    }
+
+    public void getNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              NotificationCallback callback){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("notification-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> notificationList = new ArrayList<>();
+                for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
+                    notificationList.add(notificationSnapshot.child("title").getValue(String.class));
+                    notificationList.add(notificationSnapshot.child("text").getValue(String.class));
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onNotificationReceived(notificationList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * Sets "type" for a meal which belongs to an elderly in the database.
      *
      * @param toEat Example: "pizza"
