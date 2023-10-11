@@ -130,6 +130,48 @@ public class DatabaseLib {
         void onError(String errorMessage);
     }
 
+    public interface CaregiverUsernameCallback {
+        void onUsernameFound(List<String> usernames);
+
+        void onUsernameNotFound();
+
+        void onError(String errorMessage);
+    }
+
+    /**
+     * Returns a list of caregiver usernames with given assigned elderly.
+     */
+    public void getCaregiverUsernamesByElderlyId(String elderlyId, CaregiverUsernameCallback callback) {
+        DatabaseReference caregiversRef = rootRef.child("caregiver-users");
+        final List<String> caregiverUsernames = new ArrayList<>();
+
+        caregiversRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot caregiverSnapshot : dataSnapshot.getChildren()) {
+                    DataSnapshot assignedElderlyNode = caregiverSnapshot.child("assigned-elderly");
+                    if (assignedElderlyNode.child(elderlyId).exists()) {
+                        caregiverUsernames.add(caregiverSnapshot.getKey());
+                    }
+                }
+
+                if (!caregiverUsernames.isEmpty()) {
+                    callback.onUsernameFound(caregiverUsernames);
+                } else {
+                    callback.onUsernameNotFound();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.getMessage());
+            }
+        });
+    }
+
+
+
+
     /**
      * Get caregiver email by username.
      */
