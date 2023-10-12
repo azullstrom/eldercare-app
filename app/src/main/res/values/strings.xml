@@ -67,11 +67,11 @@
     <string name="enter_the_elder_phone_number">Enter the elder phone number</string>
     <string name="enter_elder_first_name">Enter elder first name</string>
     <string name="enter_elder_user_id">Enter elder ID</string>
-    <string name="success_image">Success image checkbox</string>
+    <string name="success_image" translatable="false">Success image checkbox</string>
     <string name="you_dont_have_any_patients">You don\'t have any patients</string>
     <string name="click_the_plus_button_to_add">Click the plus button to add!</string>
     <string name="your_patient_has_been_added">Your Patient has been added!</string>
-    <string name="delete_confirmation_image">Are you sure you want to delete image</string>
+    <string name="delete_confirmation_image" translatable="false">Are you sure you want to delete image</string>
     <string name="are_you_sure_you_want_delete">Are you sure you want to remove</string>
     <string name="yes_confirmation">Yes</string>
     <string name="no_confirmation">No</string>
@@ -79,7 +79,7 @@
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>
     <string name="lang_en" translatable="false">en</string>
-    <string name="lang_sv" translatable="true">sv</string>
+    <string name="lang_sv" translatable="false">sv</string>
     <string name="first_time_use_popup">First time use</string>
     <string name="enter_new_allergy">Enter new allergy</string>
     <string name="submit">Submit</string>
