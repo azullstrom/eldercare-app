@@ -74,7 +74,10 @@
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>
-    <string name="lang_en">en</string>
-    <string name="lang_sv">sv</string>
+    <string name="lang_en" translatable="false">en</string>
+    <string name="lang_sv" translatable="true">sv</string>
+    <string name="first_time_use_popup">First time use</string>
+    <string name="enter_new_allergy">Enter new allergy</string>
+    <string name="submit">Submit</string>
 
 </resources>

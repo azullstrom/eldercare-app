@@ -18,7 +18,7 @@
             android:id="@+id/allergy_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Enter new allergy"
+            android:hint="@string/enter_new_allergy"
             android:inputType="text" />
 
         <Button
@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:text="Submit" />
+            android:text="@string/submit" />
     </LinearLayout>
 
 

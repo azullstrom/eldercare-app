@@ -251,7 +251,17 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         String elderKeyToDelete = (String) v.getTag();
                         System.out.println("THIS IS THE ID I PRESSED: " + elderKeyToDelete);
                         //TODO: ADD A WARNING/EXTRA CONFIRMATION HERE!!!!!!!
-                        databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver);
+                        databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver, new DatabaseLib.ElderlyRemovalCallback() {
+                            @Override
+                            public void onElderlyRemoved() {
+                                recreate();
+                            }
+
+                            @Override
+                            public void onElderlyRemovalError(String errorMessage) {
+
+                            }
+                        });
                         System.out.println(elderKeyToDelete + " was removed");
                     }
                 });
