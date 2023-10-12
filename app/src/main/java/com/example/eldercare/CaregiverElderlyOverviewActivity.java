@@ -65,10 +65,11 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         });
 
         // OnClickListener for the elderlySettingsCardLinearLayout
+        /*
         elderlySettingsCardLinearLayout.setOnClickListener(v -> {
             // Start elderlySettings activity
             startTargetActivity(CaregiverElderlySettingsActivity.class);
-        });
+        });*/
 
     }
 
