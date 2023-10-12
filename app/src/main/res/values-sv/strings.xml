@@ -37,7 +37,7 @@
     <string name="patient_name_placeholder">Patientnamn</string>
     <string name="meals">Måltider</string>
     <string name="allergies">Allergier</string>
-    <string name="alert_history">Avisohistorik</string>
+    <string name="alert_history">Varnings historik</string>
     <string name="elderly_settings">Äldre inställningar</string>
     <string name="breakfast">Frukost</string>
     <string name="dinner">Middag</string>
