@@ -28,14 +28,34 @@
                 android:textSize="18dp"
                 android:paddingLeft="10dp"/>
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/your_patients"
-            android:text="@string/allergies"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:textSize="25dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textAppearance="@style/your_patients"
+                android:text="@string/allergies"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:textSize="25dp" />
+
+            <ImageView
+                android:id="@+id/elder_settings_icon"
+                android:clickable="true"
+                android:focusable="true"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginRight="20dp"
+                android:contentDescription="@string/no_patients_text"
+                android:src="@drawable/settings_homepage_caregiver"
+                android:visibility="visible" />
+        </LinearLayout>
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

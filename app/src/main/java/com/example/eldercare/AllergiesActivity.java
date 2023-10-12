@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,12 +34,17 @@ import java.util.List;
 public class AllergiesActivity extends AppCompatActivity {
 
     private DatabaseLib databaseLib;
+    private boolean isDeleteModeEnabled;
+
+    private List<ImageView> deleteIcons;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_allergies);
 
         databaseLib = new DatabaseLib(this);
+        isDeleteModeEnabled = false;
+        deleteIcons = new ArrayList<>();
 
         List<String> allergyValues = new ArrayList<>();
         ImageView backButton = findViewById(R.id.back_button);
@@ -46,6 +52,11 @@ public class AllergiesActivity extends AppCompatActivity {
         String elderlyName = getIntent().getStringExtra("elderlyName");
         String yearOfBirth = getIntent().getStringExtra("dateOfBirth");
         LinearLayout allergiesLayout = findViewById(R.id.allergies_layout);
+        ImageView settingsButton = findViewById(R.id.elder_settings_icon);
+
+        settingsButton.setOnClickListener(view -> {
+            toggleDeleteMode();
+        });
 
         databaseLib.getElderlyAllergiesDataSnapshot(elderlyName, yearOfBirth, new ValueEventListener() {
             @Override
@@ -71,9 +82,30 @@ public class AllergiesActivity extends AppCompatActivity {
 
                     View customView = inflater.inflate(R.layout.allergy_card, null);
                     allergiesLayout.addView(customView);
+
+                    ImageView deleteAllergyIcon = customView.findViewById(R.id.delete_allergy);
+                    deleteIcons.add(deleteAllergyIcon);
+
                     TextView allergyName = customView.findViewById(R.id.allergySection);
                     customView.setTag(allergy);
                     allergyName.setText(allergy);
+
+                    deleteAllergyIcon.setOnClickListener(view -> {
+                        // Fetch the allergy from the customView that contains the clicked deleteIcon
+                        String clickedAllergy = (String) customView.getTag();
+                        databaseLib.removeAllergyFromElderly(clickedAllergy, elderlyName, yearOfBirth, new DatabaseLib.AllergyRemovalCallback() {
+                            @Override
+                            public void onAllergyRemoved() {
+                                recreate();
+                            }
+
+                            @Override
+                            public void onAllergyRemovalError(String errorMessage) {
+
+                            }
+                        });
+                    });
+
                 }
             }
 
@@ -121,5 +153,21 @@ public class AllergiesActivity extends AppCompatActivity {
         });
 
         addAllergyDialog.show();
+    }
+
+    private void toggleDeleteMode() {
+        isDeleteModeEnabled = !isDeleteModeEnabled;
+        ImageView deleteAllergy = findViewById(R.id.delete_allergy);
+
+        if (isDeleteModeEnabled) {
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.VISIBLE);
+            }
+        } else {
+            deleteAllergy.setVisibility(View.INVISIBLE);
+            for(ImageView deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 }
