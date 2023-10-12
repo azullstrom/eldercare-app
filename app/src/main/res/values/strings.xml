@@ -71,6 +71,10 @@
     <string name="you_dont_have_any_patients">You don\'t have any patients</string>
     <string name="click_the_plus_button_to_add">Click the plus button to add!</string>
     <string name="your_patient_has_been_added">Your Patient has been added!</string>
+    <string name="delete_confirmation_image">Are you sure you want to delete image</string>
+    <string name="are_you_sure_you_want_delete">Are you sure you want to remove</string>
+    <string name="yes_confirmation">Yes</string>
+    <string name="no_confirmation">No</string>
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>

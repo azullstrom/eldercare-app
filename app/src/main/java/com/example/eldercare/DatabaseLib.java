@@ -408,7 +408,15 @@ public class DatabaseLib {
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1900
      */
-    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String usernameCaregiver, String username, String pin, String phoneNumber, String yearOfBirth) {
+
+    public interface assignAndCreateNewElderlyToCaregiverCallback {
+        void onCreation();
+
+        void onFailure(String errorMessage);
+    }
+
+
+    public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String usernameCaregiver, String username, String pin, String phoneNumber, String yearOfBirth, assignAndCreateNewElderlyToCaregiverCallback callback) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
@@ -417,6 +425,7 @@ public class DatabaseLib {
             public void onDataChange(@NonNull DataSnapshot elderlySnapshot) {
                 if (elderlySnapshot.exists()) {
                     Toast.makeText(context, "Elderly already exists", Toast.LENGTH_SHORT).show();
+                    callback.onFailure("Elderly already exists");
                 } else {
                     caregiverRef.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -428,9 +437,11 @@ public class DatabaseLib {
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
                                 registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly", "EMPTY-TOKEN");
                                 Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
+                                callback.onCreation();
                             } else {
                                 // If the caregiver user doesn't exist
                                 Toast.makeText(context, "Enter valid caregiver.", Toast.LENGTH_SHORT).show();
+                                callback.onFailure("Enter valid caregiver");
                             }
                         }
 

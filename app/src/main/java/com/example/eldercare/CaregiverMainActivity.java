@@ -17,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -73,6 +74,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
     private String usernameCaregiver;
     private boolean isDeleteModeEnabled = false;
     private List<FrameLayout> deleteIcons = new ArrayList<>();
+
+    private String elderKeyToDelete;
 
 
     @Override
@@ -239,6 +242,52 @@ public class CaregiverMainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void deleteElderConfirmation(Runnable onConfirm) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.activity_caregiver_delete_confirmation, null);
+        Button yesImSureButton = dialogView.findViewById(R.id.yes_im_sure_button);
+        Button noImNotSureButton = dialogView.findViewById(R.id.no_im_not_sure_button);
+        builder.setView(dialogView);
+        AlertDialog deleteElderAlertDialog = builder.create();
+        TextView patientToRemove = dialogView.findViewById(R.id.patientRemove);
+        String baseMessage = getResources().getString(R.string.are_you_sure_you_want_delete);
+        String fullMessage = baseMessage + " " + elderKeyToDelete + "?";
+        patientToRemove.setText(fullMessage);
+
+
+
+        yesImSureButton.setOnClickListener(v -> {
+            onConfirm.run();
+            deleteElderAlertDialog.dismiss();
+            for(FrameLayout deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.INVISIBLE);
+            }
+            isDeleteModeEnabled = false;
+        });
+
+        noImNotSureButton.setOnClickListener(v -> {
+
+            deleteElderAlertDialog.dismiss();
+            for(FrameLayout deleteIcon : deleteIcons) {
+                deleteIcon.setVisibility(View.INVISIBLE);
+            }
+            isDeleteModeEnabled = false;
+        });
+
+        Window window = deleteElderAlertDialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(window.getAttributes());
+            layoutParams.gravity = Gravity.CENTER;
+            window.setAttributes(layoutParams);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        deleteElderAlertDialog.show();
+    }
+
     private void toggleDeleteMode() {
         //ImageView deleteElder = findViewById(R.id.delete_elder);
 
@@ -248,27 +297,28 @@ public class CaregiverMainActivity extends AppCompatActivity {
                 deleteIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String elderKeyToDelete = (String) v.getTag();
+                        elderKeyToDelete = (String) v.getTag();
+                        //DEBUG:
                         System.out.println("THIS IS THE ID I PRESSED: " + elderKeyToDelete);
-                        //TODO: ADD A WARNING/EXTRA CONFIRMATION HERE!!!!!!!
-                        databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver, new DatabaseLib.ElderlyRemovalCallback() {
-                            @Override
-                            public void onElderlyRemoved() {
-                                recreate();
-                            }
 
-                            @Override
-                            public void onElderlyRemovalError(String errorMessage) {
+                        deleteElderConfirmation(() -> {
+                            databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver, new DatabaseLib.ElderlyRemovalCallback() {
+                                @Override
+                                public void onElderlyRemoved() {
+                                    recreate();
+                                }
 
-                            }
+                                @Override
+                                public void onElderlyRemovalError(String errorMessage) {
+
+                                }
+                            });
+                            System.out.println(elderKeyToDelete + " was removed");
                         });
-                        System.out.println(elderKeyToDelete + " was removed");
                     }
                 });
             }
-
         } else {
-            //deleteElder.setVisibility(View.INVISIBLE);
             for(FrameLayout deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.INVISIBLE);
             }
@@ -367,8 +417,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.copyFrom(window.getAttributes());
             layoutParams.gravity = Gravity.BOTTOM;
-            //layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            //layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(layoutParams);
         }
 
@@ -390,15 +438,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
                     return;
                 }
 
-                /*String input = elderAllergies.getText().toString().trim();
-                List<String> allergiesList = new ArrayList<>();
-                if(!input.isEmpty()) {
-                    String[] allergiesArray = input.split(",");
-                    for (String allergy : allergiesArray) {
-                        allergiesList.add(allergy.trim());
-                    }
-                }*/
-
                 // Anders: usernameCaregiver och elderUsername istället för mail. Ändrade även till nya variablerna på allt annat. Se nedan
                 databaseLib.assignAndCreateNewElderlyToCaregiver(
                         firstName,
@@ -407,7 +446,16 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         username,
                         pin,
                         phone,
-                        yearOfBirth);
+                        yearOfBirth, new DatabaseLib.assignAndCreateNewElderlyToCaregiverCallback() {
+                            @Override
+                            public void onCreation() {
+                                addNewElderAlertDialog.dismiss();
+                                recreate();
+                            }
+
+                            @Override
+                            public void onFailure(String errorMessage) {}
+                        });
 
                 addNewElderAlertDialog.dismiss();
             }
