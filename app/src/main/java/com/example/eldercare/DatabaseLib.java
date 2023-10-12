@@ -260,8 +260,7 @@ public class DatabaseLib {
     /**
      * Adds an existing elderly to an existing caregiver in the database.
      *
-     * @param firstNameElderly First name of the elderly in the database.
-     * @param yearOfBirthElderly Example: 1920
+     * @param elderlyId Dag1930 example
      * @param usernameCaregiver Username of the caregiver in the database.
      */
     public void assignElderlyToCaregiver(String elderlyId, String usernameCaregiver) {
