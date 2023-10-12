@@ -57,6 +57,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
      *  - Remove allergies
+     *  - Add confirmation alertdialog when adding/creating
      *
      *
      ******************************************************/
@@ -415,8 +416,22 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         Toast.makeText(CaregiverMainActivity.this, "Required fields missing", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    //databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver);
-                    addExistingElderAlertDialog.dismiss();
+                    databaseLib.getAssignedElderlyDataSnapshot(usernameCaregiver, new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.hasChild(elderUID) && Boolean.TRUE.equals(snapshot.child(elderUID).getValue(Boolean.class))) {
+                                Toast.makeText(CaregiverMainActivity.this, "Elder already assigned to you", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver);
+                                addExistingElderAlertDialog.dismiss();
+                            }
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
                 }
             });
             addExistingElderAlertDialog.show();

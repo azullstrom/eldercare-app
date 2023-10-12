@@ -324,7 +324,7 @@ public class DatabaseLib {
                     });
                 } else {
                     // If the elderly user doesn't exist
-                    Toast.makeText(context, "Enter valid elderly.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Invalid elder ID. Try again", Toast.LENGTH_SHORT).show();
                 }
             }
 
