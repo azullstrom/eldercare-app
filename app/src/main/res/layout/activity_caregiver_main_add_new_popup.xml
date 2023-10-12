@@ -66,13 +66,6 @@
             android:hint="@string/enter_the_elder_phone_number"
             android:inputType="number" />
 
-        <EditText
-            android:id="@+id/elder_allergies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Enter allergies (optional)"
-            android:inputType="textPersonName" />
-
 
 
     </LinearLayout>
