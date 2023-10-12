@@ -78,4 +78,6 @@
     <string name="are_you_sure_you_want_delete">Är du säker på att du vill ta bort</string>
     <string name="yes_confirmation">Ja</string>
     <string name="no_confirmation">Nej</string>
+    <string name="remember_me">Kom ihåg mig</string>
+    <string name="forgot_password">Glömt lösenord?</string>
 </resources>

@@ -83,5 +83,6 @@
     <string name="first_time_use_popup">First time use</string>
     <string name="enter_new_allergy">Enter new allergy</string>
     <string name="submit">Submit</string>
-
+    <string name="remember_me">Remember Me</string>
+    <string name="forgot_password">Forgot Password?</string>
 </resources>

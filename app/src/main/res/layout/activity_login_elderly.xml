@@ -60,7 +60,7 @@
             android:id="@+id/rememberMeCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remember Me" />
+            android:text="@string/remember_me" />
 
         <ProgressBar
             android:layout_width="wrap_content"
