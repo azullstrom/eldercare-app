@@ -1,6 +1,7 @@
 package com.example.eldercare;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +16,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
+
 
 public class ElderlyOverview extends AppCompatActivity {
 
@@ -28,6 +32,8 @@ public class ElderlyOverview extends AppCompatActivity {
     String elderlyId ;
     ArrayList<Meal> mealList ;
     ArrayList<String> mealType;
+    Timer timer ;
+    TimerTask timerTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,61 +42,59 @@ public class ElderlyOverview extends AppCompatActivity {
         setContentView(R.layout.activity_elderly);
         button=findViewById(R.id.buttonElderly);
         textView = findViewById(R.id.textViewTest);
-
         firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("elderly-users");
+        databaseReference = firebaseDatabase.getReference().child("elderly-users");
 //        databaseReference = firebaseDatabase.getReference()
 //                    .child("elderly-users").child("Dag1930")
 //                    .child("meals").child("breakfast")
 //                    .child("time");
         databaseLib = new DatabaseLib(this);
 
-        //TODO Change "Dag1930" to currentUser and "breakfast" to mealTyep
+      timer = new Timer();
+      timerTask= new TimerTask() {
+          @Override
+          public void run() {
+
+          }
 
 
+      };
 
-        mealList = new ArrayList<>();
+
+        timer.scheduleAtFixedRate(timerTask,0,60000);
+
+        mealType = new ArrayList<>(Arrays.asList("breakfast", "lunch", "dinner", "snack1", "snack2", "snack3"));
+
+
         elderlyId = getIntent().getStringExtra("usernameElderly");
         String elderlyFirstName = elderlyId.replaceAll("[^a-zA-Z]", ""); // Extract alphabetic characters
         String elderlyYear = elderlyId.replaceAll("[^0-9]", ""); // Extract numeric characters
 
-        getData();
+       // getData();
        databaseLib.getMeals(elderlyId, new DatabaseLib.MealCallback() {
-
-           @Override
-           public void onMealsReceived(ArrayList<Meal> meals) {
-               databaseLib.setMealEaten(elderlyFirstName,elderlyYear,meals.get(0).getMealType(),false);
-            if (meals != null && !meals.get(0).isEaten()) {
-
-               String firstMeal = meals.get(0).getMealType();
-               String firstMealTime = meals.get(0).getTime();
-               button.setText("Next meal \n"+ firstMeal+" \nat "+ firstMealTime);
-                switch (meals.get(0).getMealType()){
-                    case "breakfast":
-                        button.setText("Next meal \n"+ mealType.get(0)+" \nat "+ firstMealTime);
-                        break;
-                    case "lunch":
-                        button.setText("Next meal \n"+ mealType.get(1)+" \nat "+ firstMealTime);
-                        break;
-                    case "dinner":
-                        button.setText("Next meal \n"+ mealType.get(2)+" \nat "+ firstMealTime);
-                        break;
-                    case "snack1":
-                        button.setText("Next meal \n"+ mealType.get(3)+" \nat "+ firstMealTime);
-                        break;
-                    case "snack2":
-                        button.setText("Next meal \n"+ mealType.get(4)+" \nat "+ firstMealTime);
-                        break;
-                    case "snack3":
-                        button.setText("Next meal \n"+ mealType.get(5)+" \nat "+ firstMealTime);
-                        break;
-                }
-
-            }
+                   @Override
+                   public void onMealsReceived(ArrayList<Meal> meals) {
+                       for (int i=0;i<meals.size();i++){
+                           databaseLib.setMealEaten(elderlyFirstName,elderlyYear,meals.get(i).getMealType(),false);
+                       }
+                       if (meals != null) {
+                           int index =0;
+                           Toast.makeText(ElderlyOverview.this, "Not Null", Toast.LENGTH_SHORT).show();
+                          if (!meals.get(index).isEaten())
+                          {
+                              Toast.makeText(ElderlyOverview.this, "Test", Toast.LENGTH_SHORT).show();
+                              test(index,meals,elderlyFirstName,elderlyYear);
+                          }
 
 
-           }
-       });
+
+
+
+                      }
+
+                   }
+               });
+
 
     }
 
@@ -116,32 +120,47 @@ public class ElderlyOverview extends AppCompatActivity {
             }
         });
     }
+//    private void checkMealTimes() {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+//        String currentTime = sdf.format(new Date());
+//
+//        // Compare with meal times
+//        for (String mealTime : mealTimes) {
+//            if (currentTime.equals(mealTime)) {
+//                // Trigger a notification
+//
+//                break;  // Break if a match is found
+//            }
+//        }
+//    }
 
-    List<String> displayMealsDate(DatabaseReference ref) {
-        ArrayList<String> list = new ArrayList<>();
-        int i = 0;
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot mealTypeSnapshot : snapshot.getChildren()) {
-                    Meal meal = mealTypeSnapshot.getValue(Meal.class);
-                    list.add(meal.getMealType());
+    public void test(int index,ArrayList<Meal> meals,String elderlyFirstName, String elderlyYear){
+        if(index<meals.size()){
+        if(!meals.get(index).isEaten()) {  //if the meal is true(eaten) get next meal
+            button.setText("Next meal \n"+ mealType.get(index)+" \nat "+ meals.get(index).getTime());
+            Toast.makeText(this, "From Inside", Toast.LENGTH_SHORT).show();
+            if (index==3){
+                button.setClickable(false);
+            }
+            final int finalIndex = index;
+            button.setOnClickListener(new View.OnClickListener() {
 
-                    textView.setText(list.get(0));
+                @Override
+                public void onClick(View v) {
+                    databaseLib.setMealEaten(elderlyFirstName,elderlyYear,meals.get(finalIndex).getMealType(),true);
+
+
 
                 }
 
-            }
+            });
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(ElderlyOverview.this, R.string.error, Toast.LENGTH_SHORT).show();
-            }
-        });
-        return list;
+        }
 
+            index++;
+            test(index,meals,elderlyFirstName,elderlyYear);
+        }
     }
-
 
 
 
