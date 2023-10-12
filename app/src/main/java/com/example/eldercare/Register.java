@@ -70,7 +70,17 @@ public class Register extends AppCompatActivity {
                 String email = editTextEmail.getText().toString();
                 String password = editTextPassword.getText().toString();
                 String phone = editTextPhoneNumber.getText().toString();
-                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver", tokenString);
+                databaseLib.registerUser(username, firstName, lastName, email, password, phone, "", "caregiver", tokenString, new DatabaseLib.RegistrationCallback() {
+                    @Override
+                    public void onRegistrationSuccess() {
+                        // Handle if needed
+                    }
+
+                    @Override
+                    public void onRegistrationFailure() {
+                        // Handle if needed
+                    }
+                });
 
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
