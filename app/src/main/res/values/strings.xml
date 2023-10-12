@@ -72,5 +72,7 @@
     <string name="lang_en">en</string>
     <string name="lang_sv">sv</string>
     <string name="first_time_use_popup">First time use</string>
+    <string name="enter_new_allergy">Enter new allergy</string>
+    <string name="submit">Submit</string>
 
 </resources>
