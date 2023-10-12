@@ -56,6 +56,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *  - Finish implementing deletion/unassign
      *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
+     *  - Remove allergies
      *
      *
      ******************************************************/
@@ -110,10 +111,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
-
 
     public interface ElderlyLastNameCallback {
         void onLastNameReceived(String lastName);
@@ -172,6 +169,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                             View customView = inflater.inflate(R.layout.patient_card, null);
                             eldersContainer.addView(customView);
                             ImageView deleteElderIcon = customView.findViewById(R.id.delete_elder);
+                            deleteElderIcon.setTag(elderKey);
                             deleteIcons.add(deleteElderIcon);
                             TextView patientFullName = customView.findViewById(R.id.patientFullName);
                             TextView patientID = customView.findViewById(R.id.patientID);
@@ -228,39 +226,41 @@ public class CaregiverMainActivity extends AppCompatActivity {
         contentView.addView(newContent);
     }
 
-
     private void eldersSettings(ImageView eldersSettings) {
         eldersSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
+                //Debug: System.out.println("YOU CLICKED THE SETTINGS BUTTON!!!!!!");
                 isDeleteModeEnabled = !isDeleteModeEnabled;
                 toggleDeleteMode();
-                /******************************************************
-                 * TODO:
-                 * Implement remove (unassign) functionality
-                 */
             }
         });
     }
-
     private void toggleDeleteMode() {
-        ImageView deleteElder = findViewById(R.id.delete_elder);
+        //ImageView deleteElder = findViewById(R.id.delete_elder);
 
         if (isDeleteModeEnabled) {
             for(ImageView deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.VISIBLE);
+                deleteIcon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String elderKeyToDelete = (String) v.getTag();
+                        System.out.println("THIS IS THE ID I PRESSED: " + elderKeyToDelete);
+                        //TODO: ADD A WARNING/EXTRA CONFIRMATION HERE!!!!!!!
+                        databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver);
+                        System.out.println(elderKeyToDelete + " was removed");
+                    }
+                });
             }
+
         } else {
-            deleteElder.setVisibility(View.INVISIBLE);
+            //deleteElder.setVisibility(View.INVISIBLE);
             for(ImageView deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.INVISIBLE);
             }
         }
     }
-
-
-
 
     //AlertDialog-method (When pressing plus ImageButton)
     private void addNewOrExistingPatientAlertDialog() {
@@ -307,7 +307,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
         addNewOrExistingAlertDialog.show();
     }
-
 
     //Alert-Dialog when pressing "add new elder"
     private void addNewElderAlertDialog() {
@@ -416,8 +415,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         Toast.makeText(CaregiverMainActivity.this, "Required fields missing", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    //TODO : databaseLib.assignElderlyToCaregiver();
-
+                    //databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver);
                     addExistingElderAlertDialog.dismiss();
                 }
             });
