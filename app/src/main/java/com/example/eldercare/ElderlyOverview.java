@@ -122,8 +122,8 @@ public class ElderlyOverview extends AppCompatActivity {
                 }
                 localMealTimerList = new ArrayList<>();
                 LocalTime mealTime = LocalTime.parse(meal.getTime());
-                LocalTime mealTime2 = mealTime.plusMinutes(1);
-                LocalTime mealTime3 = mealTime2.plusMinutes(1);
+                LocalTime mealTime2 = mealTime.plusMinutes(45);
+                LocalTime mealTime3 = mealTime2.plusMinutes(45);
 
                 scheduleElderlyMealNotification(meal, mealTime, false, false);
                 scheduleElderlyMealNotification(meal, mealTime2, true, false);
