@@ -300,6 +300,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //TODO Add existing elder
+                addNewOrExistingAlertDialog.dismiss();
+                addExistingElderAlertDialog();
             }
         });
 
@@ -382,5 +384,44 @@ public class CaregiverMainActivity extends AppCompatActivity {
             }
         });
         addNewElderAlertDialog.show();
+    }
+
+    private void addExistingElderAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.activity_caregiver_main_add_existing_popup, null);
+        EditText elderUserID = dialogView.findViewById(R.id.elder_UID);
+
+        Button confirmNewElderButton = dialogView.findViewById(R.id.confirm_new_elder);
+
+        builder.setView(dialogView);
+
+        AlertDialog addExistingElderAlertDialog = builder.create();
+        Window window = addExistingElderAlertDialog.getWindow();
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(window.getAttributes());
+            layoutParams.gravity = Gravity.BOTTOM;
+            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(layoutParams);
+
+            //Confirm button
+            confirmNewElderButton.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    String elderUID = elderUserID.getText().toString().trim();
+                    if(TextUtils.isEmpty(elderUID)) {
+                        Toast.makeText(CaregiverMainActivity.this, "Required fields missing", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    //TODO : databaseLib.assignElderlyToCaregiver();
+
+                    addExistingElderAlertDialog.dismiss();
+                }
+            });
+            addExistingElderAlertDialog.show();
+        }
     }
 }

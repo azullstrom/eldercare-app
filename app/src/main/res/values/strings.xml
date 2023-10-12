@@ -66,6 +66,7 @@
     <string name="enter_new_elder_pin">Enter new elder pin</string>
     <string name="enter_the_elder_phone_number">Enter the elder phone number</string>
     <string name="enter_elder_first_name">Enter elder first name</string>
+    <string name="enter_elder_user_id">Enter elder ID</string>
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>
