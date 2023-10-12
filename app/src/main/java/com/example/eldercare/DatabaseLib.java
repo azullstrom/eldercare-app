@@ -169,7 +169,40 @@ public class DatabaseLib {
         });
     }
 
+    public interface ElderlyIdListCallback {
+        void onElderlyIdsFound(List<String> elderlyIds);
+        void onElderlyIdsNotFound();
+        void onError(String errorMessage);
+    }
 
+    /**
+     * Returns a list of all elderlyIds in the database.
+     */
+    public void getAllElderlysList(ElderlyIdListCallback callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users");
+        final List<String> elderlyIds = new ArrayList<>();
+
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for (DataSnapshot elderlySnapshot : dataSnapshot.getChildren()) {
+                        String elderlyId = elderlySnapshot.getKey();
+                        elderlyIds.add(elderlyId);
+                    }
+                    callback.onElderlyIdsFound(elderlyIds);
+                } else {
+                    callback.onElderlyIdsNotFound();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
 
 
     /**
