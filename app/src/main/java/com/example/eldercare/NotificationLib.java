@@ -127,7 +127,7 @@ public class NotificationLib extends TimerTask {
             }
         }
         else{
-            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT);
+            Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
             return null;
         }
         Timer scheduleTimer = new Timer();
