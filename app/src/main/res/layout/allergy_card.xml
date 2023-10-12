@@ -45,10 +45,12 @@
                     android:textStyle="bold"
                     android:textColor="@color/purple"
                     android:paddingStart="20sp"/>
+
+
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/delete_elder"
+                android:id="@+id/delete_allergy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

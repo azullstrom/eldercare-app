@@ -47,6 +47,15 @@ public class DatabaseLib {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    /***********************************************************************************/
+    /********************************PUBLIC FUNCTIONS***********************************/
+    /***********************************************************************************/
+
+    /************************************CHAPTER 1**************************************/
+    /***********************************************************************************/
+    /********************************* GET Functions ***********************************/
+    /***********************************************************************************/
+
     /**
      * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
      *
@@ -70,6 +79,10 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
     /**
      * Fetches all data for an elderly. This snapshot can be sent into convertSnapshotIntoJson function.
      *
@@ -92,6 +105,17 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
+    public interface ElderlyIdCallback {
+        void onElderlyIdFound(String elderlyId);
+
+        void onElderlyIdNotFound();
+
+        void onError(String errorMessage);
+    }
 
     /**
      * Get elderly-id by email.
@@ -122,13 +146,10 @@ public class DatabaseLib {
         });
     }
 
-   public interface ElderlyIdCallback {
-        void onElderlyIdFound(String elderlyId);
 
-        void onElderlyIdNotFound();
-
-        void onError(String errorMessage);
-    }
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     public interface CaregiverUsernameCallback {
         void onUsernameFound(List<String> usernames);
@@ -169,8 +190,47 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+    public interface ElderlyIdListCallback {
+        void onElderlyIdsFound(List<String> elderlyIds);
+        void onElderlyIdsNotFound();
+        void onError(String errorMessage);
+    }
 
+    /**
+     * Returns a list of all elderlyIds in the database.
+     */
+    public void getAllElderlysList(ElderlyIdListCallback callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users");
+        final List<String> elderlyIds = new ArrayList<>();
 
+        elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists()) {
+                    for (DataSnapshot elderlySnapshot : dataSnapshot.getChildren()) {
+                        String elderlyId = elderlySnapshot.getKey();
+                        elderlyIds.add(elderlyId);
+                    }
+                    callback.onElderlyIdsFound(elderlyIds);
+                } else {
+                    callback.onElderlyIdsNotFound();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onError(databaseError.getMessage());
+            }
+        });
+    }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Get caregiver email by username.
@@ -190,6 +250,10 @@ public class DatabaseLib {
             }
         });
     }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Get firebaseMessaging token for caregiver
@@ -212,6 +276,10 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
     /**
      * Get elderly last name by elderly-id
      */
@@ -231,6 +299,10 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
     /**
      * Converts snapshot into JSON.
      *
@@ -238,6 +310,11 @@ public class DatabaseLib {
      *
      * @return JSON object || null
      */
+
+    /************************************CHAPTER 2**************************************/
+    /***********************************************************************************/
+    /****************************** Utility Functions **********************************/
+    /***********************************************************************************/
     public JSONObject convertSnapshotToJson(DataSnapshot dataSnapshot) {
         JSONObject jsonObject = new JSONObject();
 
@@ -256,6 +333,11 @@ public class DatabaseLib {
         }
         return null;
     }
+
+    /************************************CHAPTER 3**************************************/
+    /***********************************************************************************/
+    /****************************** Assign Functions ***********************************/
+    /***********************************************************************************/
 
     /**
      * Adds an existing elderly to an existing caregiver in the database.
@@ -301,6 +383,10 @@ public class DatabaseLib {
             }
         });
     }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Assign and adds a new elderly to an existing caregiver in the database.
@@ -356,13 +442,27 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
+    public interface ElderlyRemovalCallback {
+        void onElderlyRemoved();
+        void onElderlyRemovalError(String errorMessage);
+    }
+
+    /************************************CHAPTER 4**************************************/
+    /***********************************************************************************/
+    /****************************** Remove Functions ***********************************/
+    /***********************************************************************************/
+
     /**
      * Removes an existing elderly from an existing caregiver in the database.
      *
      * @param elderlyId Dag1930 example
      * @param usernameCaregiver Username of the caregiver in the database.
      */
-    public void removeElderlyFromCaregiver(String elderlyId, String usernameCaregiver) {
+    public void removeElderlyFromCaregiver(String elderlyId, String usernameCaregiver, ElderlyRemovalCallback callback) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(elderlyId.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
@@ -375,31 +475,47 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Remove the elderly from the caregiver's assigned-elderly node
-                                caregiverRef.child("assigned-elderly").child(elderlyId.trim()).removeValue();
-                                Toast.makeText(context, "Successfully removed!", Toast.LENGTH_SHORT).show();
+                                caregiverRef.child("assigned-elderly").child(elderlyId.trim()).removeValue()
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                // Elderly removed successfully
+                                                callback.onElderlyRemoved();
+                                            } else {
+                                                // An error occurred
+                                                callback.onElderlyRemovalError("Error removing elderly.");
+                                            }
+                                        });
                             } else {
                                 // If the caregiver user doesn't exist
-                                Toast.makeText(context, "Enter valid caregiver.", Toast.LENGTH_SHORT).show();
+                                callback.onElderlyRemovalError("Enter valid caregiver.");
                             }
                         }
 
                         @Override
                         public void onCancelled(@NonNull DatabaseError databaseError) {
                             // Handle any database errors here
+                            callback.onElderlyRemovalError("Database error: " + databaseError.getMessage());
                         }
                     });
                 } else {
                     // If the elderly user doesn't exist
-                    Toast.makeText(context, "Enter valid elderly.", Toast.LENGTH_SHORT).show();
+                    callback.onElderlyRemovalError("Enter valid elderly.");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle any database errors here
+                callback.onElderlyRemovalError("Database error: " + databaseError.getMessage());
             }
         });
     }
+
+
+    /************************************CHAPTER 5**************************************/
+    /***********************************************************************************/
+    /******************************** Meal Functions ***********************************/
+    /***********************************************************************************/
 
     /**
      * Adds a new meal for an elderly in the database.
@@ -458,58 +574,9 @@ public class DatabaseLib {
         });
     }
 
-    public void addAllergyToElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
-        Log.d("hej", firstNameElderly + yearOfBirthElderly);
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
-        DatabaseReference allergiesRef = elderlyRef.child("allergies");
-
-        // Use push() to generate a new key for the allergy and set its value
-        DatabaseReference newAllergyRef = allergiesRef.push();
-        newAllergyRef.setValue(allergy, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                if (error == null) {
-                    // Allergy added successfully
-                    // You can implement a callback or refresh the data here
-                } else {
-                    // An error occurred
-                }
-            }
-        });
-    }
-
-    public void removeAllergyFromElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
-        DatabaseReference allergiesRef = elderlyRef.child("allergies");
-
-        // Find the specific child node with the allergy value and remove it
-        Query query = allergiesRef.orderByValue().equalTo(allergy);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                    // Remove the allergy node from the database
-                    childSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                            if (error == null) {
-                                // Allergy removed successfully
-                                // You can implement a callback or refresh the data here
-                            } else {
-                                // An error occurred
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle any errors
-            }
-        });
-    }
-
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Removes a meal for an elderly in the database.
@@ -573,6 +640,10 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
     /**
      * Sets "toEat" for an elderly in the database.
      *
@@ -628,6 +699,10 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
     /**
      *
      * @param firstNameElderly
@@ -658,6 +733,81 @@ public class DatabaseLib {
         });
     }
 
+
+    /************************************CHAPTER 6**************************************/
+    /***********************************************************************************/
+    /******************************** Allergy Functions ********************************/
+    /***********************************************************************************/
+
+    public void addAllergyToElderly(String allergy, String firstNameElderly, String yearOfBirthElderly) {
+        Log.d("hej", firstNameElderly + yearOfBirthElderly);
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
+        DatabaseReference allergiesRef = elderlyRef.child("allergies");
+
+        // Use push() to generate a new key for the allergy and set its value
+        DatabaseReference newAllergyRef = allergiesRef.push();
+        newAllergyRef.setValue(allergy, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                if (error == null) {
+                    // Allergy added successfully
+                    // You can implement a callback or refresh the data here
+                } else {
+                    // An error occurred
+                }
+            }
+        });
+    }
+
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
+    public interface AllergyRemovalCallback {
+        void onAllergyRemoved();
+        void onAllergyRemovalError(String errorMessage);
+    }
+
+
+    public void removeAllergyFromElderly(String allergy, String firstNameElderly, String yearOfBirthElderly, AllergyRemovalCallback callback) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim() + yearOfBirthElderly.trim());
+        DatabaseReference allergiesRef = elderlyRef.child("allergies");
+
+        // Find the specific child node with the allergy value and remove it
+        Query query = allergiesRef.orderByValue().equalTo(allergy);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
+                    // Remove the allergy node from the database
+                    childSnapshot.getRef().removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                            if (error == null) {
+                                // Allergy removed successfully
+                                callback.onAllergyRemoved();
+                            } else {
+                                // An error occurred
+                                callback.onAllergyRemovalError(error.getMessage());
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                callback.onAllergyRemovalError(databaseError.getMessage());
+            }
+        });
+    }
+
+    /************************************CHAPTER 7**************************************/
+    /***********************************************************************************/
+    /***************************** Notification Functions ******************************/
+    /***********************************************************************************/
+
     public void addNotificationHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
                                               String notificationTitle, String notificationText,
                                               String dateAndTime){
@@ -677,6 +827,10 @@ public class DatabaseLib {
             }
         });
     }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     public interface NotificationCallback{
         void onNotificationReceived(ArrayList<String> notifications);
@@ -707,6 +861,10 @@ public class DatabaseLib {
             }
         });
     }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Sets "type" for a meal which belongs to an elderly in the database.
@@ -774,6 +932,45 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
+    public interface MealCallback {
+        void onMealsReceived(ArrayList<Meal> meals);
+    }
+
+    public void getMeals(String elderlyId, MealCallback callback) {
+        DatabaseReference mealsRef = rootRef.child("elderly-users").child(elderlyId).child("meals");
+
+        mealsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot mealSnapshot) {
+                ArrayList<Meal> mealList = new ArrayList<>();
+
+                for (DataSnapshot mealTypeSnapshot : mealSnapshot.getChildren()) {
+                    Meal meal = mealTypeSnapshot.getValue(Meal.class);
+                    if (meal != null) {
+                        mealList.add(meal);
+                    }
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onMealsReceived(mealList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle the error
+            }
+        });
+    }
+
+    /************************************CHAPTER 8**************************************/
+    /***********************************************************************************/
+    /******************************** Account Functions ********************************/
+    /***********************************************************************************/
+
     /**
      * Registers a new user in the database. Elderly or Caregiver.
      *
@@ -838,6 +1035,15 @@ public class DatabaseLib {
         });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
+
+    public interface LoginCallback {
+        void onLoginSuccess();
+        void onLoginFailure();
+    }
+
     /**
      * Login a user
      *
@@ -886,10 +1092,9 @@ public class DatabaseLib {
                 });
     }
 
-    public interface LoginCallback {
-        void onLoginSuccess();
-        void onLoginFailure();
-    }
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     /**
      * Login a user with LoginCallback. Used if you want to achieve something only if it's success or not within the app.
@@ -964,6 +1169,9 @@ public class DatabaseLib {
                 });
     }
 
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 
     public void resetPassword(String email) {
         mAuth.sendPasswordResetEmail(email.trim()).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -985,35 +1193,10 @@ public class DatabaseLib {
         });
     }
 
-    public interface MealCallback {
-        void onMealsReceived(ArrayList<Meal> meals);
-    }
 
-    public void getMeals(String elderlyId, MealCallback callback) {
-        DatabaseReference mealsRef = rootRef.child("elderly-users").child(elderlyId).child("meals");
-
-        mealsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot mealSnapshot) {
-                ArrayList<Meal> mealList = new ArrayList<>();
-
-                for (DataSnapshot mealTypeSnapshot : mealSnapshot.getChildren()) {
-                    Meal meal = mealTypeSnapshot.getValue(Meal.class);
-                    if (meal != null) {
-                        mealList.add(meal);
-                    }
-                }
-
-                // Pass the ArrayList to the custom callback
-                callback.onMealsReceived(mealList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle the error
-            }
-        });
-    }
+    /***********************************************************************************/
+    /****************************PRIVATE FUNCTIONS**************************************/
+    /***********************************************************************************/
 
 
     /**
@@ -1043,4 +1226,8 @@ public class DatabaseLib {
                 mealType.contains("snack1") || mealType.contains("snack2")
                 || mealType.contains("snack3");
     }
+
+    /***********************************************************************************/
+    /***********************************************************************************/
+    /***********************************************************************************/
 }

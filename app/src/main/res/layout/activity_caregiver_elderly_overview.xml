@@ -146,7 +146,9 @@
 
         </LinearLayout>
 
+
         <!-- Elderly Settings Card -->
+        <!--
         <LinearLayout
             android:id="@+id/elderlySettingsCard"
             android:clickable="true"
@@ -176,6 +178,6 @@
                 android:contentDescription="@string/elderly_settings"
                 android:src="@drawable/elderly_settings_img"
                 tools:ignore="ImageContrastCheck" />
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
 </LinearLayout>
