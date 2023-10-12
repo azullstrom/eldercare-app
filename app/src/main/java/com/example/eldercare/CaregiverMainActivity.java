@@ -446,7 +446,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         username,
                         pin,
                         phone,
-                        yearOfBirth, new DatabaseLib.assignAndCreateNewElderlyToCaregiverCallback() {
+                        yearOfBirth,
+                        new DatabaseLib.assignAndCreateNewElderlyToCaregiverCallback() {
                             @Override
                             public void onCreation() {
                                 addNewElderAlertDialog.dismiss();
@@ -454,10 +455,10 @@ public class CaregiverMainActivity extends AppCompatActivity {
                             }
 
                             @Override
-                            public void onFailure(String errorMessage) {}
+                            public void onFailure(String errorMessage) {
+                                addNewElderAlertDialog.dismiss();
+                            }
                         });
-
-                addNewElderAlertDialog.dismiss();
             }
         });
         addNewElderAlertDialog.show();

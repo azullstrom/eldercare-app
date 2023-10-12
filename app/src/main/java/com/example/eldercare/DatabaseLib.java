@@ -397,6 +397,14 @@ public class DatabaseLib {
     /***********************************************************************************/
     /***********************************************************************************/
 
+
+    public interface assignAndCreateNewElderlyToCaregiverCallback {
+        void onCreation();
+
+        void onFailure(String errorMessage);
+    }
+
+
     /**
      * Assign and adds a new elderly to an existing caregiver in the database.
      *
@@ -407,15 +415,8 @@ public class DatabaseLib {
      * @param pin Elderlys new 6-digit PIN code. Example: 123456
      * @param phoneNumber XXX-XXX XX XX
      * @param yearOfBirth Example: 1900
+     * @param callback
      */
-
-    public interface assignAndCreateNewElderlyToCaregiverCallback {
-        void onCreation();
-
-        void onFailure(String errorMessage);
-    }
-
-
     public void assignAndCreateNewElderlyToCaregiver(String firstNameElderly, String lastNameElderly, String usernameCaregiver, String username, String pin, String phoneNumber, String yearOfBirth, assignAndCreateNewElderlyToCaregiverCallback callback) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirth.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
@@ -435,9 +436,18 @@ public class DatabaseLib {
                                 String email = username.trim() + "@elderly.eldercare.com";
                                 String pinCode = pin.trim() + "00";
                                 caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirth.trim()).setValue(true);
-                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly", "EMPTY-TOKEN");
-                                Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
-                                callback.onCreation();
+                                registerUser(username, firstNameElderly, lastNameElderly, email, pinCode, phoneNumber, yearOfBirth, "elderly", "EMPTY-TOKEN", new RegistrationCallback() {
+                                    @Override
+                                    public void onRegistrationSuccess() {
+                                        Toast.makeText(context, "Successfully added!", Toast.LENGTH_SHORT).show();
+                                        callback.onCreation();
+                                    }
+
+                                    @Override
+                                    public void onRegistrationFailure() {
+                                        callback.onFailure("Error");
+                                    }
+                                });
                             } else {
                                 // If the caregiver user doesn't exist
                                 Toast.makeText(context, "Enter valid caregiver.", Toast.LENGTH_SHORT).show();
@@ -989,6 +999,12 @@ public class DatabaseLib {
     /******************************** Account Functions ********************************/
     /***********************************************************************************/
 
+    public interface RegistrationCallback {
+        void onRegistrationSuccess();
+        void onRegistrationFailure();
+    }
+
+
     /**
      * Registers a new user in the database. Elderly or Caregiver.
      *
@@ -1001,7 +1017,7 @@ public class DatabaseLib {
      * @param userType "elderly" || "caregiver"
      * @param token fireBaseMessagingToken
      */
-    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType, String token) {
+    public void registerUser(String username, String firstName, String lastName, String email, String password, String phoneNumber, String yearOfBirth, String userType, String token, RegistrationCallback callback) {
         String firstNameUser = firstName.trim();
         String lastNameUser = lastName.trim();
         String emailUser = email.trim();
@@ -1045,9 +1061,11 @@ public class DatabaseLib {
                     userReference.child("token").setValue(token);
 
                     Toast.makeText(context, "Registration Successful.", Toast.LENGTH_SHORT).show();
+                    callback.onRegistrationSuccess();
                 } else {
                     // Registration failed
                     Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show();
+                    callback.onRegistrationFailure();
                 }
             }
         });
