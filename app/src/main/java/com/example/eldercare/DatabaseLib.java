@@ -175,6 +175,9 @@ public class DatabaseLib {
         void onError(String errorMessage);
     }
 
+    /**
+     * Returns a list of all elderlyIds in the database.
+     */
     public void getAllElderlysList(ElderlyIdListCallback callback) {
         DatabaseReference elderlyRef = rootRef.child("elderly-users");
         final List<String> elderlyIds = new ArrayList<>();
