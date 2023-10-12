@@ -8,6 +8,7 @@
     android:padding="16dp"
     android:gravity="center">
 
+
     <TextView
         android:id="@+id/your_patients"
         android:layout_width="match_parent"
@@ -37,7 +38,7 @@
         android:layout_marginTop="-25dp"
         android:maxLines="1"
         android:padding="16dp"
-        android:text="You don't have any patients"
+        android:text="@string/you_dont_have_any_patients"
         android:textAppearance="@style/you_dont_have_patients" />
 
     <TextView
@@ -49,7 +50,7 @@
         android:gravity="center"
         android:maxLines="1"
         android:padding="10dp"
-        android:text="Click the plus button to add"
+        android:text="@string/click_the_plus_button_to_add"
         android:textAppearance="@style/click_to_add" />
 
 

@@ -67,6 +67,10 @@
     <string name="enter_the_elder_phone_number">Enter the elder phone number</string>
     <string name="enter_elder_first_name">Enter elder first name</string>
     <string name="enter_elder_user_id">Enter elder ID</string>
+    <string name="success_image">Success image checkbox</string>
+    <string name="you_dont_have_any_patients">You don\'t have any patients</string>
+    <string name="click_the_plus_button_to_add">Click the plus button to add!</string>
+    <string name="your_patient_has_been_added">Your Patient has been added!</string>
     <string name="snack1">First Snack</string>
     <string name="snack2">Second Snack</string>
     <string name="snack3">Third Snack</string>

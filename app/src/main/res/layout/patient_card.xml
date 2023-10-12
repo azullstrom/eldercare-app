@@ -16,65 +16,77 @@
 
         <!-- elderly card -->
         <LinearLayout
-            android:clickable="false"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@drawable/rounded_corners_elder_cards"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
-            >
+            android:background="@drawable/rounded_corners_elder_cards"
+            android:clickable="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingStart="20sp"
                 android:contentDescription="@string/patient_name_placeholder"
+                android:paddingStart="20sp"
                 android:src="@drawable/patienticon_img"
                 tools:ignore="ImageContrastCheck" />
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/patientFullName"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20sp"
                     android:text="@string/patient_name_placeholder"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
                     android:textColor="@color/purple"
-                    android:paddingStart="20sp"/>
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
                 <TextView
                     android:id="@+id/patientID"
-                    android:layout_height="wrap_content"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20sp"
                     android:text="@string/patient_name_placeholder"
-                    android:textSize="20sp"
-                    android:textStyle="italic"
                     android:textColor="@color/gray"
-                    android:paddingStart="20sp"/>
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
             </LinearLayout>
 
-            <ImageView
+            <!-- container for Red Square and Delete Icon -->
+            <FrameLayout
                 android:id="@+id/delete_elder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:clickable="true"
-                android:paddingLeft="25sp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/delete_img"
-                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="end|center_vertical"
-                tools:ignore="ImageContrastCheck" />
+                android:layout_marginRight="0dp"
+                android:visibility="invisible"
+                android:paddingLeft="25sp">
+
+                <!-- Red Square -->
+                <View
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_corners_elder_cards_red" />
+
+                <!-- Delete Icon -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/delete_img"
+                    tools:ignore="ImageContrastCheck" />
+            </FrameLayout>
 
         </LinearLayout>
-
-
-
     </LinearLayout>
 </LinearLayout>

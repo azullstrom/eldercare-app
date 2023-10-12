@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -56,8 +57,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
      *  - Finish implementing deletion/unassign
      *  - Implement alert icon when notification has been received
      *  - Add existing elder functionality
-     *  - Remove allergies
      *  - Add confirmation alertdialog when adding/creating
+     *  - Add a red box over the trash bin (delete icon) to make it clearer
      *
      *
      ******************************************************/
@@ -67,13 +68,11 @@ public class CaregiverMainActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     private boolean eldersExist = true;
 
-    private String elderlyLastName;
     LinearLayout eldersContainer;
     // Anders: Gjorde denna global i klassen så att man slipper hämta den hela tiden.
     private String usernameCaregiver;
     private boolean isDeleteModeEnabled = false;
-    private List<ImageView> deleteIcons = new ArrayList<>();
-
+    private List<FrameLayout> deleteIcons = new ArrayList<>();
 
 
     @Override
@@ -86,6 +85,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         // Anders: instansierar variabeln
         usernameCaregiver = getIntent().getStringExtra("usernameCaregiver");
+
+
 
         /*  Checks if the caregiver has any elders assigned   */
         // Anders: usernameCaregiver istället för "Bengan"
@@ -103,6 +104,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
+
         });
         //Plus (i.e add) button listener
         addPatientButton.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +171,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         public void onLastNameReceived(String lastName) {
                             View customView = inflater.inflate(R.layout.patient_card, null);
                             eldersContainer.addView(customView);
-                            ImageView deleteElderIcon = customView.findViewById(R.id.delete_elder);
+                            FrameLayout deleteElderIcon = customView.findViewById(R.id.delete_elder);
                             deleteElderIcon.setTag(elderKey);
                             deleteIcons.add(deleteElderIcon);
                             TextView patientFullName = customView.findViewById(R.id.patientFullName);
@@ -241,7 +243,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
         //ImageView deleteElder = findViewById(R.id.delete_elder);
 
         if (isDeleteModeEnabled) {
-            for(ImageView deleteIcon : deleteIcons) {
+            for(FrameLayout deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.VISIBLE);
                 deleteIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -257,7 +259,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
         } else {
             //deleteElder.setVisibility(View.INVISIBLE);
-            for(ImageView deleteIcon : deleteIcons) {
+            for(FrameLayout deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.INVISIBLE);
             }
         }
@@ -284,8 +286,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.copyFrom(window.getAttributes());
             layoutParams.gravity = Gravity.BOTTOM;
-            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            //layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            //layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(layoutParams);
         }
         //Create new elder button listener
@@ -300,13 +302,36 @@ public class CaregiverMainActivity extends AppCompatActivity {
         addExistingElderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO Add existing elder
                 addNewOrExistingAlertDialog.dismiss();
                 addExistingElderAlertDialog();
             }
         });
 
         addNewOrExistingAlertDialog.show();
+    }
+
+    private void successAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.activity_caregiver_success, null);
+        builder.setView(dialogView);
+        AlertDialog successAlertDialog = builder.create();
+        Window window = successAlertDialog.getWindow();
+
+        if (window != null) {
+            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+            layoutParams.copyFrom(window.getAttributes());
+
+            layoutParams.gravity = Gravity.CENTER;
+            //layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            //layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+
+            window.setAttributes(layoutParams);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        }
+        successAlertDialog.show();
     }
 
     //Alert-Dialog when pressing "add new elder"
@@ -322,7 +347,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         EditText elderUsername = dialogView.findViewById(R.id.elder_username);
         EditText elderPinCode = dialogView.findViewById(R.id.elder_pin_code);
         EditText elderPhoneNumber = dialogView.findViewById(R.id.elder_phone_number);
-        EditText elderAllergies = dialogView.findViewById(R.id.elder_allergies);
         Button confirmNewElderButton = dialogView.findViewById(R.id.confirm_new_elder);
 
         builder.setView(dialogView);
@@ -333,8 +357,8 @@ public class CaregiverMainActivity extends AppCompatActivity {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.copyFrom(window.getAttributes());
             layoutParams.gravity = Gravity.BOTTOM;
-            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            //layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+            //layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(layoutParams);
         }
 
@@ -343,10 +367,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                /* Tar input från allergirutan och skapar en lista av innehållet,
-                 * separerat med ett kommatecken
-                 */
-
                 // Anders: Lade till safe input och lade in alla editTexts i strängar.
                 String firstName = elderFirstName.getText().toString().trim();
                 String lastName = elderLastName.getText().toString().trim();
@@ -360,14 +380,14 @@ public class CaregiverMainActivity extends AppCompatActivity {
                     return;
                 }
 
-                String input = elderAllergies.getText().toString().trim();
+                /*String input = elderAllergies.getText().toString().trim();
                 List<String> allergiesList = new ArrayList<>();
                 if(!input.isEmpty()) {
                     String[] allergiesArray = input.split(",");
                     for (String allergy : allergiesArray) {
                         allergiesList.add(allergy.trim());
                     }
-                }
+                }*/
 
                 // Anders: usernameCaregiver och elderUsername istället för mail. Ändrade även till nya variablerna på allt annat. Se nedan
                 databaseLib.assignAndCreateNewElderlyToCaregiver(
@@ -377,8 +397,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         username,
                         pin,
                         phone,
-                        yearOfBirth,
-                        allergiesList);
+                        yearOfBirth);
 
                 addNewElderAlertDialog.dismiss();
             }
@@ -402,8 +421,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
             layoutParams.copyFrom(window.getAttributes());
             layoutParams.gravity = Gravity.BOTTOM;
-            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             window.setAttributes(layoutParams);
 
             //Confirm button
@@ -412,7 +429,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     String elderUID = elderUserID.getText().toString().trim();
-                    if(TextUtils.isEmpty(elderUID)) {
+                    if (TextUtils.isEmpty(elderUID)) {
                         Toast.makeText(CaregiverMainActivity.this, "Required fields missing", Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -421,17 +438,29 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if (snapshot.hasChild(elderUID) && Boolean.TRUE.equals(snapshot.child(elderUID).getValue(Boolean.class))) {
                                 Toast.makeText(CaregiverMainActivity.this, "Elder already assigned to you", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver);
-                                addExistingElderAlertDialog.dismiss();
+                            } else {
+                                databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver, new DatabaseLib.assignElderlyToCaregiverCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        addExistingElderAlertDialog.dismiss();
+                                        recreate();
+                                    }
+
+
+                                    @Override
+                                    public void onFailure(String errorMessage) {
+                                        addExistingElderAlertDialog.dismiss();
+                                    }
+                                });
                             }
                         }
+
                         @Override
                         public void onCancelled(@NonNull DatabaseError error) {
 
                         }
                     });
+                    addExistingElderAlertDialog.dismiss();
                 }
             });
             addExistingElderAlertDialog.show();
