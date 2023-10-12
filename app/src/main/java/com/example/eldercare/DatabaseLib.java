@@ -260,12 +260,11 @@ public class DatabaseLib {
     /**
      * Adds an existing elderly to an existing caregiver in the database.
      *
-     * @param firstNameElderly First name of the elderly in the database.
-     * @param yearOfBirthElderly Example: 1920
+     * @param elderlyId Dag1930 example
      * @param usernameCaregiver Username of the caregiver in the database.
      */
-    public void assignElderlyToCaregiver(String firstNameElderly, String yearOfBirthElderly, String usernameCaregiver) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly.trim()+yearOfBirthElderly.trim());
+    public void assignElderlyToCaregiver(String elderlyId, String usernameCaregiver) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(elderlyId.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -277,7 +276,7 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Assign the elderly to the caregiver by updating caregiver's node
-                                caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirthElderly.trim()).setValue(true);
+                                caregiverRef.child("assigned-elderly").child(elderlyId.trim()).setValue(true);
                                 Toast.makeText(context, "Successfully assigned!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
@@ -360,12 +359,11 @@ public class DatabaseLib {
     /**
      * Removes an existing elderly from an existing caregiver in the database.
      *
-     * @param firstNameElderly First name of the elderly in the database.
-     * @param yearOfBirthElderly Example: 1920
+     * @param elderlyId Dag1930 example
      * @param usernameCaregiver Username of the caregiver in the database.
      */
-    public void removeElderlyFromCaregiver(String firstNameElderly, String yearOfBirthElderly, String usernameCaregiver) {
-        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(firstNameElderly);
+    public void removeElderlyFromCaregiver(String elderlyId, String usernameCaregiver) {
+        DatabaseReference elderlyRef = rootRef.child("elderly-users").child(elderlyId.trim());
         DatabaseReference caregiverRef = rootRef.child("caregiver-users").child(usernameCaregiver);
 
         elderlyRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -377,7 +375,7 @@ public class DatabaseLib {
                         public void onDataChange(@NonNull DataSnapshot caregiverSnapshot) {
                             if (caregiverSnapshot.exists()) {
                                 // Remove the elderly from the caregiver's assigned-elderly node
-                                caregiverRef.child("assigned-elderly").child(firstNameElderly.trim()+yearOfBirthElderly.trim()).removeValue();
+                                caregiverRef.child("assigned-elderly").child(elderlyId.trim()).removeValue();
                                 Toast.makeText(context, "Successfully removed!", Toast.LENGTH_SHORT).show();
                             } else {
                                 // If the caregiver user doesn't exist
