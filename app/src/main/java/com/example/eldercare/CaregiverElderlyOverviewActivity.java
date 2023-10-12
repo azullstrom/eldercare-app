@@ -36,7 +36,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         LinearLayout mealCardLinearLayout            = findViewById(R.id.mealsCard);
         LinearLayout allergiesCardLinearLayout       = findViewById(R.id.allergiesCard);
         LinearLayout alertHistoryCardLinearLayout    = findViewById(R.id.alertHistoryCard);
-        LinearLayout elderlySettingsCardLinearLayout = findViewById(R.id.elderlySettingsCard);
+        //LinearLayout elderlySettingsCardLinearLayout = findViewById(R.id.elderlySettingsCard);
 
 
 
