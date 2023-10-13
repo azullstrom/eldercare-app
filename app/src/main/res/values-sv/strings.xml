@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name" translatable="false">ElderCare</string>
     <string name="logout">Logga ut</string>
     <string name="login">Logga in</string>
     <string name="username">Användarnamn</string>
@@ -19,7 +18,7 @@
     <string name="add_patient_button">Lägg till patient</string>
     <string name="back_to_patient_home">Tillbaka till patienthem</string>
     <string name="add_patient">Lägg till patient</string>
-    <string name="back_to_patient_home_page">Tillbaka till patienthemssida</string>
+    <string name="back_to_patient_home_page">Tillbaka till patienthemsida</string>
     <string name="meal_calendar">Måltidskalender</string>
     <string name="edit_meal">Redigera måltid</string>
     <string name="meal_name">Måltidsnamn:</string>
@@ -37,7 +36,7 @@
     <string name="patient_name_placeholder">Patientnamn</string>
     <string name="meals">Måltider</string>
     <string name="allergies">Allergier</string>
-    <string name="alert_history">Varnings historik</string>
+    <string name="alert_history">Varningshistorik</string>
     <string name="elderly_settings">Äldre inställningar</string>
     <string name="breakfast">Frukost</string>
     <string name="dinner">Middag</string>
@@ -69,9 +68,16 @@
     <string name="snack1">Första Snack</string>
     <string name="snack2">Andra Snack</string>
     <string name="snack3">Tredje Snack</string>
-    <string name="lang_en" translatable="false">en</string>
-    <string name="lang_sv" translatable="true">sv</string>
-    <string name="first_time_use_popup">Första gången användning</string>
+    <string name="first_time_use_popup">Första-gången-användning</string>
     <string name="enter_new_allergy">Ange ny allergi</string>
     <string name="submit">Skicka</string>
+    <string name="enter_elder_user_id">Ange äldre ID</string>
+    <string name="you_dont_have_any_patients">Du har inga patienter</string>
+    <string name="click_the_plus_button_to_add">Klicka på plusknappen för att lägga till!</string>
+    <string name="your_patient_has_been_added">Din patient har lagts till!</string>
+    <string name="are_you_sure_you_want_delete">Är du säker på att du vill ta bort</string>
+    <string name="yes_confirmation">Ja</string>
+    <string name="no_confirmation">Nej</string>
+    <string name="remember_me">Kom ihåg mig</string>
+    <string name="forgot_password">Glömt lösenord?</string>
 </resources>
