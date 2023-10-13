@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
@@ -88,8 +89,6 @@ public class CaregiverMainActivity extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser();
         // Anders: instansierar variabeln
         usernameCaregiver = getIntent().getStringExtra("usernameCaregiver");
-
-
 
         /*  Checks if the caregiver has any elders assigned   */
         // Anders: usernameCaregiver istället för "Bengan"
@@ -375,6 +374,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
 
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.activity_caregiver_success, null);
+        Button button = dialogView.findViewById(R.id.confirm_button);
         builder.setView(dialogView);
         AlertDialog successAlertDialog = builder.create();
         Window window = successAlertDialog.getWindow();
@@ -390,6 +390,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
             window.setAttributes(layoutParams);
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+            button.setOnClickListener(view -> {
+                successAlertDialog.dismiss();
+            });
         }
         successAlertDialog.show();
     }
@@ -451,6 +454,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                             @Override
                             public void onCreation() {
                                 addNewElderAlertDialog.dismiss();
+                                successAlertDialog();
                                 recreate();
                             }
 
@@ -503,6 +507,14 @@ public class CaregiverMainActivity extends AppCompatActivity {
                                     public void onSuccess() {
                                         addExistingElderAlertDialog.dismiss();
                                         recreate();
+
+                                        Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                successAlertDialog();
+                                            }
+                                        }, 500);
                                     }
 
 

@@ -23,11 +23,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = false;
+    private static final boolean TEST_MODE = true;
     Button loginButton;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
-
     DatabaseLib databaseLib;
     boolean rememberMe;
 
