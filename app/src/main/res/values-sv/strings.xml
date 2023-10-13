@@ -80,4 +80,5 @@
     <string name="no_confirmation">Nej</string>
     <string name="remember_me">Kom ihåg mig</string>
     <string name="forgot_password">Glömt lösenord?</string>
+    <string name="meal_history">Måltidshistorik</string>
 </resources>

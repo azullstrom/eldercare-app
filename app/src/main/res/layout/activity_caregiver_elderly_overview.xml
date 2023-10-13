@@ -145,6 +145,38 @@
                 />
 
         </LinearLayout>
+        <!-- Meal History Card -->
+        <LinearLayout
+            android:id="@+id/mealHistoryCard"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="116dp"
+            android:background="@color/light_gray"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginTop="7sp"
+            android:layout_marginBottom="7sp"
+            >
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:text="@string/meal_history"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/purple"
+                android:paddingStart="15sp"
+                android:paddingEnd="30sp"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/meals_img"
+                android:contentDescription="@string/meal_history"
+                />
+
+        </LinearLayout>
 
 
         <!-- Elderly Settings Card -->
