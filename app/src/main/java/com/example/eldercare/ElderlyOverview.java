@@ -313,13 +313,13 @@ public class ElderlyOverview extends AppCompatActivity {
             if(delay < 0){
                 return;
             }
-            Log.d("CREATION", String.valueOf(delay));
         }
         TimerTask scheduleSchedule = new TimerTask() {
             @Override
             public void run() {
                 handler.post(() -> {
                     //TODO: add to strings.xml
+                    Log.d("CREATION", "STARTING NOTIFICATION");
                     notificationLib = new NotificationLib(elderlyOverviewContext,
                             "Reminder to eat " + meal.getMealType() + "!",
                             "click here to go to your meal");
@@ -331,6 +331,7 @@ public class ElderlyOverview extends AppCompatActivity {
                                     elderlyYear, "Missed to register meal",
                                     "Missed to register: " + meal.getMealType() +
                                     ", " + meal.getToEat(), df.format(new Date()));
+                            Log.d("CREATION", "ADDED NOTIFICATION TO DATABASE");
                         }
                         if(notifyCaregivers){
                             sendNotificationToAllCaregivers(elderlyId + " no registration ",

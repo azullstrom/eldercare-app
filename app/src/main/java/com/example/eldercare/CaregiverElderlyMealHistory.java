@@ -31,7 +31,7 @@ public class CaregiverElderlyMealHistory extends AppCompatActivity {
         databaseLib.getMealHistoryElderly(elderlyName, elderlyYear, new DatabaseLib.MealHistoryCallback() {
             @Override
             public void onNotificationReceived(ArrayList<String> notifications) {
-                for(int i = 0; i < notifications.size(); i++){
+                for(int i = notifications.size()-1; i > 0; i--){
                     //Notifcations consist of list like this {title, text, title, text} which
                     //means that we create an alert card every third time (i%3 == 0)
                     if(i%3 == 0){
