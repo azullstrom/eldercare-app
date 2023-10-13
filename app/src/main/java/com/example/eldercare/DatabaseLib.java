@@ -855,6 +855,24 @@ public class DatabaseLib {
             }
         });
     }
+    public void addMealHistoryElderly(String firstNameElderly, String yearOfBirthElderly, Meal meal,
+                                      String dateAndTime){
+        DatabaseReference mealRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("meal-history");
+        mealRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                snapshot.getRef().child(dateAndTime).child("meal-type").setValue(meal.getMealType());
+                snapshot.getRef().child(dateAndTime).child("meal-toEat").setValue(meal.getToEat());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /***********************************************************************************/
     /***********************************************************************************/
@@ -877,6 +895,36 @@ public class DatabaseLib {
                     notificationList.add(notificationSnapshot.getKey());
                     notificationList.add(notificationSnapshot.child("title").getValue(String.class));
                     notificationList.add(notificationSnapshot.child("text").getValue(String.class));
+                }
+
+                // Pass the ArrayList to the custom callback
+                callback.onNotificationReceived(notificationList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(context, R.string.error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public interface MealHistoryCallback{
+        void onNotificationReceived(ArrayList<String> notifications);
+    }
+
+    public void getMealHistoryElderly(String firstNameElderly, String yearOfBirthElderly,
+                                              MealHistoryCallback callback){
+        DatabaseReference notificationRef = rootRef.child("elderly-users")
+                .child(firstNameElderly.trim()+yearOfBirthElderly.trim())
+                .child("meal-history");
+        notificationRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<String> notificationList = new ArrayList<>();
+                for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
+                    notificationList.add(notificationSnapshot.getKey());
+                    notificationList.add(notificationSnapshot.child("meal-toEat").getValue(String.class));
+                    notificationList.add(notificationSnapshot.child("meal-type").getValue(String.class));
                 }
 
                 // Pass the ArrayList to the custom callback

@@ -2,6 +2,7 @@ package com.example.eldercare;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,7 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
         LinearLayout mealCardLinearLayout            = findViewById(R.id.mealsCard);
         LinearLayout allergiesCardLinearLayout       = findViewById(R.id.allergiesCard);
         LinearLayout alertHistoryCardLinearLayout    = findViewById(R.id.alertHistoryCard);
-        //LinearLayout elderlySettingsCardLinearLayout = findViewById(R.id.elderlySettingsCard);
+        LinearLayout elderlyMealHistoryCardLinearLayout = findViewById(R.id.mealHistoryCard);
 
 
 
@@ -63,6 +64,8 @@ public class CaregiverElderlyOverviewActivity extends AppCompatActivity {
             // Start alertHistory activity
             startTargetActivity(CaregiverElderlyNotifications.class);
         });
+
+        elderlyMealHistoryCardLinearLayout.setOnClickListener(view -> startTargetActivity(CaregiverElderlyMealHistory.class));
 
         // OnClickListener for the elderlySettingsCardLinearLayout
         /*

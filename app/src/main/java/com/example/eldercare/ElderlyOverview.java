@@ -227,8 +227,11 @@ public class ElderlyOverview extends AppCompatActivity {
                             mealButton.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                                     databaseLib.setMealEaten(elderlyName, elderlyYear,
                                             nextMeal.getMealType(),true);
+                                    databaseLib.addMealHistoryElderly(elderlyName, elderlyYear,
+                                            nextMeal, df.format(new Date()));
                                     //cancel all reminder notifications
                                     for(ArrayList list: localMealTimerList){
                                         Meal currMeal = (Meal) list.get(0);
