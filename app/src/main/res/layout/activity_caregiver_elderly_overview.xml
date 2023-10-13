@@ -172,7 +172,7 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/meals_img"
+                android:src="@drawable/meals_history_img"
                 android:contentDescription="@string/meal_history"
                 />
 
