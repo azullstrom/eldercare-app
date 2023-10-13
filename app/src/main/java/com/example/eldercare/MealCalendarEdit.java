@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,6 +40,8 @@ public class MealCalendarEdit extends AppCompatActivity {
     String typeInput, eatInput, elderlyName, elderlyYear;
     boolean mealEaten;
     DatabaseLib database;
+    TimePicker timePicker;
+    String timePickerString;
     int width, height;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,8 @@ public class MealCalendarEdit extends AppCompatActivity {
         deleteButton = findViewById(R.id.deleteButton);
         eatenBox = findViewById(R.id.eatenBox);
         patientAllergies = findViewById(R.id.patientAllergiesEditTextView);
+        timePicker = findViewById(R.id.editMealTimePicker);
+        timePicker.setIs24HourView(true);
 
         layoutMealToEat.setHint(meal.getToEat());
         eatenBox.setChecked(meal.isEaten());
@@ -68,7 +74,7 @@ public class MealCalendarEdit extends AppCompatActivity {
         width = dm.widthPixels;
         height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*0.9), (int) (height*0.5));
+        getWindow().setLayout(width, height);
 
         exit = findViewById(R.id.exitEditMeal);
         exit.setOnClickListener(view -> finish());
@@ -96,7 +102,11 @@ public class MealCalendarEdit extends AppCompatActivity {
                 mealType.setSelection(5);
                 break;
         }
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            LocalTime mealTime = LocalTime.parse(meal.getTime());
+            timePicker.setHour(mealTime.getHour());
+            timePicker.setMinute(mealTime.getMinute());
+        }
         final FirebaseDatabase databaseFire = FirebaseDatabase.getInstance();
         DatabaseReference ref = databaseFire.getReference("elderly-users/" + elderlyName + elderlyYear + "/allergies");
         //TODO: Refactor and move to database function
@@ -117,10 +127,24 @@ public class MealCalendarEdit extends AppCompatActivity {
             }
         });
 
+        timePicker.setOnTimeChangedListener((timePicker, i, i1) -> {
+            String time = "";
+            if(i < 10){
+                time += "0";
+            }
+            time += i + ":";
+            if(i1 < 10){
+                time +=  "0";
+            }
+            time += i1;
+            timePickerString = time;
+        });
+
         saveButton.setOnClickListener(view -> {
             typeInput = String.valueOf(mealType.getSelectedItem());
             eatInput = String.valueOf(editMealToEat.getText());
             mealEaten = eatenBox.isChecked();
+            Log.d("CREATION", timePickerString);
             if(typeInput.matches("")){
                 typeInput = meal.getMealType();
             }
@@ -128,12 +152,12 @@ public class MealCalendarEdit extends AppCompatActivity {
                 eatInput = meal.getToEat();
             }
 
-            if(!eatInput.matches(meal.getToEat()) || meal.isEaten() != mealEaten){
+            if(!eatInput.matches(meal.getToEat()) || meal.isEaten() != mealEaten || timePickerString != meal.getTime()){
                 meal.setToEat(eatInput);
-                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), mealEaten);
+                database.setToEat(meal.getToEat(), elderlyName, elderlyYear, timePickerString, meal.getMealType(), mealEaten);
             }
             if(!typeInput.matches(meal.getMealType())){
-                database.setType(meal.getToEat(), elderlyName, elderlyYear, meal.getTime(), meal.getMealType(), typeInput, meal.isEaten());
+                database.setType(meal.getToEat(), elderlyName, elderlyYear, timePickerString, meal.getMealType(), typeInput, meal.isEaten());
             }
             finish();
         });

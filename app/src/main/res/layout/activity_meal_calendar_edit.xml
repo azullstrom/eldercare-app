@@ -80,6 +80,10 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </RelativeLayout>
+            <TimePicker
+                android:id="@+id/editMealTimePicker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
             <TextView
                 android:id="@+id/patientAllergiesEditTextView"
                 android:layout_width="match_parent"
