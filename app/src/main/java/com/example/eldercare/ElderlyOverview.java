@@ -5,13 +5,18 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -34,6 +39,10 @@ public class ElderlyOverview extends AppCompatActivity {
     ArrayList<Meal> mealList;
     ArrayList<ArrayList> localMealTimerList;
     Context elderlyOverviewContext;
+    boolean cancelAlarm;
+    ProgressBar progressBar;
+    AlertDialog dialog;
+    CountDownTimer countDownTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +69,68 @@ public class ElderlyOverview extends AppCompatActivity {
         markMealsAsUneatenAtMidnight();
 
         alarmButton.setOnClickListener(view -> {
-            sendNotificationToAllCaregivers("Elderly Alarm", elderlyId + " has requested help");
+            showCountDownPopup();
         });
 
 
     }
 
+    private void showCountDownPopup(){
+        cancelAlarm = false;
+        dialog = null;
+        if(countDownTimer != null){
+            countDownTimer.cancel();
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog, null);
+        builder.setTitle("Alarm");
+        builder.setView(dialogView);
+        progressBar = dialogView.findViewById(R.id.progressBar);
+        progressBar.setMax(100);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                cancelAlarm = true;
+            }
+        });
+
+        dialog = builder.create();
+        dialog.setMessage("TEST");
+        dialog.show();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setVisibility(View.GONE);
+        }
+        countDownTimer = new CountDownTimer(11000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long secondsLeft = millisUntilFinished / 1000;
+                if (dialog != null) {
+                    dialog.setMessage("Countdown: " + secondsLeft);
+                    progressBar.setProgress((int) (millisUntilFinished / 100)-10);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                if (dialog != null) {
+                    dialog.setMessage("Countdown: 0");
+                    progressBar.setProgress(0);
+                    if(!cancelAlarm){
+                        sendNotificationToAllCaregivers("Elderly Alarm", elderlyId + " has requested help");
+                    }
+                    dialog.hide();
+                }
+            }
+        }.start();
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // Handle cancel events if necessary
+            }
+        });
+    }
     /**
      * Returns the next meal. If all meals of the day are eaten it returns the first meal to eat
      * the following day
