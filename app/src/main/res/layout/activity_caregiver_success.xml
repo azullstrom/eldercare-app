@@ -29,4 +29,13 @@
         android:text="@string/your_patient_has_been_added"
         android:textAppearance="@style/your_patients"
         android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:layout_margin="20dp"
+        android:text="@string/yes_confirmation" />
 </LinearLayout>
