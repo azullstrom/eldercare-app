@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -46,39 +47,30 @@ public class CaregiverElderlyNotifications extends AppCompatActivity {
     }
 
     private void createAlertCard(String date, String title, String text){
-        LinearLayout alertCard = new LinearLayout(this);
-        alertCard.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
-        Drawable alertCardDraw;
+        LinearLayout alertLayout = findViewById(R.id.alertLayout);
+
+        LayoutInflater inflater = LayoutInflater.from(CaregiverElderlyNotifications.this);
+        View customView;
+        TextView dateText, titleText, textText;
+
         if(title.matches("Elderly Alarm")){
-            alertCardDraw = getResources().getDrawable(R.drawable.alert_card);
-            alertCardDraw.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP);
+            customView = inflater.inflate(R.layout.alert_card, null);
+            dateText = customView.findViewById(R.id.alert_date);
+            titleText = customView.findViewById(R.id.alert_title);
+            textText = customView.findViewById(R.id.alert_text);
+            customView.setTag(dateText);
         }
         else{
-            alertCardDraw = getResources().getDrawable(R.drawable.meal_card);
+            customView = inflater.inflate(R.layout.missed_meal_card, null);
+            dateText = customView.findViewById(R.id.missed_meal_date);
+            titleText = customView.findViewById(R.id.missed_meal_title);
+            textText = customView.findViewById(R.id.missed_meal_text);
+            customView.setTag(dateText);
         }
-        alertCard.setBackground(alertCardDraw);
-        alertCard.setOrientation(LinearLayout.VERTICAL);
-        alertCard.setPadding(60,50,0,40);
 
-        TextView alertDate = new TextView(this);
-        alertDate.setText(date);
-        TextView alertTitle = new TextView(this);
-        alertTitle.setText(title);
-        TextView alertText = new TextView(this);
-        alertText.setText(text);
-
-        alertDate.setTextSize(20);
-        alertDate.setTextColor(Color.parseColor("#432c81"));
-        if(title.matches("Elderly Alarm")){
-            alertDate.setTextColor(Color.WHITE);
-            alertTitle.setTextColor(Color.WHITE);
-            alertText.setTextColor(Color.WHITE);
-        }
-        alertDate.setPadding(0,0,0,10);
-        alertCard.addView(alertDate);
-        alertCard.addView(alertTitle);
-        alertCard.addView(alertText);
-
-        alertLayout.addView(alertCard);
+        alertLayout.addView(customView);
+        dateText.setText(date);
+        titleText.setText(title);
+        textText.setText(text);
     }
 }

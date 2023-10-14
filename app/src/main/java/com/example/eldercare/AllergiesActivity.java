@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -15,10 +13,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -36,7 +34,7 @@ public class AllergiesActivity extends AppCompatActivity {
     private DatabaseLib databaseLib;
     private boolean isDeleteModeEnabled;
 
-    private List<ImageView> deleteIcons;
+    private List<FrameLayout> deleteIcons;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +42,7 @@ public class AllergiesActivity extends AppCompatActivity {
 
         databaseLib = new DatabaseLib(this);
         isDeleteModeEnabled = false;
-        deleteIcons = new ArrayList<>();
+        deleteIcons = new ArrayList<FrameLayout>();
 
         List<String> allergyValues = new ArrayList<>();
         ImageView backButton = findViewById(R.id.back_button);
@@ -83,7 +81,7 @@ public class AllergiesActivity extends AppCompatActivity {
                     View customView = inflater.inflate(R.layout.allergy_card, null);
                     allergiesLayout.addView(customView);
 
-                    ImageView deleteAllergyIcon = customView.findViewById(R.id.delete_allergy);
+                    FrameLayout deleteAllergyIcon = customView.findViewById(R.id.delete_allergy);
                     deleteIcons.add(deleteAllergyIcon);
 
                     TextView allergyName = customView.findViewById(R.id.allergySection);
@@ -157,15 +155,15 @@ public class AllergiesActivity extends AppCompatActivity {
 
     private void toggleDeleteMode() {
         isDeleteModeEnabled = !isDeleteModeEnabled;
-        ImageView deleteAllergy = findViewById(R.id.delete_allergy);
+        FrameLayout deleteAllergy = findViewById(R.id.delete_allergy);
 
         if (isDeleteModeEnabled) {
-            for(ImageView deleteIcon : deleteIcons) {
+            for(FrameLayout deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.VISIBLE);
             }
         } else {
             deleteAllergy.setVisibility(View.INVISIBLE);
-            for(ImageView deleteIcon : deleteIcons) {
+            for(FrameLayout deleteIcon : deleteIcons) {
                 deleteIcon.setVisibility(View.INVISIBLE);
             }
         }

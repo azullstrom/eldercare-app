@@ -49,17 +49,31 @@
 
             </LinearLayout>
 
-            <ImageView
+            <FrameLayout
                 android:id="@+id/delete_allergy"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:clickable="true"
-                android:paddingLeft="25sp"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/delete_img"
-                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="end|center_vertical"
-                tools:ignore="ImageContrastCheck" />
+                android:layout_marginRight="0dp"
+                android:visibility="invisible"
+                android:paddingLeft="25sp">
+
+                <!-- Red Square -->
+                <View
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/rounded_corners_elder_cards_red" />
+
+                <!-- Delete Icon -->
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/delete_img"
+                    tools:ignore="ImageContrastCheck" />
+            </FrameLayout>
 
         </LinearLayout>
 
