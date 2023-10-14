@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,26 +46,21 @@ public class CaregiverElderlyMealHistory extends AppCompatActivity {
         backButton.setOnClickListener(view -> finish());
     }
     private void createAlertCard(String date, String title, String text){
-        LinearLayout alertCard = new LinearLayout(this);
-        alertCard.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
-        alertCard.setBackgroundResource(R.drawable.meal_card);
-        alertCard.setOrientation(LinearLayout.VERTICAL);
-        alertCard.setPadding(60,50,0,40);
+        LinearLayout historyLayout = findViewById(R.id.historyLayout);
 
-        TextView alertDate = new TextView(this);
-        alertDate.setText(date);
-        TextView alertTitle = new TextView(this);
-        alertTitle.setText(title);
-        TextView alertText = new TextView(this);
-        alertText.setText(text);
+        LayoutInflater inflater = LayoutInflater.from(CaregiverElderlyMealHistory.this);
+        View customView;
+        TextView dateText, titleText, textText;
 
-        alertDate.setTextSize(20);
-        alertDate.setTextColor(Color.parseColor("#432c81"));
-        alertDate.setPadding(0,0,0,10);
-        alertCard.addView(alertDate);
-        alertCard.addView(alertTitle);
-        alertCard.addView(alertText);
+        customView = inflater.inflate(R.layout.missed_meal_card, null);
+        dateText = customView.findViewById(R.id.missed_meal_date);
+        titleText = customView.findViewById(R.id.missed_meal_title);
+        textText = customView.findViewById(R.id.missed_meal_text);
+        customView.setTag(dateText);
 
-        historyLayout.addView(alertCard);
+        historyLayout.addView(customView);
+        dateText.setText(date);
+        titleText.setText(title);
+        textText.setText(text);
     }
 }
