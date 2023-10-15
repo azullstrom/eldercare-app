@@ -27,7 +27,6 @@ public class Login extends AppCompatActivity {
 
     private static final boolean TEST_MODE = false;
     Button loginButton;
-    FirebaseAuth mAuth;
     ProgressBar progressBar;
     DatabaseLib databaseLib;
     boolean rememberMe;
@@ -38,7 +37,6 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
         databaseLib = new DatabaseLib(this);
 
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
