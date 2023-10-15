@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.modules;
 
 import android.content.Context;
 import android.content.res.Configuration;

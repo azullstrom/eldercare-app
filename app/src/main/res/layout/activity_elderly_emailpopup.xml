@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/first_time_use_popup"
-        android:textSize="30sp"
+        android:textSize="24sp"
         android:textStyle="bold"/>
 
     <com.google.android.material.textfield.TextInputLayout

@@ -1,13 +1,12 @@
-package com.example.eldercare;
+package com.example.eldercare.modules;
 
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.eldercare.modules.NotificationLib;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-
-import java.util.Map;
 
 public class FireBaseMessageReceiver extends FirebaseMessagingService {
 

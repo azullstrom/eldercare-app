@@ -1,29 +1,18 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -32,10 +21,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +36,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -301,14 +290,14 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         System.out.println("THIS IS THE ID I PRESSED: " + elderKeyToDelete);
 
                         deleteElderConfirmation(() -> {
-                            databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver, new DatabaseLib.ElderlyRemovalCallback() {
+                            databaseLib.removeElderlyFromCaregiver(elderKeyToDelete, usernameCaregiver, new DatabaseLib.SuccessCallback() {
                                 @Override
-                                public void onElderlyRemoved() {
+                                public void onSuccess() {
                                     recreate();
                                 }
 
                                 @Override
-                                public void onElderlyRemovalError(String errorMessage) {
+                                public void onFailure(String errorMessage) {
 
                                 }
                             });
@@ -450,9 +439,9 @@ public class CaregiverMainActivity extends AppCompatActivity {
                         pin,
                         phone,
                         yearOfBirth,
-                        new DatabaseLib.assignAndCreateNewElderlyToCaregiverCallback() {
+                        new DatabaseLib.SuccessCallback() {
                             @Override
-                            public void onCreation() {
+                            public void onSuccess() {
                                 addNewElderAlertDialog.dismiss();
                                 successAlertDialog();
                                 recreate();
@@ -502,7 +491,7 @@ public class CaregiverMainActivity extends AppCompatActivity {
                             if (snapshot.hasChild(elderUID) && Boolean.TRUE.equals(snapshot.child(elderUID).getValue(Boolean.class))) {
                                 Toast.makeText(CaregiverMainActivity.this, "Elder already assigned to you", Toast.LENGTH_SHORT).show();
                             } else {
-                                databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver, new DatabaseLib.assignElderlyToCaregiverCallback() {
+                                databaseLib.assignElderlyToCaregiver(elderUID, usernameCaregiver, new DatabaseLib.SuccessCallback() {
                                     @Override
                                     public void onSuccess() {
                                         addExistingElderAlertDialog.dismiss();

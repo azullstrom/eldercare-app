@@ -1,19 +1,16 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 
 public class CaregiverElderlyNotifications extends AppCompatActivity {
 

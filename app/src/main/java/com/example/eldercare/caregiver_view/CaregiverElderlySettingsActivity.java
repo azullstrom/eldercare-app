@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.eldercare.R;
 
 public class CaregiverElderlySettingsActivity extends AppCompatActivity {
 

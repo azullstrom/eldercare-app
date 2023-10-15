@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 
 public class MealCalendarConfirmDelete extends AppCompatActivity {
     @Override

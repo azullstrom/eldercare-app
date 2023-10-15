@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.elderly_view;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -20,11 +20,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.eldercare.modules.Meal;
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
+import com.example.eldercare.modules.NotificationLib;
+
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Timer;
@@ -203,9 +207,9 @@ public class ElderlyOverview extends AppCompatActivity {
      * mealButton is clicked.
      */
     private void updateMeals(){
-        databaseLib.getMeals(elderlyId, new DatabaseLib.MealCallback() {
+        databaseLib.getMeals(elderlyId, new DatabaseLib.ArrayListMealCallback() {
             @Override
-            public void onMealsReceived(ArrayList<Meal> meals) {
+            public void onFound(ArrayList<Meal> meals) {
                 mealList = meals;
                 scheduleMealNotifications();
                 Meal nextMeal = getNextMeal();
@@ -352,14 +356,14 @@ public class ElderlyOverview extends AppCompatActivity {
     public void sendNotificationToAllCaregivers(String title, String text){
         notificationLib = new NotificationLib(elderlyOverviewContext, title,
                 text);
-        databaseLib.getCaregiverUsernamesByElderlyId(elderlyId, new DatabaseLib.CaregiverUsernameCallback() {
+        databaseLib.getCaregiverUsernamesByElderlyId(elderlyId, new DatabaseLib.ListCallback() {
             @Override
-            public void onUsernameFound(List<String> usernames) {
+            public void onFound(List<String> usernames) {
                 notificationLib.sendNotificationUsernameList(usernames, elderlyName, elderlyYear);
             }
 
             @Override
-            public void onUsernameNotFound() {
+            public void onNotFound() {
                 Toast.makeText(elderlyOverviewContext, R.string.error, Toast.LENGTH_SHORT).show();
             }
 

@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.modules;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -12,6 +12,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;

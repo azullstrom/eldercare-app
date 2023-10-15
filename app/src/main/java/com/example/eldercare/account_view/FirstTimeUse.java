@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.account_view;
 
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
@@ -13,34 +13,20 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
+import com.example.eldercare.modules.FireBaseMessageReceiver;
+import com.example.eldercare.modules.LanguageManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.messaging.FirebaseMessaging;
-
-import java.util.Date;
-import java.util.Timer;
 
 public class FirstTimeUse extends AppCompatActivity {
 
@@ -136,9 +122,9 @@ public class FirstTimeUse extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 setFirstTimeUsePreferences(false, false, elderlyMail);
                                                 //Add getElderlyIdByEmail and send Id by Intent to ElderlyOverview
-                                                databaseLib.getElderlyIdByEmail(elderlyMail, new DatabaseLib.ElderlyIdCallback() {
+                                                databaseLib.getElderlyIdByEmail(elderlyMail, new DatabaseLib.StringCallback() {
                                                     @Override
-                                                    public void onElderlyIdFound(String elderlyId) {
+                                                    public void onFound(String elderlyId) {
                                                         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                                                         SharedPreferences.Editor editor = prefs.edit();
                                                         editor.putString("elderlyId", elderlyId);
@@ -150,7 +136,7 @@ public class FirstTimeUse extends AppCompatActivity {
                                                     }
 
                                                     @Override
-                                                    public void onElderlyIdNotFound() {
+                                                    public void onNotFound() {
 
                                                     }
 
