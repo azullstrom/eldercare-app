@@ -170,11 +170,11 @@
                 android:layout_weight="1"/>
 
             <ImageView
-                android:layout_width="220dp"
-                android:paddingLeft="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/meal_history"
-                android:src="@drawable/meals_history_img" />
+                android:src="@drawable/meals_history_img"
+                android:contentDescription="@string/alert_history"
+                />
 
         </LinearLayout>
 
