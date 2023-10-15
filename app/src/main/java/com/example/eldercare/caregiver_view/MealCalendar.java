@@ -83,7 +83,11 @@ public class MealCalendar extends AppCompatActivity{
     void createMealButton(Meal meal){
         LinearLayout mealButton = new LinearLayout(this);
         mealButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
-        mealButton.setBackgroundResource(R.drawable.meal_card);
+        if(meal.isEaten()) {
+            mealButton.setBackgroundResource(R.drawable.meal_card_eaten);
+        } else {
+            mealButton.setBackgroundResource(R.drawable.meal_card);
+        }
         mealButton.setOrientation(LinearLayout.VERTICAL);
         mealButton.setPadding(60,50,0,40);
 

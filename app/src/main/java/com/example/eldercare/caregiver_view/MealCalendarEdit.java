@@ -130,6 +130,8 @@ public class MealCalendarEdit extends AppCompatActivity {
             }
         });
 
+        timePickerString = meal.getTime();
+
         timePicker.setOnTimeChangedListener((timePicker, i, i1) -> {
             String time = "";
             if(i < 10){
@@ -147,7 +149,7 @@ public class MealCalendarEdit extends AppCompatActivity {
             typeInput = String.valueOf(mealType.getSelectedItem());
             eatInput = String.valueOf(editMealToEat.getText());
             mealEaten = eatenBox.isChecked();
-            Log.d("CREATION", timePickerString);
+
             if(typeInput.matches("")){
                 typeInput = meal.getMealType();
             }
