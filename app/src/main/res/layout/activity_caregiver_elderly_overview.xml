@@ -55,10 +55,10 @@
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@drawable/rounded_corners_elder_cards"
+            android:elevation="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="7sp"
-            android:layout_marginBottom="7sp"
+            android:layout_margin="7sp"
             >
             <TextView
                 android:layout_height="wrap_content"
@@ -88,10 +88,10 @@
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@drawable/rounded_corners_elder_cards"
+            android:elevation="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="7sp"
-            android:layout_marginBottom="7sp"
+            android:layout_margin="7sp"
             >
             <TextView
                 android:layout_height="wrap_content"
@@ -121,10 +121,10 @@
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@drawable/rounded_corners_elder_cards"
+            android:elevation="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="7sp"
-            android:layout_marginBottom="7sp"
+            android:layout_margin="7sp"
             >
             <TextView
                 android:layout_height="wrap_content"
@@ -153,10 +153,10 @@
             android:layout_width="match_parent"
             android:layout_height="116dp"
             android:background="@drawable/rounded_corners_elder_cards"
+            android:elevation="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="7sp"
-            android:layout_marginBottom="7sp"
+            android:layout_margin="7sp"
             >
             <TextView
                 android:layout_height="wrap_content"
