@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -78,6 +79,7 @@ public class MealCalendar extends AppCompatActivity{
      *
      * @param meal the meal to create a button for
      */
+    @SuppressLint("SetTextI18n")
     void createMealButton(Meal meal){
         LinearLayout mealButton = new LinearLayout(this);
         mealButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
@@ -113,7 +115,7 @@ public class MealCalendar extends AppCompatActivity{
         mealButton.addView(mealType);
 
         TextView mealToEat = new TextView(this);
-        mealToEat.setText(meal.getToEat());
+        mealToEat.setText(meal.getToEat() + ", " + meal.getTime());
         mealButton.addView(mealToEat);
 
         mealButtonsLayout.addView(mealButton);
