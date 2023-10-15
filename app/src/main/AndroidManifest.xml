@@ -19,17 +19,17 @@
         android:theme="@style/Theme.ElderCare"
         tools:targetApi="31">
         <activity
-            android:name=".CaregiverElderlyMealHistory"
+            android:name=".caregiver_view.CaregiverElderlyMealHistory"
             android:exported="false" />
         <activity
-            android:name=".CaregiverElderlyNotifications"
+            android:name=".caregiver_view.CaregiverElderlyNotifications"
             android:exported="false" />
         <activity
-            android:name=".AllergiesActivity"
+            android:name=".caregiver_view.AllergiesActivity"
             android:exported="false" />
 
         <service
-            android:name=".FireBaseMessageReceiver"
+            android:name=".modules.FireBaseMessageReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -37,34 +37,34 @@
         </service>
 
         <activity
-            android:name=".ForgotPassword"
+            android:name=".account_view.ForgotPassword"
             android:exported="false" />
         <activity
-            android:name=".MealCalendarConfirmDelete"
+            android:name=".caregiver_view.MealCalendarConfirmDelete"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".MealCalendarAdd"
+            android:name=".caregiver_view.MealCalendarAdd"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".MealCalendarEdit"
+            android:name=".caregiver_view.MealCalendarEdit"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".FirstTimeUse"
+            android:name=".account_view.FirstTimeUse"
             android:exported="false" />
         <activity
-            android:name=".CaregiverElderlySettingsActivity"
+            android:name=".caregiver_view.CaregiverElderlySettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".Register"
+            android:name=".account_view.Register"
             android:exported="false" />
         <activity
-            android:name=".MealCalendar"
+            android:name=".caregiver_view.MealCalendar"
             android:exported="false" />
         <activity
-            android:name=".Login"
+            android:name=".account_view.Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,13 +73,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ElderlyOverview"
+            android:name=".elderly_view.ElderlyOverview"
             android:exported="false" />
         <activity
-            android:name=".CaregiverMainActivity"
+            android:name=".caregiver_view.CaregiverMainActivity"
             android:exported="false" />
         <activity
-            android:name=".CaregiverElderlyOverviewActivity"
+            android:name=".caregiver_view.CaregiverElderlyOverviewActivity"
             android:exported="false" />
     </application>
 

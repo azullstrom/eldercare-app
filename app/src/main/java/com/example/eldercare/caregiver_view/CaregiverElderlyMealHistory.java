@@ -1,15 +1,16 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 
 import java.util.ArrayList;
 
@@ -30,9 +31,9 @@ public class CaregiverElderlyMealHistory extends AppCompatActivity {
         backButton = findViewById(R.id.history_back_button);
         historyLayout = findViewById(R.id.historyLayout);
 
-        databaseLib.getMealHistoryElderly(elderlyName, elderlyYear, new DatabaseLib.MealHistoryCallback() {
+        databaseLib.getMealHistoryElderly(elderlyName, elderlyYear, new DatabaseLib.ArrayListStringCallback() {
             @Override
-            public void onNotificationReceived(ArrayList<String> notifications) {
+            public void onFound(ArrayList<String> notifications) {
                 for(int i = notifications.size()-1; i > 0; i--){
                     //Notifcations consist of list like this {title, text, title, text} which
                     //means that we create an alert card every third time (i%3 == 0)

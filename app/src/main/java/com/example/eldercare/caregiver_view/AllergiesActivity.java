@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.caregiver_view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -18,6 +18,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -91,14 +93,14 @@ public class AllergiesActivity extends AppCompatActivity {
                     deleteAllergyIcon.setOnClickListener(view -> {
                         // Fetch the allergy from the customView that contains the clicked deleteIcon
                         String clickedAllergy = (String) customView.getTag();
-                        databaseLib.removeAllergyFromElderly(clickedAllergy, elderlyName, yearOfBirth, new DatabaseLib.AllergyRemovalCallback() {
+                        databaseLib.removeAllergyFromElderly(clickedAllergy, elderlyName, yearOfBirth, new DatabaseLib.SuccessCallback() {
                             @Override
-                            public void onAllergyRemoved() {
+                            public void onSuccess() {
                                 recreate();
                             }
 
                             @Override
-                            public void onAllergyRemovalError(String errorMessage) {
+                            public void onFailure(String errorMessage) {
 
                             }
                         });

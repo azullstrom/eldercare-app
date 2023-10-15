@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.modules;
 
 public class Meal {
     private String time, toEat, mealType;

@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.account_view;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -15,6 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
+import com.example.eldercare.modules.LanguageManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -62,7 +64,17 @@ public class Login extends AppCompatActivity {
             if(rememberMe) {
                 String email = prefs.getString("elderlyMail", "");
                 String pin = prefs.getString("elderlyPin", "");
-                databaseLib.loginUser("", email, pin, "elderly");
+                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.SuccessCallback() {
+                    @Override
+                    public void onSuccess() {
+                        // Handle success
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        // Handle failure
+                    }
+                });
             } else {
                 showLoginElderlyLayout();
             }
@@ -132,7 +144,17 @@ public class Login extends AppCompatActivity {
                         if (dataSnapshot.exists()) {
                             String email = dataSnapshot.getValue(String.class);
 
-                            databaseLib.loginUser(username, email, password, "caregiver");
+                            databaseLib.loginUser(username, email, password, "caregiver", new DatabaseLib.SuccessCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    // Handle success
+                                }
+
+                                @Override
+                                public void onFailure(String errorMessage) {
+                                    // Handle failure
+                                }
+                            });
                         } else {
                             Toast.makeText(Login.this, "Username not found", Toast.LENGTH_SHORT).show();
                         }
@@ -140,7 +162,6 @@ public class Login extends AppCompatActivity {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Handle the database error
                         Toast.makeText(Login.this, "Database error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -168,9 +189,9 @@ public class Login extends AppCompatActivity {
                 SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
                 email = prefs.getString("elderlyMail", "");
 
-                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.LoginCallback() {
+                databaseLib.loginUser("", email, pin, "elderly", new DatabaseLib.SuccessCallback() {
                     @Override
-                    public void onLoginSuccess() {
+                    public void onSuccess() {
                         // The user is successfully logged in, now check if "Remember Me" is checked
                         if (checkBoxRememberMe.isChecked()) {
                             SharedPreferences.Editor editor = prefs.edit();
@@ -181,7 +202,7 @@ public class Login extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onLoginFailure() {
+                    public void onFailure(String error) {
                         // Handle login failure
                     }
                 });

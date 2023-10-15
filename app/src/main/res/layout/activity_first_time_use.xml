@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center"
-        tools:context=".Register">
+        tools:context=".account_view.Register">
 
         <TextView
             android:textStyle="bold"

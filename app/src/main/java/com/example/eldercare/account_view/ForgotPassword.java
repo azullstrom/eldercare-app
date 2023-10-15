@@ -1,4 +1,4 @@
-package com.example.eldercare;
+package com.example.eldercare.account_view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eldercare.R;
+import com.example.eldercare.modules.DatabaseLib;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ForgotPassword extends AppCompatActivity {
