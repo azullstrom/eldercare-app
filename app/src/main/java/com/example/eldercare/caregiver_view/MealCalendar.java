@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.ViewGroup;
@@ -32,7 +34,7 @@ public class MealCalendar extends AppCompatActivity{
     RelativeLayout dimLayout;
     DatabaseLib database;
     String elderlyName, elderlyYear;
-    
+
     /** Animates activity foreground alpha from startAlpha to endAlpha
      *
      * @param startAlpha value between 0-255 where 0 is transparent and 255 is opaque
@@ -77,6 +79,7 @@ public class MealCalendar extends AppCompatActivity{
      *
      * @param meal the meal to create a button for
      */
+    @SuppressLint("SetTextI18n")
     void createMealButton(Meal meal){
         LinearLayout mealButton = new LinearLayout(this);
         mealButton.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 300, 0));
@@ -106,13 +109,13 @@ public class MealCalendar extends AppCompatActivity{
                 break;
         }
         mealType.setTextSize(20);
+        mealType.setTypeface(null, Typeface.BOLD);
         mealType.setTextColor(Color.parseColor("#432c81"));
         mealType.setPadding(0,0,0,10);
         mealButton.addView(mealType);
 
         TextView mealToEat = new TextView(this);
-        mealToEat.setText(meal.getToEat());
-        mealType.setTextColor(Color.parseColor("#7b6ba8"));
+        mealToEat.setText(meal.getToEat() + ", " + meal.getTime());
         mealButton.addView(mealToEat);
 
         mealButtonsLayout.addView(mealButton);
