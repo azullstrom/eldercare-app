@@ -86,4 +86,12 @@
     <string name="remember_me">Remember Me</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="meal_history">Meal History</string>
+    <string name="hi" formatted="true">Hi %1$s 👋🏻</string>
+    <string name="no_planned_meals">You have no planned meals</string>
+    <string name="register_eaten" formatted="true">Register that you have eaten %1s</string>
+    <string name="next_meal">Next meal: %1s at %2s</string>
+    <string name="cancel">Cancel</string>
+    <string name="countdown">Countdown: %1d</string>
+    <string name="reminder_to_eat">Reminder to eat %1s!</string>
+    <string name="click_here_meal">Click here to go to your meal</string>
 </resources>
