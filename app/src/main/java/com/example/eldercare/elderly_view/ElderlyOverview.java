@@ -41,7 +41,7 @@ public class ElderlyOverview extends AppCompatActivity {
     NotificationLib notificationLib;
     DatabaseLib databaseLib;
     ArrayList<Meal> mealList;
-    ArrayList<ArrayList> localMealTimerList;
+    ArrayList<Timer> timerList;
     Context elderlyOverviewContext;
     boolean cancelAlarm;
     ProgressBar progressBar;
@@ -61,9 +61,8 @@ public class ElderlyOverview extends AppCompatActivity {
         elderlyYear = elderlyId.substring(elderlyId.length()-4);
 
         patientTitle = findViewById(R.id.patientTitle);
-        //TODO: add to strings.xml
-        patientTitle.setText("Hi "+ elderlyName + " \uD83D\uDC4B\uD83C\uDFFB");
-        localMealTimerList = new ArrayList<>();
+        patientTitle.setText(getString(R.string.hi, elderlyName));
+        timerList = new ArrayList<>();
 
 
         mealButton = findViewById(R.id.mealButtonElderly);
@@ -92,7 +91,7 @@ public class ElderlyOverview extends AppCompatActivity {
         builder.setView(dialogView);
         progressBar = dialogView.findViewById(R.id.progressBar);
         progressBar.setMax(100);
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 cancelAlarm = true;
@@ -110,7 +109,7 @@ public class ElderlyOverview extends AppCompatActivity {
             public void onTick(long millisUntilFinished) {
                 long secondsLeft = millisUntilFinished / 1000;
                 if (dialog != null) {
-                    dialog.setMessage("Countdown: " + secondsLeft);
+                    dialog.setMessage(getString(R.string.countdown, secondsLeft));
                     progressBar.setProgress((int) (millisUntilFinished / 100)-10);
                 }
             }
@@ -118,7 +117,7 @@ public class ElderlyOverview extends AppCompatActivity {
             @Override
             public void onFinish() {
                 if (dialog != null) {
-                    dialog.setMessage("Countdown: 0");
+                    dialog.setMessage(getString(R.string.countdown, 0));
                     progressBar.setProgress(0);
                     if(!cancelAlarm){
                         sendNotificationToAllCaregivers("Elderly Alarm", elderlyId + " has requested help");
@@ -179,25 +178,23 @@ public class ElderlyOverview extends AppCompatActivity {
      * notification history. Third notification is also added to notification history
      * and also sends a notification to all caregivers that the elderly has missed a meal.
      */
-    private void scheduleMealNotifications() {
+    private void scheduleMealNotifications(Meal nextMeal) {
+        if(nextMeal.isEaten()){
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            for (Meal meal : mealList) {
-                for(ArrayList list: localMealTimerList){
-                    Timer timer = (Timer) list.get(1);
-                    timer.cancel();
-                }
-                if(meal.isEaten()){
-                    continue;
-                }
-                localMealTimerList = new ArrayList<>();
-                LocalTime mealTime = LocalTime.parse(meal.getTime());
-                LocalTime mealTime2 = mealTime.plusMinutes(45);
-                LocalTime mealTime3 = mealTime2.plusMinutes(45);
-
-                scheduleElderlyMealNotification(meal, mealTime, false, false);
-                scheduleElderlyMealNotification(meal, mealTime2, true, false);
-                scheduleElderlyMealNotification(meal, mealTime3, true, true);
+            for(Timer timer: timerList){
+                timer.cancel();
             }
+
+            timerList = new ArrayList<>();
+            LocalTime mealTime = LocalTime.parse(nextMeal.getTime());
+            LocalTime mealTime2 = mealTime.plusMinutes(1);
+            LocalTime mealTime3 = mealTime2.plusMinutes(1);
+
+            scheduleElderlyMealNotification(nextMeal, mealTime, false, false);
+            scheduleElderlyMealNotification(nextMeal, mealTime2, true, false);
+            scheduleElderlyMealNotification(nextMeal, mealTime3, true, true);
         }
     }
 
@@ -211,21 +208,18 @@ public class ElderlyOverview extends AppCompatActivity {
             @Override
             public void onFound(ArrayList<Meal> meals) {
                 mealList = meals;
-                scheduleMealNotifications();
                 Meal nextMeal = getNextMeal();
                 if(nextMeal == null){
-                    //TODO: add to strings.xml
-                    mealButton.setText("You have no planned meals");
+                    mealButton.setText(R.string.no_planned_meals);
                 }
                 else{
+                    scheduleMealNotifications(nextMeal);
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         LocalTime currentTime = LocalTime.now();
                         LocalTime nextMealTime = LocalTime.parse(nextMeal.getTime());
                         if(Duration.between(currentTime, nextMealTime).toMillis() < 0 &&
                         !nextMeal.isEaten()){
-                            //TODO: add do strings.xml
-                            mealButton.setText("Register that you have eaten " +
-                                    nextMeal.getToEat());
+                            mealButton.setText(getString(R.string.register_eaten, nextMeal.getToEat()));
                             mealButton.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.purple));
                             mealButton.setTextColor(Color.parseColor("#ffffff"));
                             mealButton.setOnClickListener(new View.OnClickListener() {
@@ -237,21 +231,16 @@ public class ElderlyOverview extends AppCompatActivity {
                                     databaseLib.addMealHistoryElderly(elderlyName, elderlyYear,
                                             nextMeal, df.format(new Date()));
                                     //cancel all reminder notifications
-                                    for(ArrayList list: localMealTimerList){
-                                        Meal currMeal = (Meal) list.get(0);
-                                        Timer currTimer = (Timer) list.get(1);
-                                        if(currMeal.equals(nextMeal)){
-                                            currTimer.cancel();
-                                        }
+                                    for(Timer timer: timerList){
+                                        timer.cancel();
                                     }
+                                    timerList = new ArrayList<>();
                                     recreate();
                                 }
                             });
                         }
                         else{
-                            //TODO: add to strings.xml
-                            mealButton.setText("Next meal: " + nextMeal.getToEat() + " at "
-                                    + nextMeal.getTime());
+                            mealButton.setText(getString(R.string.next_meal, nextMeal.getToEat(), nextMeal.getTime()));
                             mealButton.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.light_gray));
                             mealButton.setTextColor(R.color.purple);
                         }
@@ -322,11 +311,9 @@ public class ElderlyOverview extends AppCompatActivity {
             @Override
             public void run() {
                 handler.post(() -> {
-                    //TODO: add to strings.xml
-                    Log.d("CREATION", "STARTING NOTIFICATION");
                     notificationLib = new NotificationLib(elderlyOverviewContext,
-                            "Reminder to eat " + meal.getMealType() + "!",
-                            "click here to go to your meal");
+                            getString(R.string.reminder_to_eat, meal.getToEat()),
+                            getString(R.string.click_here_meal));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         notificationLib.createAndShowNotification();
                         if(addHistory){
@@ -335,7 +322,6 @@ public class ElderlyOverview extends AppCompatActivity {
                                     elderlyYear, "Missed to register meal",
                                     "Missed to register: " + meal.getMealType() +
                                     ", " + meal.getToEat(), df.format(new Date()));
-                            Log.d("CREATION", "ADDED NOTIFICATION TO DATABASE");
                         }
                         if(notifyCaregivers){
                             sendNotificationToAllCaregivers(elderlyId + " no registration ",
@@ -347,10 +333,7 @@ public class ElderlyOverview extends AppCompatActivity {
         };
         timer.schedule(scheduleSchedule, delay);
         //add timer to array so that it can be cancelled later if elderly registers meal
-        ArrayList<Object> mealTimerArrayList = new ArrayList<>();
-        mealTimerArrayList.add(meal);
-        mealTimerArrayList.add(timer);
-        localMealTimerList.add(mealTimerArrayList);
+        timerList.add(timer);
     }
 
     public void sendNotificationToAllCaregivers(String title, String text){

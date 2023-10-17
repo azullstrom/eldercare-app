@@ -81,4 +81,12 @@
     <string name="remember_me">Kom ihåg mig</string>
     <string name="forgot_password">Glömt lösenord?</string>
     <string name="meal_history">Måltidshistorik</string>
+    <string name="hi" formatted="true">Hej %1$s 👋🏻</string>
+    <string name="no_planned_meals">Du har inga planerade måltider</string>
+    <string name="register_eaten" formatted="true">Registera att du har ätit %1s</string>
+    <string name="next_meal">Nästa måltid: %1s klockan %2s</string>
+    <string name="cancel">Avbryt</string>
+    <string name="countdown">Nedräkning: %1d</string>
+    <string name="reminder_to_eat">Påminnelse att äta %1s!</string>
+    <string name="click_here_meal">Klicka här för att komma till din måltid</string>
 </resources>
