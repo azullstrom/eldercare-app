@@ -49,6 +49,7 @@ public class Login extends AppCompatActivity {
         // language default //////////////////////////////////////////////////////////
         if(LanguageManager.getLanguageFromsharedprefs(this) != "en" && !prefs.getBoolean("rememberme", false)){
             LanguageManager.setDefaultLanguage(this);
+            LanguageManager.setLanguage(this, LanguageManager.getLanguageFromsharedprefs(this));
         }
 
         // If the coder wants to test the FirstTimeUse page each time the app starts
