@@ -7,6 +7,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,7 +41,8 @@ public class FirstTimeUse extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // language default
-        if(LanguageManager.getLanguageFromsharedprefs(this) != "en"){
+        SharedPreferences prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        if(LanguageManager.getLanguageFromsharedprefs(this) != "en" && !prefs.getBoolean("rememberme", false)){
             LanguageManager.setDefaultLanguage(this);
         }
 
