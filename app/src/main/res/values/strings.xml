@@ -94,4 +94,6 @@
     <string name="countdown">Countdown: %1d</string>
     <string name="reminder_to_eat">Reminder to eat %1s!</string>
     <string name="click_here_meal">Click here to go to your meal</string>
+    <string name="reset_password">Reset password</string>
+
 </resources>

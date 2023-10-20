@@ -89,4 +89,5 @@
     <string name="countdown">Nedräkning: %1d</string>
     <string name="reminder_to_eat">Påminnelse att äta %1s!</string>
     <string name="click_here_meal">Klicka här för att komma till din måltid</string>
+    <string name="reset_password">Återställ lösenord</string>
 </resources>
