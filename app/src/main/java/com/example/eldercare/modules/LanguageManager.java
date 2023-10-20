@@ -38,6 +38,19 @@ public class LanguageManager {
         Configuration config = context.getResources().getConfiguration();
         return config.locale.getLanguage();
     }
+    public static void setDefaultLanguage(Context context){
+        String languageCode = "en";
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
+        context.createConfigurationContext(configuration);
+        configuration.locale = locale;
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+
+        SharedPreferences preferences = context.getSharedPreferences("f_language", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+    }
 
     public static String getLanguageFromsharedprefs(Context context) {
         SharedPreferences preferences = context.getSharedPreferences("f_language", Context.MODE_PRIVATE);

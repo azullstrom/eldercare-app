@@ -38,6 +38,11 @@ public class FirstTimeUse extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // language default
+        if(LanguageManager.getLanguageFromsharedprefs(this) != "en"){
+            LanguageManager.setDefaultLanguage(this);
+        }
+
         //Ask for permission to use notifications (only asks if permission not granted)
         if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
             ActivityCompat.requestPermissions(this, new String[]{POST_NOTIFICATIONS}, 1);
