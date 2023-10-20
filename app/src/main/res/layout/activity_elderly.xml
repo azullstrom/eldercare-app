@@ -55,7 +55,7 @@
         android:layout_marginEnd="24dp"
         android:backgroundTint="@color/light_gray"
 
-        android:drawableEnd="@drawable/stomach_svgrepo_com"
+        android:drawableEnd="@drawable/meals_img"
         android:drawablePadding="10dp"
         android:elegantTextHeight="true"
         android:fontFamily="@font/raleway_bold"
