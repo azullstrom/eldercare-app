@@ -3,6 +3,7 @@ package com.example.eldercare.account_view;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
 
-    private static final boolean TEST_MODE = true;
+    private static final boolean TEST_MODE = false;
     Button loginButton;
     ProgressBar progressBar;
     DatabaseLib databaseLib;
@@ -39,9 +40,17 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         databaseLib = new DatabaseLib(this);
 
+
+
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
         boolean firstTimeUse = prefs.getBoolean("isFirstTimeUse", true);
         rememberMe = prefs.getBoolean("rememberMe", false);
+
+        // language default //////////////////////////////////////////////////////////
+        if(LanguageManager.getLanguageFromsharedprefs(this) != "en" && !prefs.getBoolean("rememberme", false)){
+            LanguageManager.setDefaultLanguage(this);
+            LanguageManager.setLanguage(this, LanguageManager.getLanguageFromsharedprefs(this));
+        }
 
         // If the coder wants to test the FirstTimeUse page each time the app starts
         if(TEST_MODE) {
@@ -84,7 +93,7 @@ public class Login extends AppCompatActivity {
         ImageView swedishLang = findViewById(R.id.swedishLang);
 
         ////////// Set languageSwitcher visibility //////////
-        String currentLanguage = LanguageManager.getLanguage(this);
+        String currentLanguage = LanguageManager.getLanguageFromsharedprefs(this);
         if(englishLang != null) {
             englishLang.setVisibility(currentLanguage.equals("sv") ? View.VISIBLE : View.GONE);
         }
