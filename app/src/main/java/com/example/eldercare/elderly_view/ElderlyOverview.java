@@ -78,6 +78,7 @@ public class ElderlyOverview extends AppCompatActivity {
 
         if (LanguageManager.getLanguage(this) != LanguageManager.getLanguageFromsharedprefs(this)){
             LanguageManager.setLnaguageFromSavedprefs(this);
+            recreate();
         }
     }
 
