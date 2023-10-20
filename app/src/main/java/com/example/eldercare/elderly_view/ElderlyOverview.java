@@ -51,6 +51,9 @@ public class ElderlyOverview extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (LanguageManager.getLanguage(this) != LanguageManager.getLanguageFromsharedprefs(this)){
+            LanguageManager.setLnaguageFromSavedprefs(this);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_elderly);
         elderlyOverviewContext = this;
@@ -76,10 +79,7 @@ public class ElderlyOverview extends AppCompatActivity {
             showCountDownPopup();
         });
 
-        if (LanguageManager.getLanguage(this) != LanguageManager.getLanguageFromsharedprefs(this)){
-            LanguageManager.setLnaguageFromSavedprefs(this);
-            recreate();
-        }
+
     }
 
     private void showCountDownPopup(){
