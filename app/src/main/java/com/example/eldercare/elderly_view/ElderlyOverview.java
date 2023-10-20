@@ -20,6 +20,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.eldercare.modules.LanguageManager;
 import com.example.eldercare.modules.Meal;
 import com.example.eldercare.R;
 import com.example.eldercare.modules.DatabaseLib;
@@ -75,7 +76,9 @@ public class ElderlyOverview extends AppCompatActivity {
             showCountDownPopup();
         });
 
-
+        if (LanguageManager.getLanguage(this) != LanguageManager.getLanguageFromsharedprefs(this)){
+            LanguageManager.setLnaguageFromSavedprefs(this);
+        }
     }
 
     private void showCountDownPopup(){
